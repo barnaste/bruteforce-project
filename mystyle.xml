@@ -381,7 +381,7 @@
         <module name="InnerAssignment"/>
         <module name="MagicNumber"/>
         <module name="MatchXpath">
-            <property name="query" value="//CLASS_DEF[@text!='Checker' and @text!='Main']
+            <property name="query" value="//CLASS_DEF[@text!='Checker' and @text!='app.Main']
       //LITERAL_CATCH//METHOD_CALL[.//IDENT[@text = 'printStackTrace']]/.."/>
             <message key="matchxpath.match" value="Avoid using 'printStackTrace'."/>
         </module>
@@ -720,7 +720,7 @@
         <module name="OuterTypeFilename"/>
         <module name="TrailingComment"/>
         <module name="UncommentedMain">
-            <property name="excludedClasses" value="\.(Main.*|JavadocPropertiesGenerator)$"/>
+            <property name="excludedClasses" value="\.(app.Main.*|JavadocPropertiesGenerator)$"/>
         </module>
         <module name="UpperEll"/>
 
