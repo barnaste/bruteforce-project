@@ -54,5 +54,6 @@ public class MongoUserDataBase implements UserDataBase{
 
     private MongoCollection<User> getUsersCollection() throws Exception {
         // test
+        return null;
     }
 }
