@@ -53,7 +53,6 @@ public class MongoUserDataBase implements UserDataBase{
     }
 
     private MongoCollection<User> getUsersCollection() throws Exception {
-        return null;
-        // refractor this
+        // test
     }
 }
