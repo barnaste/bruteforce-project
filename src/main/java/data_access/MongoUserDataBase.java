@@ -38,6 +38,21 @@ public class MongoUserDataBase implements UserDataBase{
 
     @Override
     public boolean addUser(User user) {
-        return false;
+        CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
+        CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
+        try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
+            MongoDatabase database = mongoClient.getDatabase("userDB").withCodecRegistry(pojoCodecRegistry);
+            MongoCollection<User> collection = database.getCollection("users", User.class);
+            if (collection.find(eq("username", user.getUsername())).first() == null) {
+                collection.insertOne(user);
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    private MongoCollection<User> getUsersCollection() throws Exception {
+        return null;
     }
 }
