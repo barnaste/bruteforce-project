@@ -1,6 +1,9 @@
 package data_access;
 
 import entity.User;
+import org.bson.types.ObjectId;
+
+import java.util.List;
 
 /**
  * UserDB is an interface that defines the methods that the UserDB class must implement.

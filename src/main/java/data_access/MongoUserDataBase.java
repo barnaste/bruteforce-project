@@ -14,6 +14,10 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import org.bson.types.ObjectId;
+
+import java.util.List;
+
 /**
  * UserDB class implemented using MongoDB.
  */
@@ -53,7 +57,7 @@ public class MongoUserDataBase implements UserDataBase{
     }
 
     private MongoCollection<User> getUsersCollection() throws Exception {
-        // test
+        // TODO: merge the common parts of the getUser() and addUser() methods here.
         return null;
     }
 }
