@@ -6,6 +6,8 @@ import entity.Plant;
 import entity.User;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,9 +21,9 @@ public class Main {
     public static void main(String[] args) {
         // final AppBuilder appBuilder = new AppBuilder();
         MongoPlantDatabase mongoPlantDatabase = new MongoPlantDatabase();
-        List<Plant> plants = mongoPlantDatabase.getPlants("ali karim lalani", 3, 5);
+        List<Plant> plants = mongoPlantDatabase.getPublicPlants(20, 50);
         for (Plant plant : plants) {
-            System.out.println(plant.getComments());
+            System.out.println(plant.getLastChanged());
         }
     }
 }

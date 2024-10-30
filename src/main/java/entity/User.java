@@ -4,11 +4,19 @@ public class User {
     private String username;
     private String password;
 
+    /**
+     * A constructor for User that initializes a user with the given username and password.
+     * @param username is the username of the user
+     * @param password is the password that the user set
+     */
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
+    /**
+     * Another constructor for the purpose of initializing plant objects directly from the database. Not meant for use.
+     */
     public User() {
 
     }
