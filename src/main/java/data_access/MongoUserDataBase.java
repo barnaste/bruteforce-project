@@ -14,9 +14,6 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import org.bson.types.ObjectId;
-
-import java.util.List;
 
 /**
  * UserDB class implemented using MongoDB.
@@ -31,7 +28,7 @@ public class MongoUserDataBase implements UserDataBase{
         CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
 
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
-            MongoDatabase database = mongoClient.getDatabase("userDB").withCodecRegistry(pojoCodecRegistry);
+            MongoDatabase database = mongoClient.getDatabase("appDB").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<User> collection = database.getCollection("users", User.class);
             return collection.find(eq("username", username)).first();
         } catch (Exception e) {
@@ -45,7 +42,7 @@ public class MongoUserDataBase implements UserDataBase{
         CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
         CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
-            MongoDatabase database = mongoClient.getDatabase("userDB").withCodecRegistry(pojoCodecRegistry);
+            MongoDatabase database = mongoClient.getDatabase("appDB").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<User> collection = database.getCollection("users", User.class);
             if (collection.find(eq("username", user.getUsername())).first() == null) {
                 collection.insertOne(user);

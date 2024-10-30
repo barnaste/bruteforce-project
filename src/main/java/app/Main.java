@@ -17,6 +17,5 @@ public class Main {
         MongoUserDataBase db = new MongoUserDataBase();
         db.addUser(user);
         System.out.println(db.getUser(user.getUsername()).getUsername());
-        System.out.println(db.getUser("nezere").getPassword());
     }
 }
