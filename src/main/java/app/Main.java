@@ -1,7 +1,14 @@
 package app;
 
+import data_access.MongoPlantDatabase;
 import data_access.MongoUserDataBase;
+import entity.Plant;
 import entity.User;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * The Main class of our application.
@@ -13,9 +20,10 @@ public class Main {
      */
     public static void main(String[] args) {
         // final AppBuilder appBuilder = new AppBuilder();
-        User user = new User("ali karim lalani", "mario");
-        MongoUserDataBase db = new MongoUserDataBase();
-        db.addUser(user);
-        System.out.println(db.getUser(user.getUsername()).getUsername());
+        MongoPlantDatabase mongoPlantDatabase = new MongoPlantDatabase();
+        List<Plant> plants = mongoPlantDatabase.getPublicPlants(20, 50);
+        for (Plant plant : plants) {
+            System.out.println(plant.getLastChanged());
+        }
     }
 }

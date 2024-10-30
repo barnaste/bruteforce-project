@@ -68,5 +68,4 @@ public class MongoImageDataBase implements ImageDataBase {
             return false;
         }
     }
-
 }
