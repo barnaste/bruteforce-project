@@ -13,7 +13,7 @@ public interface PlantDataBase {
      * @param username is the username of the user
      * @return a list of all the plants belonging to that user
      */
-    List<Plant> getPlants(String username);
+    List<Plant> getPlants(String username, int low, int hi);
 
     /**
      * A method that inserts a new plant into the database.

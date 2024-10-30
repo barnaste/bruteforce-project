@@ -1,9 +1,6 @@
 package data_access;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 import entity.Plant;
 import entity.User;
 import org.bson.codecs.configuration.CodecProvider;
@@ -23,7 +20,7 @@ public class MongoPlantDatabase implements PlantDataBase {
             "?retryWrites=true&w=majority&appName=Cluster0";
 
     @Override
-    public List<Plant> getPlants(String username) {
+    public List<Plant> getPlants(String username, int low, int hi) {
         List<Plant> result = new ArrayList<>();
 
         CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
@@ -32,12 +29,16 @@ public class MongoPlantDatabase implements PlantDataBase {
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
             MongoDatabase database = mongoClient.getDatabase("appDB").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<Plant> collection = database.getCollection("plantinfo", Plant.class);
-
+            FindIterable<Plant> iterable =  collection.find(eq("owner", username)).skip(low)
+                    .limit(hi);
+            for (Plant plant : iterable) {
+                result.add(plant);
+            }
+            return result;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
-        return null;
     }
 
     @Override
@@ -46,7 +47,7 @@ public class MongoPlantDatabase implements PlantDataBase {
         CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
             MongoDatabase database = mongoClient.getDatabase("appDB").withCodecRegistry(pojoCodecRegistry);
-            MongoCollection<Plant> collection = database.getCollection("plant", Plant.class);
+            MongoCollection<Plant> collection = database.getCollection("plantinfo", Plant.class);
             collection.insertOne(plant);
         }
     }

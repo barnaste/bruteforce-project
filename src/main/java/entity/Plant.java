@@ -4,15 +4,17 @@ public class Plant {
     private String imageID;
     private String owner;
     private String comments;
-    private String[] sharedWith;
     private Boolean isPublic;
 
-    public Plant(String imageID, String owner, String comments, String[] sharedWith, Boolean isPublic) {
+    public Plant(String imageID, String owner, String comments, Boolean isPublic) {
         this.imageID = imageID;
         this.owner = owner;
         this.comments = comments;
-        this.sharedWith = sharedWith;
         this.isPublic = isPublic;
+    }
+
+    public Plant() {
+
     }
 
     public String getImage() {
@@ -24,10 +26,7 @@ public class Plant {
     public String getComments() {
         return comments;
     }
-    public String[] getSharedWith() {
-        return sharedWith;
-    }
-    public Boolean isPublic() {
+    public Boolean getIsPublic() {
         return isPublic;
     }
     public void setImage(String imageID) {
@@ -35,9 +34,6 @@ public class Plant {
     }
     public void setComments(String comments) {
         this.comments = comments;
-    }
-    public void setSharedWith(String[] sharedWith) {
-        this.sharedWith = sharedWith;
     }
     public void setIsPublic(Boolean isPublic) {
         this.isPublic = isPublic;
