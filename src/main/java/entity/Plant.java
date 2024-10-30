@@ -1,33 +1,46 @@
 package entity;
 
+import java.util.Date;
+
 public class Plant {
     private String imageID;
     private String owner;
     private String comments;
-    private String[] sharedWith;
     private Boolean isPublic;
+    private Date lastChanged;
 
-    public Plant(String imageID, String owner, String comments, String[] sharedWith, Boolean isPublic) {
+    /**
+     * A constructor for Plant that initializes a plant with lastChanged as the current date.
+     * @param imageID is the ID of the image which is stored in the database
+     * @param owner is the username of the user who is associated with this image
+     * @param comments is any comments that the user inputted regarding this image
+     * @param isPublic is whether the user set the image as public
+     */
+    public Plant(String imageID, String owner, String comments, Boolean isPublic) {
         this.imageID = imageID;
         this.owner = owner;
         this.comments = comments;
-        this.sharedWith = sharedWith;
         this.isPublic = isPublic;
+        lastChanged = new Date();
     }
 
-    public String getImage() {
-        return imageID;
+    /**
+     * Another constructor for the purpose of initializing plant objects directly from the database. Not meant for use.
+     */
+    public Plant() {
+
     }
+
+    public Date getLastChanged() { return lastChanged; }
+    public void setLastChanged(Date lastChanged) { this.lastChanged = lastChanged; }
+    public String getImage() { return imageID; }
     public String getOwner() {
         return owner;
     }
     public String getComments() {
         return comments;
     }
-    public String[] getSharedWith() {
-        return sharedWith;
-    }
-    public Boolean isPublic() {
+    public Boolean getIsPublic() {
         return isPublic;
     }
     public void setImage(String imageID) {
@@ -35,9 +48,6 @@ public class Plant {
     }
     public void setComments(String comments) {
         this.comments = comments;
-    }
-    public void setSharedWith(String[] sharedWith) {
-        this.sharedWith = sharedWith;
     }
     public void setIsPublic(Boolean isPublic) {
         this.isPublic = isPublic;
