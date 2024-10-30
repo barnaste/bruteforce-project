@@ -37,6 +37,7 @@ public class MongoPlantDatabase implements PlantDataBase {
             System.out.println(e.getMessage());
             return null;
         }
+        return null;
     }
 
     @Override
