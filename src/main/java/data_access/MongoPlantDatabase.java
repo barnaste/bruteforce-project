@@ -67,4 +67,10 @@ public class MongoPlantDatabase implements PlantDataBase {
             collection.insertOne(plant);
         }
     }
+
+    @Override
+    public Boolean editPlant(String id) {
+        //TODO: Implement this.
+        return null;
+    }
 }

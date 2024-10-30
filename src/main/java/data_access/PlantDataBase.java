@@ -32,4 +32,11 @@ public interface PlantDataBase {
      * @param plant is the plant being inserted
      */
     void addPlant(Plant plant);
+
+    /**
+     * A method that inserts a new plant into the database.
+     * @param id is the id of the plant being modified
+     * @return true if the plant has been successfully modified, false otherwise
+     */
+    Boolean editPlant(String id);
 }
