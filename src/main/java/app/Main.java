@@ -5,6 +5,7 @@ import data_access.MongoUserDataBase;
 import entity.Plant;
 import entity.User;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,11 +20,17 @@ public class Main {
      * @param args unused arguments
      */
     public static void main(String[] args) {
-        // final AppBuilder appBuilder = new AppBuilder();
-        MongoPlantDatabase mongoPlantDatabase = new MongoPlantDatabase();
-        List<Plant> plants = mongoPlantDatabase.getPublicPlants(20, 50);
-        for (Plant plant : plants) {
-            System.out.println(plant.getLastChanged());
-        }
+        final AppBuilder appBuilder = new AppBuilder();
+        final JFrame application = appBuilder
+                .addLoginView()
+                .addSignupView()
+                .addLoggedInView()
+                .addSignupUseCase()
+                .addLoginUseCase()
+                .addLogoutUseCase()
+                .build();
+
+        application.pack();
+        application.setVisible(true);
     }
 }
