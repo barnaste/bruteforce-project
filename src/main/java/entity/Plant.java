@@ -1,5 +1,10 @@
 package entity;
 
+import data_access.ImageDataBase;
+import data_access.MongoImageDataBase;
+import data_access.PlantDataBase;
+
+import java.awt.image.BufferedImage;
 import java.util.Date;
 
 public class Plant {
@@ -11,17 +16,18 @@ public class Plant {
 
     /**
      * A constructor for Plant that initializes a plant with lastChanged as the current date.
-     * @param imageID is the ID of the image which is stored in the database
+     * @param image is the image associated with the plant
      * @param owner is the username of the user who is associated with this image
      * @param comments is any comments that the user inputted regarding this image
      * @param isPublic is whether the user set the image as public
      */
-    public Plant(String imageID, String owner, String comments, Boolean isPublic) {
-        this.imageID = imageID;
+    public Plant(BufferedImage image, String owner, String comments, Boolean isPublic) {
         this.owner = owner;
         this.comments = comments;
         this.isPublic = isPublic;
         lastChanged = new Date();
+        ImageDataBase imageDataBase = new MongoImageDataBase();
+        imageID = imageDataBase.addImage(image);
     }
 
     /**
