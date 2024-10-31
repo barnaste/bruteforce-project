@@ -1,15 +1,13 @@
-package use_case.login;
+package use_case.logout;
 
 /**
- * Output Data for the Login Use Case.
+ * Output Data for the Logout Use Case.
  */
-public class LoginOutputData {
-
+public class LogoutOutputData {
     private final String username;
-
     private final boolean useCaseFailed;
 
-    public LoginOutputData(String username, boolean useCaseFailed) {
+    public LogoutOutputData(String username, boolean useCaseFailed) {
         this.username = username;
         this.useCaseFailed = useCaseFailed;
     }

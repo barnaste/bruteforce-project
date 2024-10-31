@@ -1,9 +1,14 @@
 package app;
 
+import data_access.InMemoryUserDataBase;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.logout.LogoutController;
+import interface_adapter.logout.LogoutPresenter;
+import interface_adapter.logout.LoggedInViewModel;
 import interface_adapter.login.LoginController;
+import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
@@ -14,6 +19,9 @@ import use_case.login.LoginOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
+import use_case.logout.LogoutInputBoundary;
+import use_case.logout.LogoutInteractor;
+import use_case.logout.LogoutOutputBoundary;
 import view.LoggedInView;
 import view.LoginView;
 import view.SignupView;
@@ -35,13 +43,13 @@ public class AppBuilder {
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
-    // SAVE USER TO DATA HERE TODO:
-    // private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    // thought question: is the hard dependency below a problem?
+    private final InMemoryUserDataBase userDataAccessObject = new InMemoryUserDataBase();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
-//    private LoggedInViewModel loggedInViewModel;
+    private LoggedInViewModel loggedInViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
 
@@ -75,82 +83,65 @@ public class AppBuilder {
      * Adds the LoggedIn View to the application.
      * @return this builder
      */
-//    public AppBuilder addLoggedInView() {
-//        loggedInViewModel = new LoggedInViewModel();
-//        loggedInView = new LoggedInView(loggedInViewModel);
-//        cardPanel.add(loggedInView, loggedInView.getViewName());
-//        return this;
-//    }
+    public AppBuilder addLoggedInView() {
+        loggedInViewModel = new LoggedInViewModel();
+        loggedInView = new LoggedInView(loggedInViewModel);
+        cardPanel.add(loggedInView, loggedInView.getViewName());
+        return this;
+    }
 
     /**
      * Adds the Signup Use Case to the application.
      * @return this builder
      */
-//    public AppBuilder addSignupUseCase() {
-//        final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
-//                signupViewModel, loginViewModel);
-//        final SignupInputBoundary userSignupInteractor = new SignupInteractor(
-//                userDataAccessObject, signupOutputBoundary, userFactory);
-//
-//        final SignupController controller = new SignupController(userSignupInteractor);
-//        signupView.setSignupController(controller);
-//        return this;
-//    }
+    public AppBuilder addSignupUseCase() {
+        final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
+                signupViewModel, loginViewModel);
+        final SignupInputBoundary userSignupInteractor = new SignupInteractor(
+                userDataAccessObject, signupOutputBoundary, userFactory);
+
+        final SignupController controller = new SignupController(userSignupInteractor);
+        signupView.setSignupController(controller);
+        return this;
+    }
 
     /**
      * Adds the Login Use Case to the application.
      * @return this builder
      */
-//    public AppBuilder addLoginUseCase() {
-//        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
-//                loggedInViewModel, loginViewModel);
-//        final LoginInputBoundary loginInteractor = new LoginInteractor(
-//                userDataAccessObject, loginOutputBoundary);
-//
-//        final LoginController loginController = new LoginController(loginInteractor);
-//        loginView.setLoginController(loginController);
-//        return this;
-//    }
+    public AppBuilder addLoginUseCase() {
+        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
+                loggedInViewModel, loginViewModel);
+        final LoginInputBoundary loginInteractor = new LoginInteractor(
+                userDataAccessObject, loginOutputBoundary);
 
-    /**
-     * Adds the Change Password Use Case to the application.
-     * @return this builder
-     */
-//    public AppBuilder addChangePasswordUseCase() {
-//        final ChangePasswordOutputBoundary changePasswordOutputBoundary =
-//                new ChangePasswordPresenter(loggedInViewModel);
-//
-//        final ChangePasswordInputBoundary changePasswordInteractor =
-//                new ChangePasswordInteractor(userDataAccessObject, changePasswordOutputBoundary, userFactory);
-//
-//        final ChangePasswordController changePasswordController =
-//                new ChangePasswordController(changePasswordInteractor);
-//        loggedInView.setChangePasswordController(changePasswordController);
-//        return this;
-//    }
+        final LoginController loginController = new LoginController(loginInteractor);
+        loginView.setLoginController(loginController);
+        return this;
+    }
 
     /**
      * Adds the Logout Use Case to the application.
      * @return this builder
      */
-//    public AppBuilder addLogoutUseCase() {
-//        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel,
-//                loggedInViewModel, loginViewModel);
-//
-//        final LogoutInputBoundary logoutInteractor =
-//                new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
-//
-//        final LogoutController logoutController = new LogoutController(logoutInteractor);
-//        loggedInView.setLogoutController(logoutController);
-//        return this;
-//    }
+    public AppBuilder addLogoutUseCase() {
+        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel,
+                loggedInViewModel, loginViewModel);
+
+        final LogoutInputBoundary logoutInteractor =
+                new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
+
+        final LogoutController logoutController = new LogoutController(logoutInteractor);
+        loggedInView.setLogoutController(logoutController);
+        return this;
+    }
 
     /**
      * Creates the JFrame for the application and initially sets the SignupView to be displayed.
      * @return the application
      */
     public JFrame build() {
-        final JFrame application = new JFrame("Login Example");
+        final JFrame application = new JFrame("Brute Force App");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         application.add(cardPanel);
