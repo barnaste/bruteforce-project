@@ -1,7 +1,6 @@
 package use_case.signup;
 
 import entity.User;
-import entity.UserFactory;
 
 /**
  * The Signup Interactor.
@@ -29,7 +28,7 @@ public class SignupInteractor implements SignupInputBoundary {
         }
         else {
             final User user = userFactory.create(signupInputData.getUsername(), signupInputData.getPassword());
-            userDataAccessObject.save(user);
+            userDataAccessObject.addUser(user);
 
             final SignupOutputData signupOutputData = new SignupOutputData(user.getUsername(), false);
             userPresenter.prepareSuccessView(signupOutputData);

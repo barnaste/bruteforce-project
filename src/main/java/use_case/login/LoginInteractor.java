@@ -23,13 +23,12 @@ public class LoginInteractor implements LoginInputBoundary {
             loginPresenter.prepareFailView(username + ": Account does not exist.");
         }
         else {
-            final String pwd = userDataAccessObject.get(username).getPassword();
+            final String pwd = userDataAccessObject.getUser(username).getPassword();
             if (!password.equals(pwd)) {
                 loginPresenter.prepareFailView("Incorrect password for \"" + username + "\".");
             }
             else {
-
-                final User user = userDataAccessObject.get(loginInputData.getUsername());
+                final User user = userDataAccessObject.getUser(loginInputData.getUsername());
 
                 userDataAccessObject.setCurrentUsername(user.getUsername());
                 final LoginOutputData loginOutputData = new LoginOutputData(user.getUsername(), false);
