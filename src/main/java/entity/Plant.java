@@ -25,9 +25,8 @@ public class Plant {
         this.owner = owner;
         this.comments = comments;
         this.isPublic = isPublic;
-        lastChanged = new Date();
-        ImageDataBase imageDataBase = new MongoImageDataBase();
-        imageID = imageDataBase.addImage(image);
+        this.lastChanged = new Date();
+        this.imageID = makeImageID(image);
     }
 
     /**
@@ -35,6 +34,11 @@ public class Plant {
      */
     public Plant() {
 
+    }
+
+    private String makeImageID(BufferedImage image) {
+        ImageDataBase imageDataBase = new MongoImageDataBase();
+        return imageDataBase.addImage(image);
     }
 
     public Date getLastChanged() { return lastChanged; }
