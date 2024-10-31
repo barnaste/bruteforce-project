@@ -95,9 +95,4 @@ public class UploadInteractor implements UploadInputBoundary {
         //   appropriate classes
 
     }
-
-    public static void main(String[] args) {
-        UploadInteractor uploadInteractor = new UploadInteractor();
-        uploadInteractor.execute(new UploadInputData());
-    }
 }
