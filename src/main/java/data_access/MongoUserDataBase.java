@@ -14,23 +14,23 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.DeleteResult;
+import use_case.login.LoginUserDataAccessInterface;
+import use_case.signup.SignupUserDataAccessInterface;
 
 /**
  * UserDB class implemented using MongoDB.
  */
-public class MongoUserDataBase implements UserDataBase{
+public class MongoUserDataBase implements LoginUserDataAccessInterface, SignupUserDataAccessInterface {
     final String CONNECTIONSTRING = "mongodb+srv://brute_force:CSC207-F24@cluster0.upye6.mongodb.net/" +
             "?retryWrites=true&w=majority&appName=Cluster0";
+    CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
+    CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
 
     @Override
     public User getUser(String username) {
-        CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
-        CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
-
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
-            MongoDatabase database = mongoClient.getDatabase("appDB").withCodecRegistry(pojoCodecRegistry);
-            MongoCollection<User> collection = database.getCollection("users", User.class);
-            return collection.find(eq("username", username)).first();
+            return getUsersCollection(mongoClient).find(eq("username", username)).first();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -38,23 +38,38 @@ public class MongoUserDataBase implements UserDataBase{
     }
 
     @Override
-    public boolean addUser(User user) {
-        CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
-        CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
+    public boolean existsByUsername(String username) {
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
-            MongoDatabase database = mongoClient.getDatabase("appDB").withCodecRegistry(pojoCodecRegistry);
-            MongoCollection<User> collection = database.getCollection("users", User.class);
-            if (collection.find(eq("username", user.getUsername())).first() == null) {
+            return getUsersCollection(mongoClient).find(eq("username", username)).first() != null;
+        } catch (Exception e) {
+            System.out.println(e.getMessage()); // Replace with logging
+            return false;
+        }
+    }
+
+    @Override
+    public void addUser(User user) {
+        try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
+            MongoCollection<User> collection = getUsersCollection(mongoClient);
+            if (getUsersCollection(mongoClient).find(eq("username", user.getUsername())).first() == null) {
                 collection.insertOne(user);
-                return true;
-            } else {
-                return false;
             }
         }
     }
 
-    private MongoCollection<User> getUsersCollection() throws Exception {
-        // TODO: merge the common parts of the getUser() and addUser() methods here.
-        return null;
+    @Override
+    public boolean deleteUser(String username) {
+        try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
+            DeleteResult result = getUsersCollection(mongoClient).deleteOne(eq("username", username));
+            return result.getDeletedCount() > 0;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    private MongoCollection<User> getUsersCollection(MongoClient mongoClient) {
+        MongoDatabase database = mongoClient.getDatabase("appDB").withCodecRegistry(pojoCodecRegistry);
+        return database.getCollection("users", User.class);
     }
 }

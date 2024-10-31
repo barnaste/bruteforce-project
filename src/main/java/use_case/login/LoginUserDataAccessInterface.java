@@ -15,27 +15,23 @@ public interface LoginUserDataAccessInterface {
     boolean existsByUsername(String username);
 
     /**
-     * Saves the user.
-     * @param user the user to save
+     * A method that adds a new user entry into the database
+     * @param user is the user being added.
      */
-    void save(User user);
+    void addUser(User user);
 
     /**
-     * Returns the user with the given username.
-     * @param username the username to look up
-     * @return the user with the given username
+     * A method that returns the information of a user in the database.
+     * @param username is the username of the user.
+     * @return the user corresponding to the username, null if not found.
      */
-    User get(String username);
+    User getUser(String username);
 
     /**
-     * Returns the username of the curren user of the application.
-     * @return the username of the current user; null indicates that no one is logged into the application.
+     * A method that deletes a user from the database.
+     * @param username is the username of the user.
+     * @return true if the user was successfully deleted, false otherwise.
      */
-    String getCurrentUsername();
-
-    /**
-     * Sets the username indicating who is the current user of the application.
-     * @param username the new current username; null to indicate that no one is currently logged into the application.
-     */
-    void setCurrentUsername(String username);
+    boolean deleteUser(String username);
+    //TODO: Move this to where it's needed later.
 }

@@ -1,6 +1,5 @@
 package app;
 
-import data_access.InMemoryUserDataBase;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;

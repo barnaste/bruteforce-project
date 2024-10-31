@@ -15,8 +15,8 @@ public interface SignupUserDataAccessInterface {
     boolean existsByUsername(String username);
 
     /**
-     * Saves the user.
-     * @param user the user to save
+     * A method that adds a new user entry into the database
+     * @param user is the user being added.
      */
-    void save(User user);
+    void addUser(User user);
 }
