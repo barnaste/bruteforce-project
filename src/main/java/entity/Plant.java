@@ -1,13 +1,14 @@
 package entity;
 
-import data_access.ImageDataBase;
 import data_access.MongoImageDataBase;
-import data_access.PlantDataBase;
+import org.bson.types.ObjectId;
 
 import java.awt.image.BufferedImage;
 import java.util.Date;
 
 public class Plant {
+    private ObjectId fileID;
+    private BufferedImage image;
     private String imageID;
     private String owner;
     private String comments;
@@ -25,8 +26,7 @@ public class Plant {
         this.owner = owner;
         this.comments = comments;
         this.isPublic = isPublic;
-        this.lastChanged = new Date();
-        this.imageID = makeImageID(image);
+        this.image = image;
     }
 
     /**
@@ -36,14 +36,29 @@ public class Plant {
 
     }
 
-    private String makeImageID(BufferedImage image) {
-        ImageDataBase imageDataBase = new MongoImageDataBase();
-        return imageDataBase.addImage(image);
+    /**
+     * Set image to the image object associated with imageID.
+     */
+    public void makeImage() {
+        MongoImageDataBase imageDataBase = new MongoImageDataBase();
+        image = imageDataBase.getImageFromID(imageID);
+    }
+
+    /**
+     * Prepares a plant object to be uploaded to the database.
+     * Sets the lastChanged date to the current date and uploads the image and store it using imageID.
+     */
+    public void prepareForUpload() {
+        fileID = new ObjectId();
+        lastChanged = new Date();
+        MongoImageDataBase imageDataBase = new MongoImageDataBase();
+        imageID = imageDataBase.addImage(image);
+        image = null;
     }
 
     public Date getLastChanged() { return lastChanged; }
-    public void setLastChanged(Date lastChanged) { this.lastChanged = lastChanged; }
-    public String getImage() { return imageID; }
+    public BufferedImage getImage() { return image; }
+    public String getImageID() { return imageID; }
     public String getOwner() {
         return owner;
     }
@@ -53,7 +68,13 @@ public class Plant {
     public Boolean getIsPublic() {
         return isPublic;
     }
-    public void setImage(String imageID) {
+    public ObjectId getfileID() {
+        return fileID;
+    }
+    public void setImage(BufferedImage image){ this.image = image; }
+    public void setfileID(ObjectId fileID) { this.fileID = fileID; }
+    public void setLastChanged(Date lastChanged) { this.lastChanged = lastChanged; }
+    public void setImageID(String imageID) {
         this.imageID = imageID;
     }
     public void setComments(String comments) {
