@@ -1,11 +1,15 @@
-package use_case.upload;
+package view.upload;
 
+import interface_adapter.ViewManagerModel;
 import interface_adapter.upload.UploadController;
 import interface_adapter.upload.UploadPresenter;
-import interface_adapter.upload.UploadResultViewModel;
-import interface_adapter.upload.UploadSelectorViewModel;
-import view.upload.UploadResultView;
-import view.upload.UploadSelectorView;
+import interface_adapter.upload.confirm.UploadConfirmViewModel;
+import interface_adapter.upload.result.UploadResultViewModel;
+import interface_adapter.upload.select.UploadSelectViewModel;
+import use_case.upload.UploadInputBoundary;
+import use_case.upload.UploadInteractor;
+import use_case.upload.UploadOutputBoundary;
+import view.ViewManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,36 +69,47 @@ class MainViewDemo {
     }
 
     public void overlayUploadView() {
-        // TIP: this may need to be deferred to a factory method of sorts
         JPanel cardPanel = new JPanel();
         CardLayout cardLayout = new CardLayout();
         cardPanel.setLayout(cardLayout);
 
-        UploadSelectorViewModel selectorViewModel = new UploadSelectorViewModel();
-        UploadSelectorView selectorView = new UploadSelectorView(selectorViewModel);
-        cardPanel.add(selectorView, selectorView.getViewName());
         // NOTE: because we're adding selectorView first, it will be the initial display in the cardPanel
+        UploadSelectViewModel selectorViewModel = new UploadSelectViewModel();
+        UploadSelectView selectorView = new UploadSelectView(selectorViewModel);
+        cardPanel.add(selectorView, selectorView.getViewName());
+
+        UploadConfirmViewModel confirmViewModel = new UploadConfirmViewModel();
+        UploadConfirmView confirmView = new UploadConfirmView(confirmViewModel);
+        cardPanel.add(confirmView, confirmView.getViewName());
 
         UploadResultViewModel resultViewModel = new UploadResultViewModel();
         UploadResultView resultView = new UploadResultView(resultViewModel);
         cardPanel.add(resultView, resultView.getViewName());
 
-        UploadOutputBoundary uploadOutputBoundary = new UploadPresenter(selectorViewModel, resultViewModel);
+        ViewManagerModel uploadManagerModel = new ViewManagerModel();
+        new ViewManager(cardPanel, cardLayout, uploadManagerModel);
+
+        UploadOutputBoundary uploadOutputBoundary = new UploadPresenter(
+                uploadManagerModel,
+                selectorViewModel,
+                confirmViewModel,
+                resultViewModel
+        );
         UploadInputBoundary uploadInteractor = new UploadInteractor(uploadOutputBoundary);
         UploadController controller = new UploadController(uploadInteractor);
 
-        selectorView.setUploadController(controller);
+        selectorView.setController(controller);
+        confirmView.setUploadController(controller);
         resultView.setUploadController(controller);
+
+        uploadManagerModel.setState(selectorView.getViewName());
+        uploadManagerModel.firePropertyChanged();
+
         // create an overlay with the created cardPanel as the popup
         overlay(cardPanel, uploadInteractor::setEscapeMap);
     }
 
     public void overlay(JPanel overlayPanel, Consumer<Runnable> setOverlayEscape) {
-        //  1. accept system to be displayed on top of main view
-        //  2. overlay default (semitransparent layer)
-        //  3. display the system
-        //  4. feed the system a method to kill itself (exit signal)
-
         // create a semi-transparent overlay
         // override painting functionality so that our overlay is semi-transparent
         JPanel backgroundPanel = new JPanel() {

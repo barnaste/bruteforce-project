@@ -1,19 +1,19 @@
 package view.upload;
 
 import interface_adapter.upload.UploadController;
-import interface_adapter.upload.result.UploadResultViewModel;
+import interface_adapter.upload.confirm.UploadConfirmViewModel;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class UploadResultView extends JPanel implements PropertyChangeListener {
-    private final String viewName = "upload result";
+public class UploadConfirmView extends JPanel implements PropertyChangeListener {
+    private final String viewName = "upload confirm";
 
-    private final UploadResultViewModel viewModel;
+    private final UploadConfirmViewModel viewModel;
     private UploadController controller;
 
-    public UploadResultView(UploadResultViewModel viewModel) {
+    public UploadConfirmView(UploadConfirmViewModel viewModel) {
         this.viewModel = viewModel;
         viewModel.addPropertyChangeListener(this);
     }
@@ -28,7 +28,6 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        // final UploadState state = (UploadState) evt.getSource();
-        // TODO: fill this in
+
     }
 }
