@@ -1,6 +1,7 @@
 package data_access;
 
 import entity.Plant;
+import org.bson.types.ObjectId;
 
 import java.util.List;
 
@@ -35,8 +36,16 @@ public interface PlantDataBase {
 
     /**
      * A method that inserts a new plant into the database.
-     * @param id is the id of the plant being modified
+     * @param fileID is the fileID of the plant being modified
+     * @param newPlant is the plant object containing information to be updated with
      * @return true if the plant has been successfully modified, false otherwise
      */
-    Boolean editPlant(String id);
+    boolean editPlant(ObjectId fileID, Plant newPlant);
+
+    /**
+     * A method that deletes a plant from the database.
+     * @param fileID is the fileID of the plant being deleted
+     * @return true if the plant has been successfully deleted, false otherwise
+     */
+    boolean deletePlant(ObjectId fileID);
 }
