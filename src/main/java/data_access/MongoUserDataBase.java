@@ -27,6 +27,7 @@ public class MongoUserDataBase implements LoginUserDataAccessInterface, SignupUs
             "?retryWrites=true&w=majority&appName=Cluster0";
     CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
     CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
+    private String currentUsername;
 
 
     @Override
@@ -75,14 +76,16 @@ public class MongoUserDataBase implements LoginUserDataAccessInterface, SignupUs
      */
     @Override
     public String getCurrentUsername() {
-        return "";
+        return this.currentUsername;
     }
 
     /**
      * @param username
      */
     @Override
-    public void setCurrentUsername(String username) {}
+    public void setCurrentUsername(String username) {
+        this.currentUsername = username;
+    }
 
     private MongoCollection<User> getUsersCollection(MongoClient mongoClient) {
         MongoDatabase database = mongoClient.getDatabase("appDB").withCodecRegistry(pojoCodecRegistry);
