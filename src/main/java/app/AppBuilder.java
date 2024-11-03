@@ -25,10 +25,7 @@ import use_case.logout.LogoutOutputBoundary;
 import use_case.sort.SortInputBoundary;
 import use_case.sort.SortInteractor;
 import use_case.sort.SortOutputBoundary;
-import view.MainView;
-import view.LoginView;
-import view.SignupView;
-import view.ViewManager;
+import view.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,6 +53,23 @@ public class AppBuilder {
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
+    }
+
+    /**
+     * Adds the Start View to the application.
+     * @return this builder
+     */
+    public AppBuilder addStartView() {
+        // Initialize view models for StartView dependencies
+        signupViewModel = new SignupViewModel();
+        loginViewModel = new LoginViewModel();
+
+        // Create StartView with required view models
+        StartView startView = new StartView(signupViewModel, loginViewModel, viewManagerModel);
+
+        // Add StartView to card panel with a unique name
+        cardPanel.add(startView, "StartView");
+        return this;
     }
 
     /**
@@ -160,7 +174,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(signupView.getViewName());
+        viewManagerModel.setState("StartView");
         viewManagerModel.firePropertyChanged();
 
         return application;
