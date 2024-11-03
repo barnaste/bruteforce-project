@@ -4,13 +4,15 @@ import data_access.MongoUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
-import interface_adapter.logout.LoggedInViewModel;
+import interface_adapter.main.MainViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
+import interface_adapter.upload.UploadController;
+import interface_adapter.upload.UploadPresenter;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -20,7 +22,10 @@ import use_case.signup.SignupOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
-import view.LoggedInView;
+import use_case.upload.UploadInputBoundary;
+import use_case.upload.UploadInteractor;
+import use_case.upload.UploadOutputBoundary;
+import view.MainView;
 import view.LoginView;
 import view.SignupView;
 import view.ViewManager;
@@ -45,8 +50,8 @@ public class AppBuilder {
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
-    private LoggedInViewModel loggedInViewModel;
-    private LoggedInView loggedInView;
+    private MainViewModel mainViewModel;
+    private MainView mainView;
     private LoginView loginView;
 
     public AppBuilder() {
@@ -80,9 +85,9 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLoggedInView() {
-        loggedInViewModel = new LoggedInViewModel();
-        loggedInView = new LoggedInView(loggedInViewModel);
-        cardPanel.add(loggedInView, loggedInView.getViewName());
+        mainViewModel = new MainViewModel();
+        mainView = new MainView(mainViewModel);
+        cardPanel.add(mainView, mainView.getViewName());
         return this;
     }
 
@@ -107,7 +112,7 @@ public class AppBuilder {
      */
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
-                loggedInViewModel, loginViewModel);
+                mainViewModel, loginViewModel);
         final LoginInputBoundary loginInteractor = new LoginInteractor(
                 userDataAccessObject, loginOutputBoundary);
 
@@ -121,14 +126,27 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLogoutUseCase() {
-        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel,
-                loggedInViewModel, loginViewModel);
+        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel, mainViewModel,
+                                                                              loginViewModel);
 
-        final LogoutInputBoundary logoutInteractor =
-                new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
+        final LogoutInputBoundary logoutInteractor = new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
 
         final LogoutController logoutController = new LogoutController(logoutInteractor);
-        loggedInView.setLogoutController(logoutController);
+        mainView.setLogoutController(logoutController);
+        return this;
+    }
+
+    /**
+     * Adds the Upload Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addUploadUseCase() {
+        final UploadOutputBoundary uploadOutputBoundary = new UploadPresenter(viewManagerModel, mainViewModel);
+
+        final UploadInputBoundary uploadInteractor = new UploadInteractor(userDataAccessObject, uploadOutputBoundary);
+
+        final UploadController uploadController = new UploadController(uploadInteractor);
+        mainView.setUploadController(uploadController);
         return this;
     }
 
