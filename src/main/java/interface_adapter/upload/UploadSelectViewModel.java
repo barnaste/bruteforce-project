@@ -5,7 +5,7 @@ import interface_adapter.ViewModel;
 /**
  * The ViewModel for the File Selection component of the Upload View.
  */
-public class UploadSelectViewModel extends ViewModel<UploadState> {
+public class UploadSelectViewModel extends ViewModel<String> {
     public static final int TRANSPARENT = 0x00000000;
     public static final int TOP_PANEL_COLOR = 0xfff8f5e4;
     public static final int MAIN_PANEL_COLOR = 0xfffffbef;
@@ -19,6 +19,7 @@ public class UploadSelectViewModel extends ViewModel<UploadState> {
 
     public UploadSelectViewModel() {
         super("upload select");
-        setState(new UploadState());
+        setState("");
+        // the state for the selection screen does not hold any information
     }
 }

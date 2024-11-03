@@ -1,7 +1,6 @@
 package interface_adapter.upload;
 
-public class UploadState {
-
+public class UploadConfirmState {
     private String imagePath = "";
 
     public String getImagePath() {

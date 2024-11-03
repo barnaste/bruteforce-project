@@ -2,7 +2,8 @@ package interface_adapter.upload;
 
 import interface_adapter.ViewManagerModel;
 import use_case.upload.UploadOutputBoundary;
-import use_case.upload.UploadOutputData;
+import use_case.upload.UploadConfirmOutputData;
+import use_case.upload.UploadResultOutputData;
 
 public class UploadPresenter implements UploadOutputBoundary {
 
@@ -22,8 +23,8 @@ public class UploadPresenter implements UploadOutputBoundary {
     }
 
     @Override
-    public void switchToConfirmView(UploadOutputData outputData) {
-        final UploadState state = confirmViewModel.getState();
+    public void switchToConfirmView(UploadConfirmOutputData outputData) {
+        final UploadConfirmState state = confirmViewModel.getState();
         state.setImagePath(outputData.getImage());
         confirmViewModel.setState(state);
         confirmViewModel.firePropertyChanged();
@@ -33,8 +34,8 @@ public class UploadPresenter implements UploadOutputBoundary {
     }
 
     @Override
-    public void switchToResultView(UploadOutputData outputData) {
-        final UploadState state = resultViewModel.getState();
+    public void switchToResultView(UploadResultOutputData outputData) {
+        final UploadResultState state = resultViewModel.getState();
         state.setImagePath(outputData.getImage());
         resultViewModel.setState(state);
         resultViewModel.firePropertyChanged();

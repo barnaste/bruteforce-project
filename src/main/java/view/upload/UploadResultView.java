@@ -1,12 +1,17 @@
 package view.upload;
 
 import interface_adapter.upload.UploadController;
+import interface_adapter.upload.UploadResultState;
 import interface_adapter.upload.UploadResultViewModel;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
 
 public class UploadResultView extends JPanel implements PropertyChangeListener {
     private final String viewName = "upload result";
@@ -14,57 +19,178 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
     private final UploadResultViewModel viewModel;
     private UploadController controller;
 
-    private final JButton returnBtn;
-    private final JButton saveBtn;
-    private final JButton discardBtn;
+    // TODO: get rid of these default values
+    private final JLabel nameLabel = new JLabel("Coconut Palm");
+    private final JLabel scientificNameLabel = new JLabel("Cocos nucifera");
+    private final JLabel familyLabel = new JLabel("Palm Family");
+    private final JLabel certaintyLabel = new JLabel("76% certainty");
+    private final JTextArea notesField = new JTextArea();
+
+    private BufferedImage image;
 
     public UploadResultView(UploadResultViewModel viewModel) {
         this.viewModel = viewModel;
         viewModel.addPropertyChangeListener(this);
 
         this.setLayout(new GridBagLayout());
-        this.setBackground(new Color(UploadResultViewModel.BACKGROUND_COLOR));
-
-        this.returnBtn = new JButton(UploadResultViewModel.RETURN_BUTTON_LABEL);
-        returnBtn.setBorderPainted(true);
-        returnBtn.setContentAreaFilled(false);
-        returnBtn.setFocusPainted(false);
-
-        returnBtn.addActionListener((e) -> controller.switchToSelectView());
-
-        this.saveBtn = new JButton(UploadResultViewModel.SAVE_BUTTON_LABEL);
-        saveBtn.setBorderPainted(true);
-        saveBtn.setContentAreaFilled(false);
-        saveBtn.setFocusPainted(false);
-
-        saveBtn.addActionListener((e) -> controller.save());
-
-        this.discardBtn = new JButton(UploadResultViewModel.DISCARD_BUTTON_LABEL);
-        discardBtn.setBorderPainted(true);
-        discardBtn.setContentAreaFilled(false);
-        discardBtn.setFocusPainted(false);
-
-        discardBtn.addActionListener((e) -> controller.escape());
+        this.setBackground(new Color(UploadResultViewModel.TRANSPARENT, true));
 
         // position each component nicely within the view area using a GridBagLayout
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
         constraints.gridy = 0;
+        constraints.gridwidth = 2;
         constraints.anchor = GridBagConstraints.NORTHWEST;
-        constraints.insets = new Insets(10, 10, 10, 10);
-        this.add(returnBtn, constraints);
+        this.add(createTopPanel(), constraints);
 
-        // TODO: these belong in an actionPanel together for better styling
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
+        constraints.gridheight = 2;
+        constraints.anchor = GridBagConstraints.CENTER;
+        this.add(createImagePanel(), constraints);
+
         constraints.gridx = 1;
         constraints.gridy = 1;
-        constraints.anchor = GridBagConstraints.CENTER;
-        this.add(saveBtn, constraints);
+        constraints.gridheight = 1;
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.anchor = GridBagConstraints.NORTHWEST;
+        constraints.ipady = 20;
+        constraints.weighty = 1;
+        this.add(createContentPanel(), constraints);
 
+        constraints.gridx = 1;
         constraints.gridy = 2;
-        this.add(discardBtn, constraints);
+        constraints.ipadx = 20;
+        constraints.weighty = 0;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.anchor = GridBagConstraints.SOUTH;
+        this.add(createActionPanel(), constraints);
     }
 
-    public void setUploadController(UploadController controller) {
+    private JPanel createContentPanel() {
+        JPanel contentPanel = new JPanel();
+        SpringLayout layout = new SpringLayout();
+        contentPanel.setLayout(layout);
+        contentPanel.setBackground(new Color(UploadResultViewModel.CONTENT_PANEL_COLOR, true));
+
+        Font font = nameLabel.getFont();
+        nameLabel.setFont(font.deriveFont(Font.BOLD).deriveFont(20f));
+        layout.putConstraint(SpringLayout.WEST, nameLabel, 20, SpringLayout.WEST, contentPanel);
+        layout.putConstraint(SpringLayout.NORTH, nameLabel, 20, SpringLayout.NORTH, contentPanel);
+        contentPanel.add(nameLabel);
+
+        scientificNameLabel.setFont(font.deriveFont(Font.ITALIC).deriveFont(16f));
+        layout.putConstraint(SpringLayout.WEST, scientificNameLabel, 20, SpringLayout.WEST, contentPanel);
+        layout.putConstraint(SpringLayout.NORTH, scientificNameLabel, 5, SpringLayout.SOUTH, nameLabel);
+        contentPanel.add(scientificNameLabel);
+
+        familyLabel.setFont(font.deriveFont(Font.PLAIN).deriveFont(14f));
+        layout.putConstraint(SpringLayout.WEST, familyLabel, 20, SpringLayout.WEST, contentPanel);
+        layout.putConstraint(SpringLayout.NORTH, familyLabel, 5, SpringLayout.SOUTH, scientificNameLabel);
+        contentPanel.add(familyLabel);
+
+        certaintyLabel.setFont(font.deriveFont(Font.PLAIN).deriveFont(14f));
+        layout.putConstraint(SpringLayout.WEST, certaintyLabel, 20, SpringLayout.WEST, contentPanel);
+        layout.putConstraint(SpringLayout.NORTH, certaintyLabel, 15, SpringLayout.SOUTH, familyLabel);
+        contentPanel.add(certaintyLabel);
+
+        notesField.setRows(10);
+        notesField.setText("My notes...");
+        notesField.setFont(font.deriveFont(Font.PLAIN).deriveFont(12f));
+        notesField.setLineWrap(true);
+        notesField.setWrapStyleWord(true);
+        notesField.setMargin(new Insets(10, 10, 10, 10));
+        notesField.setBackground(new Color(UploadResultViewModel.CONTENT_PANEL_COLOR, true));
+        JScrollPane notesScrollPane = new JScrollPane(notesField);
+
+        layout.putConstraint(SpringLayout.WEST, notesScrollPane, 20, SpringLayout.WEST, contentPanel);
+        layout.putConstraint(SpringLayout.EAST, notesScrollPane, -20, SpringLayout.EAST, contentPanel);
+        layout.putConstraint(SpringLayout.NORTH, notesScrollPane, 35, SpringLayout.SOUTH, certaintyLabel);
+        contentPanel.add(notesScrollPane);
+
+        return contentPanel;
+    }
+
+    private JPanel createTopPanel() {
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BorderLayout());
+        topPanel.setBackground(new Color(UploadResultViewModel.TOP_PANEL_COLOR, true));
+        topPanel.setPreferredSize(new Dimension(
+                UploadResultViewModel.PANEL_WIDTH,
+                UploadResultViewModel.TOP_PANEL_HEIGHT
+        ));
+
+        JButton returnBtn = new JButton(UploadResultViewModel.RETURN_BUTTON_LABEL);
+        returnBtn.setBorderPainted(true);
+        returnBtn.setContentAreaFilled(false);
+        returnBtn.setFocusPainted(false);
+        returnBtn.setBorderPainted(false);
+
+        returnBtn.addActionListener((e) -> controller.switchToSelectView());
+        topPanel.add(returnBtn, BorderLayout.WEST);
+        return topPanel;
+    }
+
+    private JPanel createImagePanel() {
+        JPanel imagePanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (image != null) {
+                    int thumbWidth = Math.min(image.getWidth(), image.getHeight());
+                    BufferedImage thumbnail = image.getSubimage(
+                            (image.getWidth() - thumbWidth) / 2,
+                            (image.getHeight() - thumbWidth) / 2,
+                            thumbWidth, thumbWidth);
+                    g.drawImage(thumbnail, 0, 0,
+                            UploadResultViewModel.IMAGE_WIDTH,
+                            UploadResultViewModel.IMAGE_HEIGHT,
+                            this
+                    );
+                }
+            }
+        };
+        imagePanel.setPreferredSize(new Dimension(
+                UploadResultViewModel.IMAGE_WIDTH,
+                UploadResultViewModel.IMAGE_HEIGHT
+        ));
+        return imagePanel;
+    }
+
+    private JPanel createActionPanel() {
+        JPanel actionPanel = new JPanel();
+        actionPanel.setLayout(new GridBagLayout());
+        actionPanel.setBackground(new Color(UploadResultViewModel.ACTION_PANEL_COLOR));
+
+        JButton saveBtn = new JButton(UploadResultViewModel.SAVE_BUTTON_LABEL);
+        saveBtn.setBorderPainted(true);
+        saveBtn.setContentAreaFilled(false);
+        saveBtn.setFocusPainted(false);
+        saveBtn.setPreferredSize(new Dimension(100, 30));
+
+        saveBtn.addActionListener((e) -> controller.save());
+
+        JButton discardBtn = new JButton(UploadResultViewModel.DISCARD_BUTTON_LABEL);
+        discardBtn.setBorderPainted(true);
+        discardBtn.setContentAreaFilled(false);
+        discardBtn.setFocusPainted(false);
+        discardBtn.setPreferredSize(new Dimension(100, 30));
+
+        discardBtn.addActionListener((e) -> controller.escape());
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.insets = new Insets(20, 20, 20, 20);
+        actionPanel.add(discardBtn, constraints);
+
+        constraints.gridx = 1;
+        actionPanel.add(saveBtn, constraints);
+        return actionPanel;
+    }
+
+    public void setController(UploadController controller) {
         this.controller = controller;
     }
 
@@ -72,9 +198,25 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
         return viewName;
     }
 
+    private void setFields(UploadResultState state) {
+        this.setImage(state.getImagePath());
+        // TODO: do some other stuff with the other state values
+        //  you might also have to reset text fields
+    }
+
+    private void setImage(String imagePath) {
+        try {
+            image = ImageIO.read(new File(imagePath));
+            this.revalidate();
+            this.repaint();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        // final UploadState state = (UploadState) evt.getSource();
-        // TODO: fill this in
+         final UploadResultState state = (UploadResultState) evt.getNewValue();
+         this.setFields(state);
     }
 }

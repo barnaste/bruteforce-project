@@ -124,7 +124,7 @@ class MainViewDemo {
 
         selectorView.setController(controller);
         confirmView.setController(controller);
-        resultView.setUploadController(controller);
+        resultView.setController(controller);
 
         uploadManagerModel.setState(selectorView.getViewName());
         uploadManagerModel.firePropertyChanged();

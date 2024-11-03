@@ -1,9 +1,8 @@
 package use_case.upload;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -32,13 +31,19 @@ public class UploadInteractor implements UploadInputBoundary {
 
     @Override
     public void switchToConfirmView(UploadInputData inputData) {
-        UploadOutputData outputData = new UploadOutputData(inputData.getImage());
+        UploadConfirmOutputData outputData = new UploadConfirmOutputData(inputData.getImage());
         this.presenter.switchToConfirmView(outputData);
     }
 
     @Override
     public void switchToResultView(UploadInputData uploadInputData) {
-        UploadOutputData outputData = new UploadOutputData(uploadInputData.getImage());
+        UploadResultOutputData outputData = new UploadResultOutputData(
+                uploadInputData.getImage(),
+                "",
+                "",
+                "",
+                0
+        );
         this.presenter.switchToResultView(outputData);
     }
 

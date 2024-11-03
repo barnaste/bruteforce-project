@@ -1,8 +1,7 @@
 package view.upload;
 
 import interface_adapter.upload.UploadController;
-import interface_adapter.upload.UploadResultViewModel;
-import interface_adapter.upload.UploadState;
+import interface_adapter.upload.UploadConfirmState;
 import interface_adapter.upload.UploadConfirmViewModel;
 
 import javax.imageio.ImageIO;
@@ -22,7 +21,6 @@ public class UploadConfirmView extends JPanel implements PropertyChangeListener 
 
     private String imagePath = "";
     private BufferedImage image;
-    private final int IMAGE_WIDTH = 500;
 
     public UploadConfirmView(UploadConfirmViewModel viewModel) {
         this.viewModel = viewModel;
@@ -31,7 +29,20 @@ public class UploadConfirmView extends JPanel implements PropertyChangeListener 
         this.setLayout(new GridBagLayout());
         this.setBackground(new Color(UploadConfirmViewModel.TRANSPARENT, true));
 
-        // set up the top panel, where the return and continue buttons are found
+        // position each component nicely within the view area using GridBagLayout
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.insets = new Insets(0, 10, 0, 10);
+        this.add(createTopPanel(), constraints);
+
+        constraints.gridy = 1;
+        constraints.gridwidth = 2;
+        this.add(createImagePanel(), constraints);
+    }
+
+    private JPanel createTopPanel() {
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BorderLayout());
         topPanel.setBackground(new Color(UploadConfirmViewModel.TOP_PANEL_COLOR, true));
@@ -57,21 +68,7 @@ public class UploadConfirmView extends JPanel implements PropertyChangeListener 
 
         confirmBtn.addActionListener((e) -> controller.switchToResultView(this.imagePath) );
         topPanel.add(confirmBtn, BorderLayout.EAST);
-
-        // set up an image with an image that can change at runtime
-        JPanel imagePanel = createImagePanel();
-
-        // position each component nicely within the view area using GridBagLayout
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.insets = new Insets(0, 10, 0, 10);
-        this.add(topPanel, constraints);
-
-        constraints.gridy = 1;
-        constraints.gridwidth = 2;
-        this.add(imagePanel, constraints);
+        return topPanel;
     }
 
     private JPanel createImagePanel() {
@@ -85,11 +82,18 @@ public class UploadConfirmView extends JPanel implements PropertyChangeListener 
                             (image.getWidth() - thumbWidth) / 2,
                             (image.getHeight() - thumbWidth) / 2,
                             thumbWidth, thumbWidth);
-                    g.drawImage(thumbnail, 0, 0, IMAGE_WIDTH, IMAGE_WIDTH, this);
+                    g.drawImage(thumbnail, 0, 0,
+                            UploadConfirmViewModel.IMAGE_WIDTH,
+                            UploadConfirmViewModel.IMAGE_HEIGHT,
+                            this
+                    );
                 }
             }
         };
-        imagePanel.setPreferredSize(new Dimension(IMAGE_WIDTH, IMAGE_WIDTH));
+        imagePanel.setPreferredSize(new Dimension(
+                UploadConfirmViewModel.IMAGE_WIDTH,
+                UploadConfirmViewModel.IMAGE_HEIGHT
+        ));
         return imagePanel;
     }
 
@@ -101,7 +105,7 @@ public class UploadConfirmView extends JPanel implements PropertyChangeListener 
         return viewName;
     }
 
-    private void setFields(UploadState state) {
+    private void setFields(UploadConfirmState state) {
         this.imagePath = state.getImagePath();
         this.setImage(imagePath);
     }
@@ -118,7 +122,7 @@ public class UploadConfirmView extends JPanel implements PropertyChangeListener 
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        final UploadState state = (UploadState) evt.getNewValue();
+        final UploadConfirmState state = (UploadConfirmState) evt.getNewValue();
         this.setFields(state);
     }
 }

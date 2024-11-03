@@ -1,10 +1,9 @@
 package use_case.upload;
 
-public class UploadOutputData {
-
+public class UploadConfirmOutputData {
     private final String imagePath;
 
-    public UploadOutputData(String image) {
+    public UploadConfirmOutputData(String image) {
         this.imagePath = image;
     }
 
