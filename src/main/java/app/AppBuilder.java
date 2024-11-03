@@ -1,6 +1,6 @@
 package app;
 
-import data_access.MongoUserDataBase;
+import data_access.MongoUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
@@ -40,7 +40,7 @@ public class AppBuilder {
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
-    private final MongoUserDataBase userDataAccessObject = new MongoUserDataBase();
+    private final MongoUserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;

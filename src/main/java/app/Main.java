@@ -1,16 +1,6 @@
 package app;
 
-import data_access.MongoPlantDatabase;
-import data_access.MongoUserDataBase;
-import entity.Plant;
-import entity.User;
-
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 /**
  * The Main class of our application.
  */
