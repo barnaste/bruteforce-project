@@ -12,7 +12,7 @@ import interface_adapter.logout.LogoutController;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 
-import interface_adapter.upload.UploadController;
+import interface_adapter.sort.SortController;
 
 /**
  * The Main View, for when the user is logged into the program.
@@ -23,12 +23,12 @@ public class MainView extends JPanel implements PropertyChangeListener {
     private final MainViewModel mainViewModel;
 
     private LogoutController logoutController;
-    private UploadController uploadController;
+    private SortController sortController;
 
     private final JLabel username;
 
     private final JButton logOut;
-    private final JButton upload;
+    private final JButton sort;
 
     private final JTextField passwordInputField = new JTextField(15);
 
@@ -45,9 +45,9 @@ public class MainView extends JPanel implements PropertyChangeListener {
         final JPanel buttons = new JPanel();
         buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
         logOut = new JButton("Log Out");
-        upload = new JButton("Upload");
+        sort = new JButton("Sort");
         buttons.add(logOut);
-        buttons.add(upload);
+        buttons.add(sort);
 
         final JPanel gallery = new JPanel();
         // Temporarily give the gallery panel a border so it's visible
@@ -94,11 +94,11 @@ public class MainView extends JPanel implements PropertyChangeListener {
                 }
         );
 
-        upload.addActionListener(
+        sort.addActionListener(
                 evt -> {
-                    if (evt.getSource().equals(upload)) {
+                    if (evt.getSource().equals(sort)) {
                         // TODO: Implement
-                        uploadController.execute();
+                        sortController.execute();
                     }
                 }
         );
@@ -126,7 +126,7 @@ public class MainView extends JPanel implements PropertyChangeListener {
         this.logoutController = logoutController;
     }
 
-    public void setUploadController(UploadController uploadController) {
-        this.uploadController = uploadController;
+    public void setSortController(SortController sortController) {
+        this.sortController = sortController;
     }
 }

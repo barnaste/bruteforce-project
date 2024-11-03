@@ -1,10 +1,10 @@
-package use_case.upload;
+package use_case.sort;
 
-public class UploadOutputData {
+public class SortOutputData {
 
     private final boolean useCaseFailed;
 
-    public UploadOutputData(boolean useCaseFailed) {
+    public SortOutputData(boolean useCaseFailed) {
         this.useCaseFailed = useCaseFailed;
         // TODO: Implement
     }

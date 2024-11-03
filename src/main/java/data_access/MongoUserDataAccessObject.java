@@ -18,7 +18,7 @@ import com.mongodb.client.result.DeleteResult;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
-import use_case.upload.UploadUserDataAccessInterface;
+import use_case.sort.SortUserDataAccessInterface;
 
 /**
  * UserDB class implemented using MongoDB.
@@ -26,7 +26,7 @@ import use_case.upload.UploadUserDataAccessInterface;
 public class MongoUserDataAccessObject implements LoginUserDataAccessInterface,
                                                   SignupUserDataAccessInterface,
                                                   LogoutUserDataAccessInterface,
-                                                  UploadUserDataAccessInterface {
+        SortUserDataAccessInterface {
     final String CONNECTIONSTRING = "mongodb+srv://brute_force:CSC207-F24@cluster0.upye6.mongodb.net/" +
             "?retryWrites=true&w=majority&appName=Cluster0";
     CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
