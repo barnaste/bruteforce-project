@@ -59,12 +59,16 @@ public class UploadSelectView extends JPanel implements PropertyChangeListener {
 
     public void openFileDialog() {
         // make the JFileChooser resemble the system file manager
+        // first store the current Look and Feel, and swap to the new system-based Look and Feel
+        LookAndFeel defaultLNF = UIManager.getLookAndFeel();
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }
         catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
                UnsupportedLookAndFeelException e) {
-            throw new RuntimeException(e);
+            // NOTE: it is not particularly consequential if we reach this branch -- we just use
+            // the look and feel that was set by default
+            System.out.println(e.getMessage());
         }
 
         // limit file choice to image files
@@ -79,6 +83,15 @@ public class UploadSelectView extends JPanel implements PropertyChangeListener {
         if (response == JFileChooser.APPROVE_OPTION) {
             controller.switchToConfirmView(fileChooser.getSelectedFile().getAbsolutePath());
         }
+
+        // now return to the Look and Feel that was used before making the switch
+        // NOTE that if we do not do this, the button and panel styling will be changed throughout the whole app
+        try {
+            UIManager.setLookAndFeel(defaultLNF);
+        } catch (UnsupportedLookAndFeelException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public void setController(UploadController controller) {
