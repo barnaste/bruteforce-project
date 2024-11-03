@@ -1,14 +1,11 @@
 package entity;
 
-import data_access.MongoImageDataBase;
 import org.bson.types.ObjectId;
 
-import java.awt.image.BufferedImage;
 import java.util.Date;
 
 public class Plant {
     private ObjectId fileID;
-    private BufferedImage image;
     private String imageID;
     private String owner;
     private String comments;
@@ -17,16 +14,16 @@ public class Plant {
 
     /**
      * A constructor for Plant that initializes a plant with lastChanged as the current date.
-     * @param image is the image associated with the plant
+     * @param imageID is the image id associated with the image for the plant
      * @param owner is the username of the user who is associated with this image
      * @param comments is any comments that the user inputted regarding this image
      * @param isPublic is whether the user set the image as public
      */
-    public Plant(BufferedImage image, String owner, String comments, Boolean isPublic) {
+    public Plant(String imageID, String owner, String comments, Boolean isPublic) {
         this.owner = owner;
         this.comments = comments;
         this.isPublic = isPublic;
-        this.image = image;
+        this.imageID = imageID;
     }
 
     /**
@@ -36,28 +33,7 @@ public class Plant {
 
     }
 
-    /**
-     * Set image to the image object associated with imageID.
-     */
-    public void makeImage() {
-        MongoImageDataBase imageDataBase = new MongoImageDataBase();
-        image = imageDataBase.getImageFromID(imageID);
-    }
-
-    /**
-     * Prepares a plant object to be uploaded to the database.
-     * Sets the lastChanged date to the current date and uploads the image and store it using imageID.
-     */
-    public void prepareForUpload() {
-        fileID = new ObjectId();
-        lastChanged = new Date();
-        MongoImageDataBase imageDataBase = new MongoImageDataBase();
-        imageID = imageDataBase.addImage(image);
-        image = null;
-    }
-
     public Date getLastChanged() { return lastChanged; }
-    public BufferedImage getImage() { return image; }
     public String getImageID() { return imageID; }
     public String getOwner() {
         return owner;
@@ -68,11 +44,10 @@ public class Plant {
     public Boolean getIsPublic() {
         return isPublic;
     }
-    public ObjectId getfileID() {
+    public ObjectId getFileID() {
         return fileID;
     }
-    public void setImage(BufferedImage image){ this.image = image; }
-    public void setfileID(ObjectId fileID) { this.fileID = fileID; }
+    public void setFileID(ObjectId fileID) { this.fileID = fileID; }
     public void setLastChanged(Date lastChanged) { this.lastChanged = lastChanged; }
     public void setImageID(String imageID) {
         this.imageID = imageID;

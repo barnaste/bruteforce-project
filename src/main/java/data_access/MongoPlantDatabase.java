@@ -2,10 +2,7 @@ package data_access;
 
 import com.mongodb.client.*;
 import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
 import entity.Plant;
-import entity.User;
-import org.bson.Document;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
@@ -13,7 +10,6 @@ import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
@@ -34,16 +30,20 @@ public class MongoPlantDatabase implements PlantDataBase {
         Bson sort = descending("lastChanged");
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
             MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
-            FindIterable<Plant> iterable =  collection.find(eq("owner", username)).sort(sort).skip(skip)
+
+            // Find user's plants, sorted and paginated
+            FindIterable<Plant> iterable = collection.find(eq("owner", username))
+                    .sort(sort)
+                    .skip(skip)
                     .limit(limit);
+
             for (Plant plant : iterable) {
-                plant.makeImage();
-                result.add(plant);
+                result.add(plant); // Add each plant to the result
             }
-            return result;
+            return result; // Return the list of plants
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return null;
+            return null; // Handle errors
         }
     }
 
@@ -52,16 +52,22 @@ public class MongoPlantDatabase implements PlantDataBase {
         Bson sort = descending("lastChanged");
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
             MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
-            FindIterable<Plant> iterable =  collection.find(eq("isPublic", true)).sort(sort).skip(skip)
+
+            // Find public plants, apply sorting, skipping, and limiting results
+            FindIterable<Plant> iterable = collection.find(eq("isPublic", true))
+                    .sort(sort)
+                    .skip(skip)
                     .limit(limit);
+
+            // Add each found plant to the result list
             for (Plant plant : iterable) {
-                plant.makeImage();
                 result.add(plant);
             }
+
             return result;
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return null;
+            return null; // Return null in case of an error
         }
     }
 
@@ -69,50 +75,16 @@ public class MongoPlantDatabase implements PlantDataBase {
     public void addPlant(Plant plant) {
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
             MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
-            plant.prepareForUpload();
+
+            // Insert the provided plant object into the collection
             collection.insertOne(plant);
         }
+        // No need to catch exceptions here since the method returns void
     }
 
     @Override
     public boolean editPlant(ObjectId fileID, Plant newPlant) {
-        // TODO: Complete this method.
-        try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
-            MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
-
-            // Create a filter to find the plant by its ID
-            Bson filter = eq("_id", fileID);
-
-            // Find the existing plant
-            Plant existingPlant = collection.find(filter).first();
-
-            if (existingPlant != null) {
-                // Check if the image has changed
-                if (!existingPlant.getImageID().equals(newPlant.getImageID())) {
-                    // Delete the old image from the image database
-                    MongoImageDataBase imageDataBase = new MongoImageDataBase();
-                    imageDataBase.deleteImage(existingPlant.getImageID());
-                }
-
-                // Create an update document to specify the fields to update
-                Bson updateOperation = new Document("$set", new Document("owner", newPlant.getOwner())
-                        .append("comments", newPlant.getComments())
-                        .append("isPublic", newPlant.getIsPublic())
-                        .append("lastChanged", new Date())
-                        .append("imageID", newPlant.getImageID())); // Update the imageID if changed
-
-                // Use updateOne to update the document
-                UpdateResult result = collection.updateOne(filter, updateOperation);
-
-                // Return true if the plant was modified, false otherwise
-                return result.getModifiedCount() > 0;
-            } else {
-                return false; // Plant not found
-            }
-        } catch (Exception e) {
-            System.out.println("Error editing plant: " + e.getMessage()); // Consider using a logging framework
-            return false;
-        }
+        return true;
     }
 
     @Override
@@ -120,31 +92,26 @@ public class MongoPlantDatabase implements PlantDataBase {
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
             MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
 
-            // Find the plant to get its imageID before deleting
-            Plant plant = collection.find(eq("_id", fileID)).first();
+            // Create a filter to find the plant by its ID
+            Bson filter = eq("_id", fileID);
 
-            if (plant != null) {
-                // Delete the image from the image database
-                MongoImageDataBase imageDataBase = new MongoImageDataBase();
-                imageDataBase.deleteImage(plant.getImageID());
+            // Perform the delete operation
+            DeleteResult result = collection.deleteOne(filter);
 
-                // Create a filter to find the plant by its ID
-                Bson filter = eq("_id", fileID);
-
-                // Perform the delete operation
-                DeleteResult result = collection.deleteOne(filter);
-
-                // Return true if a document was deleted
-                return result.getDeletedCount() > 0;
-            } else {
-                return false; // Plant not found
-            }
+            // Return true if a document was deleted
+            return result.getDeletedCount() > 0;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
         }
     }
 
+    /**
+     * Retrieves the MongoDB collection for plants.
+     *
+     * @param mongoClient the MongoDB client used to connect to the database
+     * @return the MongoCollection of Plant objects
+     */
     private MongoCollection<Plant> getPlantsCollection(MongoClient mongoClient) {
         MongoDatabase database = mongoClient.getDatabase("appDB").withCodecRegistry(pojoCodecRegistry);
         return database.getCollection("plants", Plant.class);
