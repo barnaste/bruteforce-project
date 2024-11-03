@@ -18,9 +18,7 @@ import java.util.function.Consumer;
 // TODO: note to self, if you dynamically add or remove a component, you must revalidate and repaint!
 
 // TODO: there are currently two major bugs in the program:
-//  1. if you upload an image so that you are in confirm view, then return twice so that you go back to the
-//     main view and then try to upload again, the buttons will appear strangely formatted and unbordered
-//  2. the cardlayout panels all have the same dimensions -- setting maximum dimension does not work
+//  1. the cardlayout panels all have the same dimensions -- setting maximum dimension does not work
 
 class MainViewDemo {
     private final int OVERLAY_COLOR = 0x30a7c080;
@@ -78,7 +76,6 @@ class MainViewDemo {
         CardLayout cardLayout = new CardLayout();
         cardPanel.setLayout(cardLayout);
 
-        // NOTE: because we're adding selectorView first, it will be the initial display in the cardPanel
         UploadSelectViewModel selectorViewModel = new UploadSelectViewModel();
         UploadSelectView selectorView = new UploadSelectView(selectorViewModel);
         cardPanel.add(selectorView, selectorView.getViewName());

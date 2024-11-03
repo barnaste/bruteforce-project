@@ -18,8 +18,8 @@ public class UploadSelectView extends JPanel implements PropertyChangeListener {
     private final UploadSelectViewModel viewModel;
     private UploadController controller;
 
-    private final JButton cancel;
-    private final JButton selectFile;
+    private final JButton cancelBtn;
+    private final JButton selectFileBtn;
 
     public UploadSelectView(UploadSelectViewModel uploadSelectViewModel) {
         this.viewModel = uploadSelectViewModel;
@@ -28,19 +28,19 @@ public class UploadSelectView extends JPanel implements PropertyChangeListener {
         this.setLayout(new GridBagLayout());
         this.setBackground(new Color(UploadSelectViewModel.BACKGROUND_COLOR, true));
 
-        this.cancel = new JButton(UploadSelectViewModel.CANCEL_BUTTON_LABEL);
-        cancel.setBorderPainted(true);
-        cancel.setContentAreaFilled(false);
-        cancel.setFocusPainted(false);
+        this.cancelBtn = new JButton(UploadSelectViewModel.CANCEL_BUTTON_LABEL);
+        cancelBtn.setBorderPainted(true);
+        cancelBtn.setContentAreaFilled(false);
+        cancelBtn.setFocusPainted(false);
 
-        cancel.addActionListener((e) -> controller.escape());
+        cancelBtn.addActionListener((e) -> controller.escape());
 
-        this.selectFile = new JButton(UploadSelectViewModel.UPLOAD_BUTTON_LABEL);
-        selectFile.setBorderPainted(true);
-        selectFile.setContentAreaFilled(false);
-        selectFile.setFocusPainted(false);
+        this.selectFileBtn = new JButton(UploadSelectViewModel.UPLOAD_BUTTON_LABEL);
+        selectFileBtn.setBorderPainted(true);
+        selectFileBtn.setContentAreaFilled(false);
+        selectFileBtn.setFocusPainted(false);
 
-        selectFile.addActionListener((e) -> openFileDialog());
+        selectFileBtn.addActionListener((e) -> openFileDialog());
 
         // position each component nicely within the view area using a GridBagLayout
         GridBagConstraints constraints = new GridBagConstraints();
@@ -48,13 +48,13 @@ public class UploadSelectView extends JPanel implements PropertyChangeListener {
         constraints.gridy = 0;
         constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.insets = new Insets(10, 10, 20, 10);
-        this.add(cancel, constraints);
+        this.add(cancelBtn, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 2;
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(20, 10, 10, 10);
-        this.add(selectFile, constraints);
+        this.add(selectFileBtn, constraints);
     }
 
     public void openFileDialog() {

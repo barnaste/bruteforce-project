@@ -8,7 +8,7 @@ import interface_adapter.ViewModel;
 public class UploadSelectViewModel extends ViewModel<UploadState> {
     public static final int BACKGROUND_COLOR = 0xfffffbef;
 
-    public static final String CANCEL_BUTTON_LABEL = "← Return";
+    public static final String CANCEL_BUTTON_LABEL = "× Cancel";
     public static final String UPLOAD_BUTTON_LABEL = "Select from Computer";
 
     public UploadSelectViewModel() {
