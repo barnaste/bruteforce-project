@@ -1,8 +1,6 @@
 package app;
 
-import data_access.MongoUserDataBase;
-import entity.User;
-
+import javax.swing.*;
 /**
  * The Main class of our application.
  */
@@ -12,11 +10,17 @@ public class Main {
      * @param args unused arguments
      */
     public static void main(String[] args) {
-        // final AppBuilder appBuilder = new AppBuilder();
-        User user = new User("ali karim lalani", "mario");
-        MongoUserDataBase db = new MongoUserDataBase();
-        db.addUser(user);
-        System.out.println(db.getUser(user.getUsername()).getUsername());
-        System.out.println(db.getUser("nezere").getPassword());
+        final AppBuilder appBuilder = new AppBuilder();
+        final JFrame application = appBuilder
+                .addLoginView()
+                .addSignupView()
+                .addLoggedInView()
+                .addSignupUseCase()
+                .addLoginUseCase()
+                .addLogoutUseCase()
+                .build();
+
+        application.pack();
+        application.setVisible(true);
     }
 }

@@ -15,7 +15,7 @@
 
 1. As a gardener, I want to be able to save and view images of plants in my garden : ***Team***
 2. As a traveler, I want to be able to identify unfamiliar plants : ***Xiangyu***
-3. I recently started collecting houseplants and want to be able to share their progress with my friends and family : ***Stefan***
+3. I want to be able to edit information about plants that I previously inputted : ***Stefan***
 4. I want to be able to discover plant pictures that other users have posted and want to make public and to 
    showcase my plants to unknown users : ***Ali***
 5. I want my family and friends to be able to create an accounts for their own plants : ***Avi***
