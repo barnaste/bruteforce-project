@@ -11,8 +11,8 @@ import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import interface_adapter.upload.UploadController;
-import interface_adapter.upload.UploadPresenter;
+import interface_adapter.sort.SortController;
+import interface_adapter.sort.SortPresenter;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -22,9 +22,9 @@ import use_case.signup.SignupOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
-import use_case.upload.UploadInputBoundary;
-import use_case.upload.UploadInteractor;
-import use_case.upload.UploadOutputBoundary;
+import use_case.sort.SortInputBoundary;
+import use_case.sort.SortInteractor;
+import use_case.sort.SortOutputBoundary;
 import view.MainView;
 import view.LoginView;
 import view.SignupView;
@@ -137,16 +137,16 @@ public class AppBuilder {
     }
 
     /**
-     * Adds the Upload Use Case to the application.
+     * Adds the Sort Use Case to the application.
      * @return this builder
      */
-    public AppBuilder addUploadUseCase() {
-        final UploadOutputBoundary uploadOutputBoundary = new UploadPresenter(viewManagerModel, mainViewModel);
+    public AppBuilder addSortUseCase() {
+        final SortOutputBoundary sortOutputBoundary = new SortPresenter(viewManagerModel, mainViewModel);
 
-        final UploadInputBoundary uploadInteractor = new UploadInteractor(userDataAccessObject, uploadOutputBoundary);
+        final SortInputBoundary sortInteractor = new SortInteractor(userDataAccessObject, sortOutputBoundary);
 
-        final UploadController uploadController = new UploadController(uploadInteractor);
-        mainView.setUploadController(uploadController);
+        final SortController sortController = new SortController(sortInteractor);
+        mainView.setSortController(sortController);
         return this;
     }
 
