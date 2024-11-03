@@ -18,43 +18,60 @@ public class UploadSelectView extends JPanel implements PropertyChangeListener {
     private final UploadSelectViewModel viewModel;
     private UploadController controller;
 
-    private final JButton cancelBtn;
-    private final JButton selectFileBtn;
-
     public UploadSelectView(UploadSelectViewModel uploadSelectViewModel) {
         this.viewModel = uploadSelectViewModel;
         uploadSelectViewModel.addPropertyChangeListener(this);
 
         this.setLayout(new GridBagLayout());
-        this.setBackground(new Color(UploadSelectViewModel.BACKGROUND_COLOR, true));
+        this.setBackground(new Color(UploadSelectViewModel.TRANSPARENT, true));
 
-        this.cancelBtn = new JButton(UploadSelectViewModel.CANCEL_BUTTON_LABEL);
+        // set up the top panel, where the cancel button is found
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BorderLayout());
+        topPanel.setBackground(new Color(UploadSelectViewModel.TOP_PANEL_COLOR, true));
+        topPanel.setPreferredSize(new Dimension(
+                UploadSelectViewModel.PANEL_WIDTH,
+                UploadSelectViewModel.TOP_PANEL_HEIGHT
+        ));
+
+        JButton cancelBtn = new JButton(UploadSelectViewModel.CANCEL_BUTTON_LABEL);
         cancelBtn.setBorderPainted(true);
         cancelBtn.setContentAreaFilled(false);
         cancelBtn.setFocusPainted(false);
+        cancelBtn.setBorderPainted(false);
 
         cancelBtn.addActionListener((e) -> controller.escape());
+        topPanel.add(cancelBtn, BorderLayout.WEST);
 
-        this.selectFileBtn = new JButton(UploadSelectViewModel.UPLOAD_BUTTON_LABEL);
+        // set up the main panel, where the upload button is found
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridBagLayout());
+        mainPanel.setBackground(new Color(UploadSelectViewModel.MAIN_PANEL_COLOR, true));
+        mainPanel.setPreferredSize(new Dimension(
+                UploadSelectViewModel.PANEL_WIDTH,
+                UploadSelectViewModel.MAIN_PANEL_HEIGHT
+        ));
+
+        JButton selectFileBtn = new JButton(UploadSelectViewModel.UPLOAD_BUTTON_LABEL);
         selectFileBtn.setBorderPainted(true);
         selectFileBtn.setContentAreaFilled(false);
         selectFileBtn.setFocusPainted(false);
 
         selectFileBtn.addActionListener((e) -> openFileDialog());
+        mainPanel.add(selectFileBtn, new GridBagConstraints());
 
         // position each component nicely within the view area using a GridBagLayout
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
         constraints.gridy = 0;
-        constraints.anchor = GridBagConstraints.NORTHWEST;
-        constraints.insets = new Insets(10, 10, 20, 10);
-        this.add(cancelBtn, constraints);
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.insets = new Insets(0, 10, 0, 10);
+        this.add(topPanel, constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 2;
+        constraints.gridy = 1;
         constraints.anchor = GridBagConstraints.CENTER;
-        constraints.insets = new Insets(20, 10, 10, 10);
-        this.add(selectFileBtn, constraints);
+        this.add(mainPanel, constraints);
     }
 
     public void openFileDialog() {

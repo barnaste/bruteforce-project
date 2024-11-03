@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 //  1. the cardlayout panels all have the same dimensions -- setting maximum dimension does not work
 
 class MainViewDemo {
-    private final int OVERLAY_COLOR = 0x30a7c080;
+    private final int OVERLAY_COLOR = 0x40829181;
     private final int BACKGROUND_COLOR = 0xfffffbef;
 
     private final int DISPLAY_WIDTH = 1200;
@@ -45,8 +45,8 @@ class MainViewDemo {
         upload.setContentAreaFilled(false);
         upload.setFocusPainted(false);
 
-        JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.add(upload, new GridBagConstraints());
+        JPanel mainPanel = new JPanel();
+        mainPanel.add(upload);
         mainPanel.setBackground(new Color(BACKGROUND_COLOR, true));
         mainView.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
 
@@ -58,7 +58,6 @@ class MainViewDemo {
             //  change to a class of the developer's choice.
             //  Here, we cut straight to the overlayUploadView method.
             overlayUploadView();
-            upload.setEnabled(false);
         });
 
         // create display frame
@@ -71,9 +70,32 @@ class MainViewDemo {
         frame.setVisible(true);
     }
 
+    // TODO: IMPORTANT -- this method and enableInteraction must both be implemented
+    //  each method disables and enables all buttons on the main view, respectively.
+    //  Otherwise, these buttons will be clickable while there is an overlay, resulting
+    //  in undesirable effects.
+    private void disableInteraction() {
+        upload.setEnabled(false);
+    }
+
+    private void enableInteraction() {
+        upload.setEnabled(true);
+    }
+
     public void overlayUploadView() {
         JPanel cardPanel = new JPanel();
-        CardLayout cardLayout = new CardLayout();
+        // NOTE: we extend CardLayout so that whenever the top card is swapped, the
+        // ENTIRE view is redrawn, and not just the region the card occupied.
+        // This is because cards may be of variant dimensions. We would otherwise
+        // have artefacts from previous cards if they were of larger dimensions.
+        CardLayout cardLayout = new CardLayout() {
+            @Override
+            public void show(Container parent, String name) {
+                super.show(parent, name);
+                mainView.revalidate();
+                mainView.repaint();
+            }
+        };
         cardPanel.setLayout(cardLayout);
 
         UploadSelectViewModel selectorViewModel = new UploadSelectViewModel();
@@ -112,6 +134,9 @@ class MainViewDemo {
     }
 
     public void overlay(JPanel overlayPanel, Consumer<Runnable> setOverlayEscape) {
+        // disable any interaction outside the overlay
+        this.disableInteraction();
+
         // create a semi-transparent overlay
         // override painting functionality so that our overlay is semi-transparent
         JPanel backgroundPanel = new JPanel() {
@@ -128,7 +153,8 @@ class MainViewDemo {
 
         backgroundPanel.add(overlayPanel);
         setOverlayEscape.accept(() -> {
-            upload.setEnabled(true);
+            // enable interaction outside the overlay once the overlay is removed
+            this.enableInteraction();
 
             mainView.remove(backgroundPanel);
             mainView.revalidate();

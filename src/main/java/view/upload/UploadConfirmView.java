@@ -1,6 +1,7 @@
 package view.upload;
 
 import interface_adapter.upload.UploadController;
+import interface_adapter.upload.UploadResultViewModel;
 import interface_adapter.upload.UploadState;
 import interface_adapter.upload.UploadConfirmViewModel;
 
@@ -23,29 +24,39 @@ public class UploadConfirmView extends JPanel implements PropertyChangeListener 
     private BufferedImage image;
     private final int IMAGE_WIDTH = 500;
 
-    private final JButton confirmBtn;
-    private final JButton returnBtn;
-
     public UploadConfirmView(UploadConfirmViewModel viewModel) {
         this.viewModel = viewModel;
         viewModel.addPropertyChangeListener(this);
 
         this.setLayout(new GridBagLayout());
-        this.setBackground(new Color(UploadConfirmViewModel.BACKGROUND_COLOR, true));
+        this.setBackground(new Color(UploadConfirmViewModel.TRANSPARENT, true));
 
-        this.returnBtn = new JButton(UploadConfirmViewModel.RETURN_BUTTON_LABEL);
+        // set up the top panel, where the return and continue buttons are found
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BorderLayout());
+        topPanel.setBackground(new Color(UploadConfirmViewModel.TOP_PANEL_COLOR, true));
+        topPanel.setPreferredSize(new Dimension(
+                UploadConfirmViewModel.PANEL_WIDTH,
+                UploadConfirmViewModel.TOP_PANEL_HEIGHT
+        ));
+
+        JButton returnBtn = new JButton(UploadConfirmViewModel.RETURN_BUTTON_LABEL);
         returnBtn.setBorderPainted(true);
         returnBtn.setContentAreaFilled(false);
         returnBtn.setFocusPainted(false);
+        returnBtn.setBorderPainted(false);
 
         returnBtn.addActionListener((e) -> controller.switchToSelectView() );
+        topPanel.add(returnBtn, BorderLayout.WEST);
 
-        this.confirmBtn = new JButton(UploadConfirmViewModel.CONFIRM_BUTTON_LABEL);
+        JButton confirmBtn = new JButton(UploadConfirmViewModel.CONFIRM_BUTTON_LABEL);
         confirmBtn.setBorderPainted(true);
         confirmBtn.setContentAreaFilled(false);
         confirmBtn.setFocusPainted(false);
+        confirmBtn.setBorderPainted(false);
 
         confirmBtn.addActionListener((e) -> controller.switchToResultView(this.imagePath) );
+        topPanel.add(confirmBtn, BorderLayout.EAST);
 
         // set up an image with an image that can change at runtime
         JPanel imagePanel = createImagePanel();
@@ -54,18 +65,12 @@ public class UploadConfirmView extends JPanel implements PropertyChangeListener 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
         constraints.gridy = 0;
-        constraints.anchor = GridBagConstraints.NORTHWEST;
-        constraints.insets = new Insets(10, 10, 10, 10);
-        this.add(returnBtn, constraints);
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.insets = new Insets(0, 10, 0, 10);
+        this.add(topPanel, constraints);
 
-        constraints.gridx = 1;
-        constraints.anchor = GridBagConstraints.NORTHEAST;
-        this.add(confirmBtn, constraints);
-
-        constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.gridwidth = 2;
-        constraints.anchor = GridBagConstraints.CENTER;
         this.add(imagePanel, constraints);
     }
 
