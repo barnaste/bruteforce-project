@@ -1,39 +1,40 @@
 package view;
 
-import java.awt.Component;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import interface_adapter.logout.LogoutController;
-import interface_adapter.logout.LoggedInState;
-import interface_adapter.logout.LoggedInViewModel;
+import interface_adapter.main.MainState;
+import interface_adapter.main.MainViewModel;
+
+import interface_adapter.upload.UploadController;
 
 /**
- * The View for when the user is logged into the program.
+ * The Main View, for when the user is logged into the program.
  */
-public class LoggedInView extends JPanel implements PropertyChangeListener {
+public class MainView extends JPanel implements PropertyChangeListener {
 
     private final String viewName = "logged in";
-    private final LoggedInViewModel loggedInViewModel;
+    private final MainViewModel mainViewModel;
+
     private LogoutController logoutController;
+    private UploadController uploadController;
 
     private final JLabel username;
 
     private final JButton logOut;
+    private final JButton upload;
 
     private final JTextField passwordInputField = new JTextField(15);
 
-    public LoggedInView(LoggedInViewModel loggedInViewModel) {
-        this.loggedInViewModel = loggedInViewModel;
-        this.loggedInViewModel.addPropertyChangeListener(this);
+    public MainView(MainViewModel mainViewModel) {
+        this.mainViewModel = mainViewModel;
+        this.mainViewModel.addPropertyChangeListener(this);
 
         final JLabel title = new JLabel("Logged In Screen");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -42,17 +43,29 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         username = new JLabel();
 
         final JPanel buttons = new JPanel();
+        buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
         logOut = new JButton("Log Out");
+        upload = new JButton("Upload");
         buttons.add(logOut);
+        buttons.add(upload);
+
+        final JPanel gallery = new JPanel();
+        // Temporarily give the gallery panel a border so it's visible
+        gallery.setPreferredSize(new Dimension(500, 300));
+        gallery.setBorder(BorderFactory.createLineBorder(Color.black));
+
+        final JPanel mainPanel = new JPanel();
+        mainPanel.add(buttons);
+        mainPanel.add(gallery);
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         passwordInputField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void documentListenerHelper() {
-                final LoggedInState currentState = loggedInViewModel.getState();
+                final MainState currentState = mainViewModel.getState();
                 currentState.setPassword(passwordInputField.getText());
-                loggedInViewModel.setState(currentState);
+                mainViewModel.setState(currentState);
             }
 
             @Override
@@ -75,8 +88,17 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                 // This creates an anonymous subclass of ActionListener and instantiates it.
                 evt -> {
                     if (evt.getSource().equals(logOut)) {
-                        final LoggedInState loggedInState = loggedInViewModel.getState();
-                        logoutController.execute(loggedInState.getUsername());
+                        final MainState mainState = mainViewModel.getState();
+                        logoutController.execute(mainState.getUsername());
+                    }
+                }
+        );
+
+        upload.addActionListener(
+                evt -> {
+                    if (evt.getSource().equals(upload)) {
+                        // TODO: Implement
+                        uploadController.execute();
                     }
                 }
         );
@@ -85,13 +107,13 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         this.add(usernameInfo);
         this.add(username);
 
-        this.add(buttons);
+        this.add(mainPanel);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("state")) {
-            final LoggedInState state = (LoggedInState) evt.getNewValue();
+            final MainState state = (MainState) evt.getNewValue();
             username.setText(state.getUsername());
         }
     }
@@ -102,5 +124,9 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     public void setLogoutController(LogoutController logoutController) {
         this.logoutController = logoutController;
+    }
+
+    public void setUploadController(UploadController uploadController) {
+        this.uploadController = uploadController;
     }
 }

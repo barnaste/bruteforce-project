@@ -7,16 +7,16 @@ import entity.User;
  */
 public class SignupInteractor implements SignupInputBoundary {
     private final SignupUserDataAccessInterface userDataAccessObject;
-    private final SignupOutputBoundary userPresenter;
+        private final SignupOutputBoundary userPresenter;
 
     public SignupInteractor(SignupUserDataAccessInterface signupDataAccessInterface,
-                            SignupOutputBoundary signupOutputBoundary) {
-        this.userDataAccessObject = signupDataAccessInterface;
-        this.userPresenter = signupOutputBoundary;
-    }
+                SignupOutputBoundary signupOutputBoundary) {
+            this.userDataAccessObject = signupDataAccessInterface;
+            this.userPresenter = signupOutputBoundary;
+        }
 
-    @Override
-    public void execute(SignupInputData signupInputData) {
+        @Override
+        public void execute(SignupInputData signupInputData) {
         if (userDataAccessObject.existsByUsername(signupInputData.getUsername())) {
             userPresenter.prepareFailView("User already exists.");
         }

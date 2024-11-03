@@ -1,22 +1,22 @@
-package interface_adapter.logout;
+package interface_adapter.main;
 
 /**
- * The State information representing the logged-in user.
+ * The State information representing the main app, i.e., the logged-in user.
  */
-public class LoggedInState {
+public class MainState {
     private String username = "";
 
     private String password = "";
     private String passwordError;
 
-    public LoggedInState(LoggedInState copy) {
+    public MainState(MainState copy) {
         username = copy.username;
         password = copy.password;
         passwordError = copy.passwordError;
     }
 
     // Because of the previous copy constructor, the default constructor must be explicit.
-    public LoggedInState() {
+    public MainState() {
 
     }
 

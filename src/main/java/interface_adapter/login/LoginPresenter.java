@@ -1,8 +1,8 @@
 package interface_adapter.login;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.logout.LoggedInState;
-import interface_adapter.logout.LoggedInViewModel;
+import interface_adapter.main.MainState;
+import interface_adapter.main.MainViewModel;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginOutputData;
 
@@ -12,14 +12,14 @@ import use_case.login.LoginOutputData;
 public class LoginPresenter implements LoginOutputBoundary {
 
     private final LoginViewModel loginViewModel;
-    private final LoggedInViewModel loggedInViewModel;
+    private final MainViewModel mainViewModel;
     private final ViewManagerModel viewManagerModel;
 
     public LoginPresenter(ViewManagerModel viewManagerModel,
-                          LoggedInViewModel loggedInViewModel,
+                          MainViewModel mainViewModel,
                           LoginViewModel loginViewModel) {
         this.viewManagerModel = viewManagerModel;
-        this.loggedInViewModel = loggedInViewModel;
+        this.mainViewModel = mainViewModel;
         this.loginViewModel = loginViewModel;
     }
 
@@ -27,12 +27,12 @@ public class LoginPresenter implements LoginOutputBoundary {
     public void prepareSuccessView(LoginOutputData response) {
         // On success, switch to the logged in view.
 
-        final LoggedInState loggedInState = loggedInViewModel.getState();
-        loggedInState.setUsername(response.getUsername());
-        this.loggedInViewModel.setState(loggedInState);
-        this.loggedInViewModel.firePropertyChanged();
+        final MainState mainState = mainViewModel.getState();
+        mainState.setUsername(response.getUsername());
+        this.mainViewModel.setState(mainState);
+        this.mainViewModel.firePropertyChanged();
 
-        this.viewManagerModel.setState(loggedInViewModel.getViewName());
+        this.viewManagerModel.setState(mainViewModel.getViewName());
         this.viewManagerModel.firePropertyChanged();
     }
 
