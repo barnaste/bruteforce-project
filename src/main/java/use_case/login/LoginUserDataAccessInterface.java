@@ -33,5 +33,7 @@ public interface LoginUserDataAccessInterface {
      * @return true if the user was successfully deleted, false otherwise.
      */
     boolean deleteUser(String username);
-    //TODO: Move this to where it's needed later.
+
+    void setCurrentUsername(String username);
+
 }

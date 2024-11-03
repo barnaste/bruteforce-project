@@ -8,14 +8,11 @@ import entity.User;
 public class SignupInteractor implements SignupInputBoundary {
     private final SignupUserDataAccessInterface userDataAccessObject;
     private final SignupOutputBoundary userPresenter;
-    private final UserFactory userFactory;
 
     public SignupInteractor(SignupUserDataAccessInterface signupDataAccessInterface,
-                            SignupOutputBoundary signupOutputBoundary,
-                            UserFactory userFactory) {
+                            SignupOutputBoundary signupOutputBoundary) {
         this.userDataAccessObject = signupDataAccessInterface;
         this.userPresenter = signupOutputBoundary;
-        this.userFactory = userFactory;
     }
 
     @Override
@@ -27,7 +24,7 @@ public class SignupInteractor implements SignupInputBoundary {
             userPresenter.prepareFailView("Passwords don't match.");
         }
         else {
-            final User user = userFactory.create(signupInputData.getUsername(), signupInputData.getPassword());
+            final User user = new User(signupInputData.getUsername(), signupInputData.getPassword());
             userDataAccessObject.addUser(user);
 
             final SignupOutputData signupOutputData = new SignupOutputData(user.getUsername(), false);

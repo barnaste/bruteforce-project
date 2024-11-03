@@ -16,16 +16,19 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
 import use_case.login.LoginUserDataAccessInterface;
+import use_case.logout.LogoutUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 /**
  * UserDB class implemented using MongoDB.
  */
-public class MongoUserDataAccessObject implements LoginUserDataAccessInterface, SignupUserDataAccessInterface {
+public class MongoUserDataBase implements LoginUserDataAccessInterface, SignupUserDataAccessInterface, LogoutUserDataAccessInterface {
     final String CONNECTIONSTRING = "mongodb+srv://brute_force:CSC207-F24@cluster0.upye6.mongodb.net/" +
             "?retryWrites=true&w=majority&appName=Cluster0";
     CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
     CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
+    private String currentUsername;
+
 
     @Override
     public User getUser(String username) {
@@ -66,6 +69,22 @@ public class MongoUserDataAccessObject implements LoginUserDataAccessInterface, 
             System.out.println(e.getMessage());
             return false;
         }
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public String getCurrentUsername() {
+        return this.currentUsername;
+    }
+
+    /**
+     * @param username
+     */
+    @Override
+    public void setCurrentUsername(String username) {
+        this.currentUsername = username;
     }
 
     private MongoCollection<User> getUsersCollection(MongoClient mongoClient) {

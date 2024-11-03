@@ -1,7 +1,6 @@
 package app;
 
-import entity.CommonUserFactory;
-import entity.UserFactory;
+import data_access.MongoUserDataBase;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
@@ -37,13 +36,11 @@ import java.awt.*;
 public class AppBuilder {
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
-    // thought question: is the hard dependency below a problem?
-    private final UserFactory userFactory = new CommonUserFactory();
+
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
-    // thought question: is the hard dependency below a problem?
-    private final InMemoryUserDataBase userDataAccessObject = new InMemoryUserDataBase();
+    private final MongoUserDataBase userDataAccessObject = new MongoUserDataBase();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -97,7 +94,7 @@ public class AppBuilder {
         final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
                 signupViewModel, loginViewModel);
         final SignupInputBoundary userSignupInteractor = new SignupInteractor(
-                userDataAccessObject, signupOutputBoundary, userFactory);
+                userDataAccessObject, signupOutputBoundary);
 
         final SignupController controller = new SignupController(userSignupInteractor);
         signupView.setSignupController(controller);
