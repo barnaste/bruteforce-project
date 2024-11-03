@@ -27,6 +27,7 @@ public class MongoUserDataBase implements LoginUserDataAccessInterface, SignupUs
     CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
     CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
 
+
     @Override
     public User getUser(String username) {
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
@@ -67,6 +68,12 @@ public class MongoUserDataBase implements LoginUserDataAccessInterface, SignupUs
             return false;
         }
     }
+
+    /**
+     * @param username
+     */
+    @Override
+    public void setCurrentUsername(String username) {}
 
     private MongoCollection<User> getUsersCollection(MongoClient mongoClient) {
         MongoDatabase database = mongoClient.getDatabase("appDB").withCodecRegistry(pojoCodecRegistry);
