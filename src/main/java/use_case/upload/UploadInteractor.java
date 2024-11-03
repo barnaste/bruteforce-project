@@ -17,7 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class UploadInteractor implements UploadInputBoundary {
-    private final UploadOutputBoundary uploadOutputBoundary;
+    private final UploadOutputBoundary presenter;
 
     private Runnable escapeMap;
 
@@ -27,22 +27,28 @@ public class UploadInteractor implements UploadInputBoundary {
     private static final String API_PRIVATE_KEY = "2b10zA9aJVKs90Ge5DEINUTouO"; // secret
 
     public UploadInteractor(UploadOutputBoundary uploadOutputBoundary) {
-        this.uploadOutputBoundary = uploadOutputBoundary;
+        this.presenter = uploadOutputBoundary;
     }
 
     @Override
-    public void uploadImage(UploadInputData uploadInputData) {
+    public void switchToConfirmView(UploadInputData inputData) {
+        UploadOutputData outputData = new UploadOutputData(inputData.getImage());
+        this.presenter.switchToConfirmView(outputData);
     }
 
     @Override
-    public void saveUpload() {
-
+    public void switchToResultView(UploadInputData uploadInputData) {
+        UploadOutputData outputData = new UploadOutputData(uploadInputData.getImage());
+        this.presenter.switchToResultView(outputData);
     }
 
     @Override
-    public void returnToSelector() {
-
+    public void switchToSelectView() {
+        this.presenter.switchToSelectView();
     }
+
+    @Override
+    public void saveUpload() {}
 
     public void setEscapeMap(Runnable escapeMap) {
         this.escapeMap = escapeMap;
@@ -54,7 +60,6 @@ public class UploadInteractor implements UploadInputBoundary {
 
     public void execute(UploadInputData uploadInputData) {
         File filePath = new File("");
-        // TODO: if filePath is empty, the user cancelled file selection -- go back to asking for an upload
 
         HttpEntity entity = MultipartEntityBuilder.create()
                 .addPart("images", new FileBody(filePath)).addTextBody("organs", "auto")
@@ -98,9 +103,6 @@ public class UploadInteractor implements UploadInputBoundary {
     // TODO:
     //  1. fetch plant name from an image to plant name api
     //  2. fetch plant details from trefle (this requires that we curl from java somehow)
-
-    // TODO: turn everything into nice helper methods where appropriate, else bring things into
-    //   appropriate classes
 
 }
 

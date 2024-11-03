@@ -12,9 +12,18 @@ public class UploadController {
         this.uploadUseCaseInteractor = uploadInteractor;
     }
 
-    public void upload(String filePath) {
+    public void switchToConfirmView(String filePath) {
         final UploadInputData uploadInputData = new UploadInputData(filePath);
-        uploadUseCaseInteractor.uploadImage(uploadInputData);
+        uploadUseCaseInteractor.switchToConfirmView(uploadInputData);
+    }
+
+    public void switchToResultView(String filePath) {
+        final UploadInputData uploadInputData = new UploadInputData(filePath);
+        uploadUseCaseInteractor.switchToResultView(uploadInputData);
+    }
+
+    public void switchToSelectView() {
+        uploadUseCaseInteractor.switchToSelectView();
     }
 
     public void escape() {
@@ -22,4 +31,5 @@ public class UploadController {
     }
 
     public void save() {}
+
 }

@@ -3,9 +3,9 @@ package view.upload;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.upload.UploadController;
 import interface_adapter.upload.UploadPresenter;
-import interface_adapter.upload.confirm.UploadConfirmViewModel;
-import interface_adapter.upload.result.UploadResultViewModel;
-import interface_adapter.upload.select.UploadSelectViewModel;
+import interface_adapter.upload.UploadConfirmViewModel;
+import interface_adapter.upload.UploadResultViewModel;
+import interface_adapter.upload.UploadSelectViewModel;
 import use_case.upload.UploadInputBoundary;
 import use_case.upload.UploadInteractor;
 import use_case.upload.UploadOutputBoundary;
@@ -16,6 +16,11 @@ import java.awt.*;
 import java.util.function.Consumer;
 
 // TODO: note to self, if you dynamically add or remove a component, you must revalidate and repaint!
+
+// TODO: there are currently two major bugs in the program:
+//  1. if you upload an image so that you are in confirm view, then return twice so that you go back to the
+//     main view and then try to upload again, the buttons will appear strangely formatted and unbordered
+//  2. the cardlayout panels all have the same dimensions -- setting maximum dimension does not work
 
 class MainViewDemo {
     private final int OVERLAY_COLOR = 0x30a7c080;
@@ -99,7 +104,7 @@ class MainViewDemo {
         UploadController controller = new UploadController(uploadInteractor);
 
         selectorView.setController(controller);
-        confirmView.setUploadController(controller);
+        confirmView.setController(controller);
         resultView.setUploadController(controller);
 
         uploadManagerModel.setState(selectorView.getViewName());

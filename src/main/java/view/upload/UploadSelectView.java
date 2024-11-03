@@ -1,7 +1,7 @@
 package view.upload;
 
 import interface_adapter.upload.UploadController;
-import interface_adapter.upload.select.UploadSelectViewModel;
+import interface_adapter.upload.UploadSelectViewModel;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -26,7 +26,6 @@ public class UploadSelectView extends JPanel implements PropertyChangeListener {
         uploadSelectViewModel.addPropertyChangeListener(this);
 
         this.setLayout(new GridBagLayout());
-
         this.setBackground(new Color(UploadSelectViewModel.BACKGROUND_COLOR, true));
 
         this.cancel = new JButton(UploadSelectViewModel.CANCEL_BUTTON_LABEL);
@@ -55,7 +54,7 @@ public class UploadSelectView extends JPanel implements PropertyChangeListener {
         constraints.gridy = 2;
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets(20, 10, 10, 10);
-        add(selectFile, constraints);
+        this.add(selectFile, constraints);
     }
 
     public void openFileDialog() {
@@ -78,13 +77,8 @@ public class UploadSelectView extends JPanel implements PropertyChangeListener {
         // prompt user to select an image
         int response = fileChooser.showOpenDialog(null);
         if (response == JFileChooser.APPROVE_OPTION) {
-            controller.upload(fileChooser.getSelectedFile().getAbsolutePath());
+            controller.switchToConfirmView(fileChooser.getSelectedFile().getAbsolutePath());
         }
-    }
-
-    public void propertyChange(PropertyChangeEvent evt) {
-        // final UploadState state = (UploadState) evt.getNewValue();
-        // TODO: fill this in
     }
 
     public void setController(UploadController controller) {
@@ -94,4 +88,6 @@ public class UploadSelectView extends JPanel implements PropertyChangeListener {
     public String getViewName() {
         return viewName;
     }
+
+    public void propertyChange(PropertyChangeEvent evt) {}
 }

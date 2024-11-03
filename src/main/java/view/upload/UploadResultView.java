@@ -1,7 +1,7 @@
 package view.upload;
 
 import interface_adapter.upload.UploadController;
-import interface_adapter.upload.result.UploadResultViewModel;
+import interface_adapter.upload.UploadResultViewModel;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;

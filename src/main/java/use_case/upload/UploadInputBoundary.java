@@ -9,11 +9,13 @@ public interface UploadInputBoundary {
      * Executes the upload use case.
      * @param uploadInputData the input data
      */
-    void uploadImage(UploadInputData uploadInputData);
+    void switchToConfirmView(UploadInputData uploadInputData);
+
+    void switchToResultView(UploadInputData uploadInputData);
+
+    void switchToSelectView();
 
     void saveUpload();
-
-    void returnToSelector();
 
     /**
      * Set the method by which the upload use case is closed -- the UI for this

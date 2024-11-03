@@ -1,19 +1,15 @@
 package use_case.upload;
 
-import java.io.File;
-
-/**
- * The Input Data for the Upload use case.
- */
-public class UploadInputData {
+public class UploadOutputData {
 
     private final String imagePath;
 
-    public UploadInputData(String image) {
+    public UploadOutputData(String image) {
         this.imagePath = image;
     }
 
     public String getImage() {
         return imagePath;
     }
+
 }
