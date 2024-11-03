@@ -22,7 +22,7 @@ import use_case.signup.SignupUserDataAccessInterface;
 /**
  * UserDB class implemented using MongoDB.
  */
-public class MongoUserDataBase implements LoginUserDataAccessInterface, SignupUserDataAccessInterface, LogoutUserDataAccessInterface {
+public class MongoUserDataAccessObject implements LoginUserDataAccessInterface, SignupUserDataAccessInterface, LogoutUserDataAccessInterface {
     final String CONNECTIONSTRING = "mongodb+srv://brute_force:CSC207-F24@cluster0.upye6.mongodb.net/" +
             "?retryWrites=true&w=majority&appName=Cluster0";
     CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
@@ -72,7 +72,9 @@ public class MongoUserDataBase implements LoginUserDataAccessInterface, SignupUs
     }
 
     /**
-     * @return
+     * Retrieves the current username.
+     *
+     * @return The current username.
      */
     @Override
     public String getCurrentUsername() {
@@ -80,7 +82,9 @@ public class MongoUserDataBase implements LoginUserDataAccessInterface, SignupUs
     }
 
     /**
-     * @param username
+     * Sets the current username.
+     *
+     * @param username The username to set as the current username.
      */
     @Override
     public void setCurrentUsername(String username) {
