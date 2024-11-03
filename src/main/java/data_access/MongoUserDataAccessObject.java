@@ -21,7 +21,7 @@ import use_case.signup.SignupUserDataAccessInterface;
 /**
  * UserDB class implemented using MongoDB.
  */
-public class MongoUserDataBase implements LoginUserDataAccessInterface, SignupUserDataAccessInterface {
+public class MongoUserDataAccessObject implements LoginUserDataAccessInterface, SignupUserDataAccessInterface {
     final String CONNECTIONSTRING = "mongodb+srv://brute_force:CSC207-F24@cluster0.upye6.mongodb.net/" +
             "?retryWrites=true&w=majority&appName=Cluster0";
     CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
