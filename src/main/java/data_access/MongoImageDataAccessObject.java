@@ -11,14 +11,18 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
-public class MongoImageDataBase implements ImageDataBase {
+public class MongoImageDataAccessObject implements ImageDataBase {
     static final String CONNECTIONSTRING = "mongodb+srv://brute_force:CSC207-F24@cluster0.upye6.mongodb.net/" +
             "?retryWrites=true&w=majority&appName=Cluster0";
     private final MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING);
     private final MongoDatabase database = mongoClient.getDatabase("appDB"); // Replace with your actual database name
     private final GridFSBucket gridFSBucket = GridFSBuckets.create(database, "plantImages");
 
-    @Override
+    /**
+     * A method that returns the image with the given id.
+     * @param id is the unique id of the desired image
+     * @return the image with the given id
+     */
     public BufferedImage getImageFromID(String id){
         try {
             ObjectId objectId = new ObjectId(id);
@@ -35,7 +39,11 @@ public class MongoImageDataBase implements ImageDataBase {
         }
     }
 
-    @Override
+    /**
+     * A method that inserts a new image into the database.
+     * @param image is the image to insert
+     * @return the id of the inserted image
+     */
     public String addImage(BufferedImage image){
         try {
             // Write BufferedImage to ByteArrayOutputStream
@@ -57,7 +65,11 @@ public class MongoImageDataBase implements ImageDataBase {
         }
     }
 
-    @Override
+    /**
+     * A method that deletes the image with the given id.
+     * @param id is the id of the image to delete
+     * @return whether the image was successfully deleted
+     */
     public boolean deleteImage(String id){
         try {
             ObjectId objectId = new ObjectId(id);
