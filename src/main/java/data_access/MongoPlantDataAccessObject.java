@@ -8,6 +8,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
+import use_case.load_user_gallery.UserGalleryPlantDataAccessInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ import static com.mongodb.client.model.Sorts.descending;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-public class MongoPlantDataAccessObject implements PlantDataBase {
+public class MongoPlantDataAccessObject implements UserGalleryPlantDataAccessInterface, PlantDataBase {
     final String CONNECTIONSTRING = "mongodb+srv://brute_force:CSC207-F24@cluster0.upye6.mongodb.net/" +
             "?retryWrites=true&w=majority&appName=Cluster0";
     CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
@@ -45,6 +46,11 @@ public class MongoPlantDataAccessObject implements PlantDataBase {
             System.out.println(e.getMessage());
             return null; // Handle errors
         }
+    }
+
+    @Override
+    public int getNumOfUserImages(String username) {
+        return 0;
     }
 
     public List<Plant> getPublicPlants(int skip, int limit) {
