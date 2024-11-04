@@ -44,14 +44,14 @@ public class MainView extends JPanel implements PropertyChangeListener {
 
         final JPanel buttons = new JPanel();
         buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
-        logOut = new JButton("Log Out");
-        sort = new JButton("Sort");
+        logOut = ViewComponentFactory.buildButton("Log Out");
+        sort = ViewComponentFactory.buildButton("Sort");
         buttons.add(logOut);
         buttons.add(sort);
 
         final JPanel gallery = new JPanel();
         // Temporarily give the gallery panel a border so it's visible
-        gallery.setPreferredSize(new Dimension(500, 300));
+        gallery.setPreferredSize(new Dimension(800, 500));
         gallery.setBorder(BorderFactory.createLineBorder(Color.black));
 
         final JPanel mainPanel = new JPanel();

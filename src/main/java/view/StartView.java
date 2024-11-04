@@ -35,14 +35,14 @@ public class StartView extends JPanel implements ActionListener {
         buttonsPanel.setLayout(new FlowLayout());
 
         // "New User" button
-        JButton newUserButton = new JButton("New User");
+        JButton newUserButton = ViewComponentFactory.buildButton("New User");
         newUserButton.setPreferredSize(new Dimension(200, 55));
         newUserButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         newUserButton.addActionListener(this);
         buttonsPanel.add(newUserButton);
 
         // "Login" button
-        JButton loginButton = new JButton("Login");
+        JButton loginButton = ViewComponentFactory.buildButton("Login");
         loginButton.setPreferredSize(new Dimension(200, 55));
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginButton.addActionListener(this);
