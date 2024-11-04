@@ -33,4 +33,11 @@ public class SignupController {
     public void switchToLoginView() {
         userSignupUseCaseInteractor.switchToLoginView();
     }
+
+    /**
+     * Executes the "switch to StartView" Use Case.
+     */
+    public void switchToStartView() {
+        userSignupUseCaseInteractor.switchToStartView();
+    }
 }
