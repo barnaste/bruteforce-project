@@ -4,7 +4,7 @@ public interface UploadOutputBoundary {
 
     void switchToConfirmView(UploadConfirmOutputData outputData);
 
-    void switchToResultView(UploadResultOutputData outputData);
+    void switchToSelectView(UploadSelectOutputData outputData);
 
-    void switchToSelectView();
+    void switchToResultView(UploadResultOutputData outputData);
 }

@@ -2,7 +2,6 @@ package use_case.upload;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -20,10 +19,10 @@ public class UploadInteractor implements UploadInputBoundary {
 
     private Runnable escapeMap;
 
-    // for plantnet
+    // plantnet-specific information
     private static final String PROJECT = "all";
     private static final String API_URL = "https://my-api.plantnet.org/v2/identify/" + PROJECT + "?api-key=";
-    private static final String API_PRIVATE_KEY = "2b10zA9aJVKs90Ge5DEINUTouO"; // secret
+    private static final String API_PRIVATE_KEY = "2b1015rSKP2VVP2UzoDaqbYI"; // secret
 
     public UploadInteractor(UploadOutputBoundary uploadOutputBoundary) {
         this.presenter = uploadOutputBoundary;
@@ -36,20 +35,73 @@ public class UploadInteractor implements UploadInputBoundary {
     }
 
     @Override
-    public void switchToResultView(UploadInputData uploadInputData) {
-        UploadResultOutputData outputData = new UploadResultOutputData(
-                uploadInputData.getImage(),
-                "",
-                "",
-                "",
-                0
-        );
-        this.presenter.switchToResultView(outputData);
+    public void loadImageData(UploadInputData uploadInputData) {
+        File image = new File(uploadInputData.getImage());
+        HttpEntity entity = MultipartEntityBuilder.create()
+                .addPart("images", new FileBody(image)).addTextBody("organs", "auto")
+                .build();
+        // list of probable species
+        HttpPost request = new HttpPost(API_URL + API_PRIVATE_KEY);
+        request.setEntity(entity);
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpResponse httpResponse;
+        // fetch plant information from uploaded image using plantnet api
+        try {
+            httpResponse = client.execute(request);
+            String jsonString = EntityUtils.toString(httpResponse.getEntity());
+
+            // TIP: there should be no thrown exceptions as we are guaranteed a JSON from the httpResponse
+            try {
+                JSONObject jsonObject = new JSONObject(jsonString);
+
+                if (jsonObject.has("error")) {
+                    UploadSelectOutputData outputData = new UploadSelectOutputData(jsonObject.getString("message"));
+                    this.presenter.switchToSelectView(outputData);
+                } else {
+                    // find relevant information in jsonObject
+                    String name = jsonObject
+                            .getJSONArray("results")
+                            .getJSONObject(0)
+                            .getJSONObject("species")
+                            .getJSONArray("commonNames")
+                            .getString(0);
+                    String scientific = jsonObject
+                            .getJSONArray("results")
+                            .getJSONObject(0)
+                            .getJSONObject("species")
+                            .getString("scientificNameWithoutAuthor");
+                    String family = jsonObject
+                            .getJSONArray("results")
+                            .getJSONObject(0)
+                            .getJSONObject("species")
+                            .getJSONObject("family")
+                            .getString("scientificNameWithoutAuthor");
+                    double score = jsonObject
+                            .getJSONArray("results")
+                            .getJSONObject(0)
+                            .getDouble("score");
+
+                    UploadResultOutputData outputData = new UploadResultOutputData(
+                            uploadInputData.getImage(),
+                            name,
+                            scientific,
+                            family,
+                            score
+                    );
+                    this.presenter.switchToResultView(outputData);
+                }
+            } catch (JSONException e) {
+                System.out.println(e.getMessage());
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
     public void switchToSelectView() {
-        this.presenter.switchToSelectView();
+        this.presenter.switchToSelectView(new UploadSelectOutputData());
     }
 
     @Override
@@ -64,50 +116,6 @@ public class UploadInteractor implements UploadInputBoundary {
     }
 
     public void execute(UploadInputData uploadInputData) {
-        File filePath = new File("");
-
-        HttpEntity entity = MultipartEntityBuilder.create()
-                .addPart("images", new FileBody(filePath)).addTextBody("organs", "auto")
-                .build();
-        // list of probable species
-        HttpPost request = new HttpPost(API_URL + API_PRIVATE_KEY);
-        request.setEntity(entity);
-
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpResponse httpResponse;
-        // fetch plant information from uploaded image using plantnet api
-        try {
-            httpResponse = client.execute(request);
-            String jsonString = EntityUtils.toString(httpResponse.getEntity());
-
-            try {
-                JSONObject jsonObject = new JSONObject(jsonString);
-
-                // TODO: what happens when no plant is recognized -- can happen often
-
-                // find relevant information in jsonObject
-                double score = jsonObject
-                        .getJSONArray("results")
-                        .getJSONObject(0)
-                        .getDouble("score");
-                String scientific = jsonObject
-                        .getJSONArray("results")
-                        .getJSONObject(0)
-                        .getJSONObject("species")
-                        .getString("scientificNameWithoutAuthor");
-
-                System.out.println(score + " " + scientific);
-            } catch (JSONException e) {
-                System.out.println(e.getMessage());
-            }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
     }
-
-    // TODO:
-    //  1. fetch plant name from an image to plant name api
-    //  2. fetch plant details from trefle (this requires that we curl from java somehow)
-
 }
 

@@ -1,8 +1,8 @@
 package view.upload;
 
 import interface_adapter.upload.UploadController;
-import interface_adapter.upload.UploadSelectViewModel;
-import org.jetbrains.annotations.NotNull;
+import interface_adapter.upload.select.UploadSelectState;
+import interface_adapter.upload.select.UploadSelectViewModel;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -16,11 +16,9 @@ import java.beans.PropertyChangeListener;
 public class UploadSelectView extends JPanel implements PropertyChangeListener {
     private final String viewName = "upload select";
 
-    private final UploadSelectViewModel viewModel;
     private UploadController controller;
 
     public UploadSelectView(UploadSelectViewModel uploadSelectViewModel) {
-        this.viewModel = uploadSelectViewModel;
         uploadSelectViewModel.addPropertyChangeListener(this);
 
         this.setLayout(new GridBagLayout());
@@ -40,7 +38,6 @@ public class UploadSelectView extends JPanel implements PropertyChangeListener {
         this.add(createMainPanel(), constraints);
     }
 
-    @NotNull
     private JPanel createMainPanel() {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
@@ -60,7 +57,6 @@ public class UploadSelectView extends JPanel implements PropertyChangeListener {
         return mainPanel;
     }
 
-    @NotNull
     private JPanel createTopPanel() {
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BorderLayout());
@@ -126,5 +122,15 @@ public class UploadSelectView extends JPanel implements PropertyChangeListener {
         return viewName;
     }
 
-    public void propertyChange(PropertyChangeEvent evt) {}
+    public void propertyChange(PropertyChangeEvent evt) {
+        final UploadSelectState state = (UploadSelectState) evt.getNewValue();
+        if (state.getError() != null) {
+            JOptionPane.showMessageDialog(this,
+                    "Please ensure the captured plant is in clear view!\n" +
+                            "Your photograph should depict only one plant.",
+                    state.getError(),
+                    JOptionPane.PLAIN_MESSAGE
+            );
+        }
+    }
 }

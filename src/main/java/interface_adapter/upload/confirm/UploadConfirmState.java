@@ -1,4 +1,4 @@
-package interface_adapter.upload;
+package interface_adapter.upload.confirm;
 
 public class UploadConfirmState {
     private String imagePath = "";
@@ -10,5 +10,4 @@ public class UploadConfirmState {
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
-
 }

@@ -3,9 +3,9 @@ package view.upload;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.upload.UploadController;
 import interface_adapter.upload.UploadPresenter;
-import interface_adapter.upload.UploadConfirmViewModel;
-import interface_adapter.upload.UploadResultViewModel;
-import interface_adapter.upload.UploadSelectViewModel;
+import interface_adapter.upload.confirm.UploadConfirmViewModel;
+import interface_adapter.upload.result.UploadResultViewModel;
+import interface_adapter.upload.select.UploadSelectViewModel;
 import use_case.upload.UploadInputBoundary;
 import use_case.upload.UploadInteractor;
 import use_case.upload.UploadOutputBoundary;
@@ -14,11 +14,6 @@ import view.ViewManager;
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Consumer;
-
-// TODO: note to self, if you dynamically add or remove a component, you must revalidate and repaint!
-
-// TODO: there are currently two major bugs in the program:
-//  1. the cardlayout panels all have the same dimensions -- setting maximum dimension does not work
 
 class MainViewDemo {
     private final int OVERLAY_COLOR = 0x40829181;
@@ -133,6 +128,8 @@ class MainViewDemo {
         overlay(cardPanel, uploadInteractor::setEscapeMap);
     }
 
+    // TODO: it is recommended that we maintain this overlay method within the final
+    //  copy of the Main View -- it will prove useful for all overlays within the application.
     public void overlay(JPanel overlayPanel, Consumer<Runnable> setOverlayEscape) {
         // disable any interaction outside the overlay
         this.disableInteraction();

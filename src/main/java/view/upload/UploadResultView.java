@@ -1,8 +1,8 @@
 package view.upload;
 
 import interface_adapter.upload.UploadController;
-import interface_adapter.upload.UploadResultState;
-import interface_adapter.upload.UploadResultViewModel;
+import interface_adapter.upload.result.UploadResultState;
+import interface_adapter.upload.result.UploadResultViewModel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -12,24 +12,22 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 public class UploadResultView extends JPanel implements PropertyChangeListener {
     private final String viewName = "upload result";
 
-    private final UploadResultViewModel viewModel;
     private UploadController controller;
 
-    // TODO: get rid of these default values
-    private final JLabel nameLabel = new JLabel("Coconut Palm");
-    private final JLabel scientificNameLabel = new JLabel("Cocos nucifera");
-    private final JLabel familyLabel = new JLabel("Palm Family");
-    private final JLabel certaintyLabel = new JLabel("76% certainty");
+    private final JLabel nameLabel = new JLabel();
+    private final JLabel scientificNameLabel = new JLabel();
+    private final JLabel familyLabel = new JLabel();
+    private final JLabel certaintyLabel = new JLabel();
     private final JTextArea notesField = new JTextArea();
 
     private BufferedImage image;
 
     public UploadResultView(UploadResultViewModel viewModel) {
-        this.viewModel = viewModel;
         viewModel.addPropertyChangeListener(this);
 
         this.setLayout(new GridBagLayout());
@@ -96,7 +94,6 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
         contentPanel.add(certaintyLabel);
 
         notesField.setRows(10);
-        notesField.setText("My notes...");
         notesField.setFont(font.deriveFont(Font.PLAIN).deriveFont(12f));
         notesField.setLineWrap(true);
         notesField.setWrapStyleWord(true);
@@ -200,8 +197,15 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
 
     private void setFields(UploadResultState state) {
         this.setImage(state.getImagePath());
-        // TODO: do some other stuff with the other state values
-        //  you might also have to reset text fields
+        this.nameLabel.setText(state.getName());
+        this.scientificNameLabel.setText(state.getScientificName());
+        this.familyLabel.setText(state.getFamily());
+
+        DecimalFormat roundingFormat = new DecimalFormat("###.##");
+        this.certaintyLabel.setText(Double.valueOf(roundingFormat.format(state.getCertainty() * 100)) +
+                "% certainty");
+
+        this.notesField.setText("My notes...");
     }
 
     private void setImage(String imagePath) {

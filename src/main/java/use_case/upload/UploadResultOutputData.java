@@ -5,9 +5,10 @@ public class UploadResultOutputData {
     private final String name;
     private final String scientificName;
     private final String family;
-    private final int certainty;
+    private final double certainty;
 
-    public UploadResultOutputData(String imagePath, String name, String scientificName, String family, int certainty) {
+    public UploadResultOutputData(String imagePath, String name, String scientificName,
+                                  String family, double certainty) {
         this.imagePath = imagePath;
         this.name = name;
         this.scientificName = scientificName;
@@ -31,7 +32,7 @@ public class UploadResultOutputData {
         return family;
     }
 
-    public int getCertainty() {
+    public double getCertainty() {
         return certainty;
     }
 }

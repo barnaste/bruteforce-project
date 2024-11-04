@@ -1,4 +1,4 @@
-package interface_adapter.upload;
+package interface_adapter.upload.confirm;
 
 import interface_adapter.ViewModel;
 

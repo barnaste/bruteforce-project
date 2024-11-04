@@ -1,8 +1,8 @@
 package view.upload;
 
 import interface_adapter.upload.UploadController;
-import interface_adapter.upload.UploadConfirmState;
-import interface_adapter.upload.UploadConfirmViewModel;
+import interface_adapter.upload.confirm.UploadConfirmState;
+import interface_adapter.upload.confirm.UploadConfirmViewModel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,14 +16,12 @@ import java.io.IOException;
 public class UploadConfirmView extends JPanel implements PropertyChangeListener {
     private final String viewName = "upload confirm";
 
-    private final UploadConfirmViewModel viewModel;
     private UploadController controller;
 
     private String imagePath = "";
     private BufferedImage image;
 
     public UploadConfirmView(UploadConfirmViewModel viewModel) {
-        this.viewModel = viewModel;
         viewModel.addPropertyChangeListener(this);
 
         this.setLayout(new GridBagLayout());

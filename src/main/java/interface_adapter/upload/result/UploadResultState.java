@@ -1,11 +1,11 @@
-package interface_adapter.upload;
+package interface_adapter.upload.result;
 
 public class UploadResultState {
     private String imagePath = "";
     private String name = "";
     private String scientificName = "";
     private String family = "";
-    private int certainty = 0;
+    private double certainty = 0;
 
     public String getImagePath() {
         return imagePath;
@@ -39,11 +39,11 @@ public class UploadResultState {
         this.family = family;
     }
 
-    public int getCertainty() {
+    public double getCertainty() {
         return certainty;
     }
 
-    public void setCertainty(int certainty) {
+    public void setCertainty(double certainty) {
         this.certainty = certainty;
     }
 }
