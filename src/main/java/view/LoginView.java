@@ -51,9 +51,9 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                 new JLabel("Password"), passwordInputField);
 
         final JPanel buttons = new JPanel();
-        logIn = new JButton("log in");
+        logIn = ViewComponentFactory.buildButton("Log In");
         buttons.add(logIn);
-        cancel = new JButton("cancel");
+        cancel = ViewComponentFactory.buildButton("Cancel");
         buttons.add(cancel);
 
         logIn.addActionListener(
@@ -133,7 +133,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
      * @param evt the ActionEvent to react to
      */
     public void actionPerformed(ActionEvent evt) {
-        System.out.println("Click " + evt.getActionCommand());
+        loginController.switchToStartView();
     }
 
     @Override
@@ -147,6 +147,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         usernameInputField.setText(state.getUsername());
         passwordInputField.setText(state.getPassword());
     }
+
 
     public String getViewName() {
         return viewName;

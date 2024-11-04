@@ -3,6 +3,8 @@ package interface_adapter.logout;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.login.LoginState;
+import interface_adapter.main.MainState;
+import interface_adapter.main.MainViewModel;
 import use_case.logout.LogoutOutputBoundary;
 import use_case.logout.LogoutOutputData;
 
@@ -11,14 +13,14 @@ import use_case.logout.LogoutOutputData;
  */
 public class LogoutPresenter implements LogoutOutputBoundary {
 
-    private LoggedInViewModel loggedInViewModel;
+    private MainViewModel mainViewModel;
     private ViewManagerModel viewManagerModel;
     private LoginViewModel loginViewModel;
 
     public LogoutPresenter(ViewManagerModel viewManagerModel,
-                           LoggedInViewModel loggedInViewModel,
+                           MainViewModel mainViewModel,
                            LoginViewModel loginViewModel) {
-        this.loggedInViewModel = loggedInViewModel;
+        this.mainViewModel = mainViewModel;
         this.viewManagerModel = viewManagerModel;
         this.loginViewModel = loginViewModel;
     }
@@ -28,10 +30,10 @@ public class LogoutPresenter implements LogoutOutputBoundary {
         // On success, switch to the login view
 
         // Update the logged in state
-        final LoggedInState loggedInState = loggedInViewModel.getState();
-        loggedInState.setUsername("");
-        loggedInViewModel.setState(loggedInState);
-        loggedInViewModel.firePropertyChanged("state");
+        final MainState mainState = mainViewModel.getState();
+        mainState.setUsername("");
+        mainViewModel.setState(mainState);
+        mainViewModel.firePropertyChanged("state");
 
         // Update the login state
         final LoginState loginState = loginViewModel.getState();
