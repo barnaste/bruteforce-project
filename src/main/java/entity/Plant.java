@@ -7,6 +7,7 @@ import java.util.Date;
 public class Plant {
     private ObjectId fileID;
     private String imageID;
+    private String species;
     private String owner;
     private String comments;
     private Boolean isPublic;
@@ -15,15 +16,17 @@ public class Plant {
     /**
      * A constructor for Plant that initializes a plant with lastChanged as the current date.
      * @param imageID is the image id associated with the image for the plant
+     * @param species is the species of the plant
      * @param owner is the username of the user who is associated with this image
      * @param comments is any comments that the user inputted regarding this image
      * @param isPublic is whether the user set the image as public
      */
-    public Plant(String imageID, String owner, String comments, Boolean isPublic) {
+    public Plant(String imageID, String species, String owner, String comments, Boolean isPublic) {
         this.owner = owner;
         this.comments = comments;
         this.isPublic = isPublic;
         this.imageID = imageID;
+        this.species = species;
     }
 
     /**
@@ -47,6 +50,8 @@ public class Plant {
     public ObjectId getFileID() {
         return fileID;
     }
+    public String getSpecies() { return species; }
+    public void setSpecies(String species) { this.species = species; }
     public void setFileID(ObjectId fileID) { this.fileID = fileID; }
     public void setLastChanged(Date lastChanged) { this.lastChanged = lastChanged; }
     public void setImageID(String imageID) {
