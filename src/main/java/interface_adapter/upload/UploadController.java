@@ -28,7 +28,8 @@ public class UploadController {
         uploadUseCaseInteractor.escape();
     }
 
-    public void saveUpload() {
-        uploadUseCaseInteractor.saveUpload();
+    public void saveUpload(String filePath) {
+        final UploadInputData uploadInputData = new UploadInputData(filePath);
+        uploadUseCaseInteractor.saveUpload(uploadInputData);
     }
 }

@@ -3,9 +3,11 @@ package view.upload;
 import interface_adapter.upload.UploadController;
 import interface_adapter.upload.result.UploadResultState;
 import interface_adapter.upload.result.UploadResultViewModel;
+import view.ViewComponentFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.text.View;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
@@ -25,6 +27,7 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
     private final JLabel certaintyLabel = new JLabel();
     private final JTextArea notesField = new JTextArea();
 
+    private String imagePath = "";
     private BufferedImage image;
 
     public UploadResultView(UploadResultViewModel viewModel) {
@@ -118,10 +121,7 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
                 UploadResultViewModel.TOP_PANEL_HEIGHT
         ));
 
-        JButton returnBtn = new JButton(UploadResultViewModel.RETURN_BUTTON_LABEL);
-        returnBtn.setBorderPainted(true);
-        returnBtn.setContentAreaFilled(false);
-        returnBtn.setFocusPainted(false);
+        JButton returnBtn = ViewComponentFactory.buildButton(UploadResultViewModel.RETURN_BUTTON_LABEL);
         returnBtn.setBorderPainted(false);
 
         returnBtn.addActionListener((e) -> controller.switchToSelectView());
@@ -160,18 +160,12 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
         actionPanel.setLayout(new GridBagLayout());
         actionPanel.setBackground(new Color(UploadResultViewModel.ACTION_PANEL_COLOR));
 
-        JButton saveBtn = new JButton(UploadResultViewModel.SAVE_BUTTON_LABEL);
-        saveBtn.setBorderPainted(true);
-        saveBtn.setContentAreaFilled(false);
-        saveBtn.setFocusPainted(false);
+        JButton saveBtn = ViewComponentFactory.buildButton(UploadResultViewModel.SAVE_BUTTON_LABEL);
         saveBtn.setPreferredSize(new Dimension(100, 30));
 
-        saveBtn.addActionListener((e) -> controller.saveUpload());
+        saveBtn.addActionListener((e) -> controller.saveUpload(imagePath));
 
-        JButton discardBtn = new JButton(UploadResultViewModel.DISCARD_BUTTON_LABEL);
-        discardBtn.setBorderPainted(true);
-        discardBtn.setContentAreaFilled(false);
-        discardBtn.setFocusPainted(false);
+        JButton discardBtn = ViewComponentFactory.buildButton(UploadResultViewModel.DISCARD_BUTTON_LABEL);
         discardBtn.setPreferredSize(new Dimension(100, 30));
 
         discardBtn.addActionListener((e) -> controller.escape());
@@ -196,7 +190,8 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
     }
 
     private void setFields(UploadResultState state) {
-        this.setImage(state.getImagePath());
+        this.imagePath = state.getImagePath();
+        this.setImage(imagePath);
         this.nameLabel.setText(state.getName());
         this.scientificNameLabel.setText(state.getScientificName());
         this.familyLabel.setText(state.getFamily());

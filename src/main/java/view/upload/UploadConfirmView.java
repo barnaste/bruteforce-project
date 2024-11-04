@@ -3,6 +3,7 @@ package view.upload;
 import interface_adapter.upload.UploadController;
 import interface_adapter.upload.confirm.UploadConfirmState;
 import interface_adapter.upload.confirm.UploadConfirmViewModel;
+import view.ViewComponentFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -49,19 +50,13 @@ public class UploadConfirmView extends JPanel implements PropertyChangeListener 
                 UploadConfirmViewModel.TOP_PANEL_HEIGHT
         ));
 
-        JButton returnBtn = new JButton(UploadConfirmViewModel.RETURN_BUTTON_LABEL);
-        returnBtn.setBorderPainted(true);
-        returnBtn.setContentAreaFilled(false);
-        returnBtn.setFocusPainted(false);
+        JButton returnBtn = ViewComponentFactory.buildButton(UploadConfirmViewModel.RETURN_BUTTON_LABEL);
         returnBtn.setBorderPainted(false);
 
         returnBtn.addActionListener((e) -> controller.switchToSelectView() );
         topPanel.add(returnBtn, BorderLayout.WEST);
 
-        JButton confirmBtn = new JButton(UploadConfirmViewModel.CONFIRM_BUTTON_LABEL);
-        confirmBtn.setBorderPainted(true);
-        confirmBtn.setContentAreaFilled(false);
-        confirmBtn.setFocusPainted(false);
+        JButton confirmBtn = ViewComponentFactory.buildButton(UploadConfirmViewModel.CONFIRM_BUTTON_LABEL);
         confirmBtn.setBorderPainted(false);
 
         confirmBtn.addActionListener((e) -> controller.switchToResultView(this.imagePath) );

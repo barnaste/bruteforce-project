@@ -3,6 +3,7 @@ package view.upload;
 import interface_adapter.upload.UploadController;
 import interface_adapter.upload.select.UploadSelectState;
 import interface_adapter.upload.select.UploadSelectViewModel;
+import view.ViewComponentFactory;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -47,10 +48,7 @@ public class UploadSelectView extends JPanel implements PropertyChangeListener {
                 UploadSelectViewModel.MAIN_PANEL_HEIGHT
         ));
 
-        JButton selectFileBtn = new JButton(UploadSelectViewModel.UPLOAD_BUTTON_LABEL);
-        selectFileBtn.setBorderPainted(true);
-        selectFileBtn.setContentAreaFilled(false);
-        selectFileBtn.setFocusPainted(false);
+        JButton selectFileBtn = ViewComponentFactory.buildButton(UploadSelectViewModel.UPLOAD_BUTTON_LABEL);
 
         selectFileBtn.addActionListener((e) -> openFileDialog());
         mainPanel.add(selectFileBtn, new GridBagConstraints());
@@ -66,10 +64,7 @@ public class UploadSelectView extends JPanel implements PropertyChangeListener {
                 UploadSelectViewModel.TOP_PANEL_HEIGHT
         ));
 
-        JButton cancelBtn = new JButton(UploadSelectViewModel.CANCEL_BUTTON_LABEL);
-        cancelBtn.setBorderPainted(true);
-        cancelBtn.setContentAreaFilled(false);
-        cancelBtn.setFocusPainted(false);
+        JButton cancelBtn = ViewComponentFactory.buildButton(UploadSelectViewModel.CANCEL_BUTTON_LABEL);
         cancelBtn.setBorderPainted(false);
 
         cancelBtn.addActionListener((e) -> controller.escape());

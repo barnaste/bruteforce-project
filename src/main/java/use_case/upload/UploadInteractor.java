@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import data_access.ImageDataBase;
 import data_access.PlantDataBase;
+import entity.Plant;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -111,10 +112,13 @@ public class UploadInteractor implements UploadInputBoundary {
     }
 
     @Override
-    public void saveUpload() {
+    public void saveUpload(UploadInputData inputData) {
         // TODO: save images as cropped
 
 
+        Plant plant = new Plant();
+
+        this.escapeMap.run();
     }
 
     public void setEscapeMap(Runnable escapeMap) {
