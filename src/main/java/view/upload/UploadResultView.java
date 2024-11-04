@@ -166,7 +166,7 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
         saveBtn.setFocusPainted(false);
         saveBtn.setPreferredSize(new Dimension(100, 30));
 
-        saveBtn.addActionListener((e) -> controller.save());
+        saveBtn.addActionListener((e) -> controller.saveUpload());
 
         JButton discardBtn = new JButton(UploadResultViewModel.DISCARD_BUTTON_LABEL);
         discardBtn.setBorderPainted(true);

@@ -1,5 +1,7 @@
 package view.upload;
 
+import data_access.MongoImageDataAccessObject;
+import data_access.MongoPlantDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.upload.UploadController;
 import interface_adapter.upload.UploadPresenter;
@@ -114,7 +116,11 @@ class MainViewDemo {
                 confirmViewModel,
                 resultViewModel
         );
-        UploadInputBoundary uploadInteractor = new UploadInteractor(uploadOutputBoundary);
+        UploadInputBoundary uploadInteractor = new UploadInteractor(
+                uploadOutputBoundary,
+                new MongoImageDataAccessObject(),
+                new MongoPlantDataAccessObject()
+        );
         UploadController controller = new UploadController(uploadInteractor);
 
         selectorView.setController(controller);

@@ -28,5 +28,7 @@ public class UploadController {
         uploadUseCaseInteractor.escape();
     }
 
-    public void save() {}
+    public void saveUpload() {
+        uploadUseCaseInteractor.saveUpload();
+    }
 }

@@ -3,6 +3,8 @@ package use_case.upload;
 import java.io.File;
 import java.io.IOException;
 
+import data_access.ImageDataBase;
+import data_access.PlantDataBase;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -16,6 +18,8 @@ import org.json.JSONObject;
 
 public class UploadInteractor implements UploadInputBoundary {
     private final UploadOutputBoundary presenter;
+    private final ImageDataBase imageDataBase;
+    private final PlantDataBase plantDataBase;
 
     private Runnable escapeMap;
 
@@ -24,14 +28,21 @@ public class UploadInteractor implements UploadInputBoundary {
     private static final String API_URL = "https://my-api.plantnet.org/v2/identify/" + PROJECT + "?api-key=";
     private static final String API_PRIVATE_KEY = "2b1015rSKP2VVP2UzoDaqbYI"; // secret
 
-    public UploadInteractor(UploadOutputBoundary uploadOutputBoundary) {
+    public UploadInteractor(UploadOutputBoundary uploadOutputBoundary, ImageDataBase imageDataBase, PlantDataBase plantDataBase) {
         this.presenter = uploadOutputBoundary;
+        this.imageDataBase = imageDataBase;
+        this.plantDataBase = plantDataBase;
     }
 
     @Override
     public void switchToConfirmView(UploadInputData inputData) {
         UploadConfirmOutputData outputData = new UploadConfirmOutputData(inputData.getImage());
         this.presenter.switchToConfirmView(outputData);
+    }
+
+    @Override
+    public void switchToSelectView() {
+        this.presenter.switchToSelectView(new UploadSelectOutputData());
     }
 
     @Override
@@ -100,12 +111,11 @@ public class UploadInteractor implements UploadInputBoundary {
     }
 
     @Override
-    public void switchToSelectView() {
-        this.presenter.switchToSelectView(new UploadSelectOutputData());
-    }
+    public void saveUpload() {
+        // TODO: save images as cropped
 
-    @Override
-    public void saveUpload() {}
+
+    }
 
     public void setEscapeMap(Runnable escapeMap) {
         this.escapeMap = escapeMap;
