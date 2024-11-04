@@ -44,8 +44,8 @@ public class MainView extends JPanel implements PropertyChangeListener {
 
         final JPanel buttons = new JPanel();
         buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
-        logOut = new JButton("Log Out");
-        sort = new JButton("Sort");
+        logOut = ViewComponentFactory.buildButton("Log Out");
+        sort = ViewComponentFactory.buildButton("Sort");
         buttons.add(logOut);
         buttons.add(sort);
 
