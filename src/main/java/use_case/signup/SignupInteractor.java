@@ -36,4 +36,7 @@ public class SignupInteractor implements SignupInputBoundary {
     public void switchToLoginView() {
         userPresenter.switchToLoginView();
     }
+    public void switchToStartView() {
+        userPresenter.switchToStartView();
+    }
 }
