@@ -3,7 +3,6 @@ package view;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.List;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -12,6 +11,8 @@ import javax.swing.event.DocumentListener;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
+
+import interface_adapter.sort.SortController;
 
 /**
  * The Main View, for when the user is logged into the program.
@@ -22,11 +23,12 @@ public class MainView extends JPanel implements PropertyChangeListener {
     private final MainViewModel mainViewModel;
 
     private LogoutController logoutController;
+    private SortController sortController;
 
     private final JLabel username;
 
     private final JButton logOut;
-    private final JButton upload;
+    private final JButton sort;
 
     private final JTextField passwordInputField = new JTextField(15);
 
@@ -35,8 +37,25 @@ public class MainView extends JPanel implements PropertyChangeListener {
         this.mainViewModel.addPropertyChangeListener(this);
 
         final JLabel title = new JLabel("Logged In Screen");
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        final JLabel usernameInfo = new JLabel("Currently logged in: ");
         username = new JLabel();
-        final JPanel header = ViewComponentFactory.buildHorizontalPanel(List.of(title, username));
+
+        final JPanel buttons = new JPanel();
+        buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
+        logOut = new JButton("Log Out");
+        sort = new JButton("Sort");
+        buttons.add(logOut);
+        buttons.add(sort);
+
+        final UserGalleryPanel gallery = new UserGalleryPanel();
+
+        final JPanel mainPanel = new JPanel();
+        mainPanel.add(buttons);
+        mainPanel.add(gallery);
+
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         passwordInputField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -62,10 +81,6 @@ public class MainView extends JPanel implements PropertyChangeListener {
             }
         });
 
-        upload = ViewComponentFactory.buildButton("Upload");
-        logOut = ViewComponentFactory.buildButton("Log Out");
-        final JPanel buttons = ViewComponentFactory.buildVerticalPanel(List.of(upload, logOut));
-
         logOut.addActionListener(
                 // This creates an anonymous subclass of ActionListener and instantiates it.
                 evt -> {
@@ -76,31 +91,27 @@ public class MainView extends JPanel implements PropertyChangeListener {
                 }
         );
 
-        upload.addActionListener(
+        sort.addActionListener(
                 evt -> {
-                    if (evt.getSource().equals(upload)) {
-                        //TODO: implement this.
+                    if (evt.getSource().equals(sort)) {
+                        // TODO: Implement
+                        sortController.execute();
                     }
                 }
         );
 
-        final JPanel gallery = new JPanel();
-        // Temporarily give the gallery panel a border so it's visible
-        gallery.setPreferredSize(new Dimension(800, 500));
-        gallery.setBorder(BorderFactory.createLineBorder(Color.black));
+        this.add(title);
+        this.add(usernameInfo);
+        this.add(username);
 
-        final JPanel body = ViewComponentFactory.buildHorizontalPanel(List.of(buttons, gallery));
-
-        this.add(ViewComponentFactory.buildVerticalPanel(List.of(header, body)));
-
-        this.setLayout(new GridBagLayout());
+        this.add(mainPanel);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("state")) {
             final MainState state = (MainState) evt.getNewValue();
-            username.setText("Currently logged in: " + state.getUsername());
+            username.setText(state.getUsername());
         }
     }
 
@@ -110,5 +121,9 @@ public class MainView extends JPanel implements PropertyChangeListener {
 
     public void setLogoutController(LogoutController logoutController) {
         this.logoutController = logoutController;
+    }
+
+    public void setSortController(SortController sortController) {
+        this.sortController = sortController;
     }
 }
