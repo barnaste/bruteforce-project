@@ -26,6 +26,7 @@ public class Plant {
         this.comments = comments;
         this.isPublic = isPublic;
         this.imageID = imageID;
+        this.species = species;
     }
 
     /**
