@@ -49,10 +49,7 @@ public class MainView extends JPanel implements PropertyChangeListener {
         buttons.add(logOut);
         buttons.add(sort);
 
-        final JPanel gallery = new JPanel();
-        // Temporarily give the gallery panel a border so it's visible
-        gallery.setPreferredSize(new Dimension(500, 300));
-        gallery.setBorder(BorderFactory.createLineBorder(Color.black));
+        final UserGalleryPanel gallery = new UserGalleryPanel();
 
         final JPanel mainPanel = new JPanel();
         mainPanel.add(buttons);
