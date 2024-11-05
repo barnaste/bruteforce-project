@@ -2,6 +2,8 @@ package view.upload;
 
 import data_access.MongoImageDataAccessObject;
 import data_access.MongoPlantDataAccessObject;
+import data_access.MongoUserDataAccessObject;
+import data_access.UserDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.upload.UploadController;
 import interface_adapter.upload.UploadPresenter;
@@ -116,10 +118,15 @@ class MainViewDemo {
                 confirmViewModel,
                 resultViewModel
         );
+        // TODO: this is a makeshift setup -- the userDataAccessObject should already exist and
+        //  is expected to be injected into the main view, or accessible by the main view somehow
+        UserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
+        userDataAccessObject.setCurrentUsername("Charles Kyle Andrews Henderson the III");
         UploadInputBoundary uploadInteractor = new UploadInteractor(
                 uploadOutputBoundary,
                 new MongoImageDataAccessObject(),
-                new MongoPlantDataAccessObject()
+                new MongoPlantDataAccessObject(),
+                userDataAccessObject
         );
         UploadController controller = new UploadController(uploadInteractor);
 
@@ -127,7 +134,7 @@ class MainViewDemo {
         confirmView.setController(controller);
         resultView.setController(controller);
 
-        uploadManagerModel.setState(resultView.getViewName());
+        uploadManagerModel.setState(selectorView.getViewName());
         uploadManagerModel.firePropertyChanged();
 
         // create an overlay with the created cardPanel as the popup
