@@ -1,10 +1,11 @@
 package view;
 
-import java.awt.Component;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -14,6 +15,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.View;
 
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginState;
@@ -50,11 +52,9 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         final LabelTextPanel passwordInfo = new LabelTextPanel(
                 new JLabel("Password"), passwordInputField);
 
-        final JPanel buttons = new JPanel();
         logIn = ViewComponentFactory.buildButton("Log In");
-        buttons.add(logIn);
         cancel = ViewComponentFactory.buildButton("Cancel");
-        buttons.add(cancel);
+        final JPanel buttons = ViewComponentFactory.buildHorizontalPanel(List.of(logIn, cancel));
 
         logIn.addActionListener(
                 evt -> {
@@ -121,11 +121,11 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
             }
         });
 
-        this.add(title);
-        this.add(usernameInfo);
-        this.add(usernameErrorField);
-        this.add(passwordInfo);
-        this.add(buttons);
+        this.add(ViewComponentFactory.buildVerticalPanel(
+                List.of(title, usernameInfo, usernameErrorField, passwordInfo, buttons)
+        ));
+
+        this.setLayout(new GridBagLayout());
     }
 
     /**
