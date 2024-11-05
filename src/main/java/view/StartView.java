@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
+
 import interface_adapter.ViewManagerModel;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupViewModel;
@@ -21,35 +23,28 @@ public class StartView extends JPanel implements ActionListener {
         this.loginViewModel = loginViewModel;
         this.viewManagerModel = viewManagerModel;
 
-        // Set layout
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
         // Welcome label
         JLabel welcomeLabel = new JLabel("Welcome!");
         welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 30));
         add(welcomeLabel);
 
-        // Create buttons panel
-        JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new FlowLayout());
-
         // "New User" button
         JButton newUserButton = ViewComponentFactory.buildButton("New User");
         newUserButton.setPreferredSize(new Dimension(200, 55));
         newUserButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         newUserButton.addActionListener(this);
-        buttonsPanel.add(newUserButton);
 
         // "Login" button
         JButton loginButton = ViewComponentFactory.buildButton("Login");
         loginButton.setPreferredSize(new Dimension(200, 55));
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginButton.addActionListener(this);
-        buttonsPanel.add(loginButton);
 
-        add(Box.createRigidArea(new Dimension(0, 20))); // Space between title and buttons
-        add(buttonsPanel);
+        // Add components
+        JPanel buttonsPanel = ViewComponentFactory.buildHorizontalPanel(List.of(newUserButton, loginButton));
+        add(ViewComponentFactory.buildVerticalPanel(List.of(welcomeLabel, buttonsPanel)));
+        setLayout(new GridBagLayout());
     }
 
     @Override
