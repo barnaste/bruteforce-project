@@ -5,15 +5,12 @@ import interface_adapter.upload.result.UploadResultState;
 import interface_adapter.upload.result.UploadResultViewModel;
 import view.ViewComponentFactory;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.text.View;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
 
 public class UploadResultView extends JPanel implements PropertyChangeListener {
@@ -26,6 +23,7 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
     private final JLabel familyLabel = new JLabel();
     private final JLabel certaintyLabel = new JLabel();
     private final JTextArea notesField = new JTextArea();
+    private final JToggleButton privacyToggle = new JToggleButton();
 
     private BufferedImage image;
 
@@ -108,6 +106,31 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
         layout.putConstraint(SpringLayout.NORTH, notesScrollPane, 35, SpringLayout.SOUTH, certaintyLabel);
         contentPanel.add(notesScrollPane);
 
+        // default privacy to public
+        privacyToggle.setFont(font.deriveFont(16f));
+        privacyToggle.setMargin(new Insets(0, 0, 0, 0));
+        privacyToggle.setPreferredSize(new Dimension(30, 30));
+        privacyToggle.setBorder(null);
+        privacyToggle.setFocusPainted(false);
+        privacyToggle.setText("\uD83D\uDD12");
+        // enable a different color when privacy is toggled
+        privacyToggle.setBackground(new Color(UploadResultViewModel.PUBLIC_TOGGLE_COLOR, true));
+        UIManager.put("ToggleButton.select",
+                new Color(UploadResultViewModel.PRIVATE_TOGGLE_COLOR, true));
+        SwingUtilities.updateComponentTreeUI(privacyToggle);
+        // enable user feedback when they toggle privacy
+        privacyToggle.addItemListener((e) -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                privacyToggle.setText("\uD83D\uDD13");
+            }
+            else {
+                privacyToggle.setText("\uD83D\uDD12");
+            }
+        });
+        layout.putConstraint(SpringLayout.EAST, privacyToggle, -20, SpringLayout.EAST, contentPanel);
+        layout.putConstraint(SpringLayout.NORTH, privacyToggle, 20, SpringLayout.NORTH, contentPanel);
+        contentPanel.add(privacyToggle);
+
         return contentPanel;
     }
 
@@ -160,8 +183,11 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
         saveBtn.addActionListener((e) -> controller.saveUpload(
                 image,
                 scientificNameLabel.getText(),
-                notesField.getText()
+                notesField.getText(),
+                !privacyToggle.isSelected()
         ));
+        // NOTE: we negate privacyToggle as the controller needs to know if the image is public,
+        //  not if the image is private.
 
         JButton discardBtn = ViewComponentFactory.buildButton(UploadResultViewModel.DISCARD_BUTTON_LABEL);
         discardBtn.setPreferredSize(new Dimension(100, 30));
@@ -198,6 +224,8 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
                 "% certainty");
 
         this.notesField.setText("My notes...");
+
+        this.privacyToggle.setSelected(false);
 
         this.revalidate();
         this.repaint();

@@ -127,7 +127,7 @@ class MainViewDemo {
         confirmView.setController(controller);
         resultView.setController(controller);
 
-        uploadManagerModel.setState(selectorView.getViewName());
+        uploadManagerModel.setState(resultView.getViewName());
         uploadManagerModel.firePropertyChanged();
 
         // create an overlay with the created cardPanel as the popup
