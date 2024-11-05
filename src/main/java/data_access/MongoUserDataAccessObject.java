@@ -23,9 +23,7 @@ import use_case.sort.SortUserDataAccessInterface;
 /**
  * UserDB class implemented using MongoDB.
  */
-public class MongoUserDataAccessObject implements LoginUserDataAccessInterface,
-                                                  SignupUserDataAccessInterface,
-                                                  LogoutUserDataAccessInterface,
+public class MongoUserDataAccessObject implements UserDataAccessObject, LoginUserDataAccessInterface, SignupUserDataAccessInterface, LogoutUserDataAccessInterface,
         SortUserDataAccessInterface {
     final String CONNECTIONSTRING = "mongodb+srv://brute_force:CSC207-F24@cluster0.upye6.mongodb.net/" +
             "?retryWrites=true&w=majority&appName=Cluster0";
