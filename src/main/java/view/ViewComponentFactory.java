@@ -1,8 +1,12 @@
 package view;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * A factory class for building View Components with a consistent style.
@@ -57,5 +61,22 @@ public final class ViewComponentFactory {
             p.add(components.get(components.size() - 1));
         }
         return p;
+
+    public static BufferedImage buildCroppedImage(String imagePath) {
+        BufferedImage image = null;
+        try {
+            // Crop the image so that it is has square aspect ratio
+            BufferedImage sourceImg = ImageIO.read(new File(imagePath));
+            int thumbWidth = Math.min(sourceImg.getWidth(), sourceImg.getHeight());
+            image = sourceImg.getSubimage(
+                    (sourceImg.getWidth() - thumbWidth) / 2,
+                    (sourceImg.getHeight() - thumbWidth) / 2,
+                    thumbWidth, thumbWidth);
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        return image;
+
     }
 }
