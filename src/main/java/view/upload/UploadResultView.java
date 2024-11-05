@@ -27,7 +27,6 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
     private final JLabel certaintyLabel = new JLabel();
     private final JTextArea notesField = new JTextArea();
 
-    private String imagePath = "";
     private BufferedImage image;
 
     public UploadResultView(UploadResultViewModel viewModel) {
@@ -135,12 +134,7 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 if (image != null) {
-                    int thumbWidth = Math.min(image.getWidth(), image.getHeight());
-                    BufferedImage thumbnail = image.getSubimage(
-                            (image.getWidth() - thumbWidth) / 2,
-                            (image.getHeight() - thumbWidth) / 2,
-                            thumbWidth, thumbWidth);
-                    g.drawImage(thumbnail, 0, 0,
+                    g.drawImage(image, 0, 0,
                             UploadResultViewModel.IMAGE_WIDTH,
                             UploadResultViewModel.IMAGE_HEIGHT,
                             this
@@ -163,7 +157,11 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
         JButton saveBtn = ViewComponentFactory.buildButton(UploadResultViewModel.SAVE_BUTTON_LABEL);
         saveBtn.setPreferredSize(new Dimension(100, 30));
 
-        saveBtn.addActionListener((e) -> controller.saveUpload(imagePath));
+        saveBtn.addActionListener((e) -> controller.saveUpload(
+                image,
+                scientificNameLabel.getText(),
+                notesField.getText()
+        ));
 
         JButton discardBtn = ViewComponentFactory.buildButton(UploadResultViewModel.DISCARD_BUTTON_LABEL);
         discardBtn.setPreferredSize(new Dimension(100, 30));
@@ -190,8 +188,7 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
     }
 
     private void setFields(UploadResultState state) {
-        this.imagePath = state.getImagePath();
-        this.setImage(imagePath);
+        this.image = ViewComponentFactory.buildCroppedImage(state.getImagePath());
         this.nameLabel.setText(state.getName());
         this.scientificNameLabel.setText(state.getScientificName());
         this.familyLabel.setText(state.getFamily());
@@ -201,16 +198,9 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
                 "% certainty");
 
         this.notesField.setText("My notes...");
-    }
 
-    private void setImage(String imagePath) {
-        try {
-            image = ImageIO.read(new File(imagePath));
-            this.revalidate();
-            this.repaint();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+        this.revalidate();
+        this.repaint();
     }
 
     @Override

@@ -1,7 +1,5 @@
 package use_case.upload;
 
-import java.io.File;
-
 /**
  * The Input Data for the Upload use case.
  */

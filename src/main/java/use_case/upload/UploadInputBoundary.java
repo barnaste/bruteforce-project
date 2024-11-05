@@ -15,7 +15,7 @@ public interface UploadInputBoundary {
 
     void switchToSelectView();
 
-    void saveUpload(UploadInputData uploadInputData);
+    void saveUpload(UploadSaveInputData uploadInputData);
 
     /**
      * Set the method by which the upload use case is closed -- the UI for this

@@ -2,6 +2,9 @@ package interface_adapter.upload;
 
 import use_case.upload.UploadInputBoundary;
 import use_case.upload.UploadInputData;
+import use_case.upload.UploadSaveInputData;
+
+import java.awt.image.BufferedImage;
 
 public class UploadController {
     private final UploadInputBoundary uploadUseCaseInteractor;
@@ -28,8 +31,8 @@ public class UploadController {
         uploadUseCaseInteractor.escape();
     }
 
-    public void saveUpload(String filePath) {
-        final UploadInputData uploadInputData = new UploadInputData(filePath);
-        uploadUseCaseInteractor.saveUpload(uploadInputData);
+    public void saveUpload(BufferedImage image, String plantSpecies, String userNotes) {
+        final UploadSaveInputData inputData = new UploadSaveInputData(image, plantSpecies, userNotes);
+        uploadUseCaseInteractor.saveUpload(inputData);
     }
 }

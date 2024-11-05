@@ -122,7 +122,7 @@ public class UploadSelectView extends JPanel implements PropertyChangeListener {
         if (state.getError() != null) {
             JOptionPane.showMessageDialog(this,
                     "Please ensure the captured plant is in clear view!\n" +
-                            "Your photograph should depict only one plant.",
+                            "Your photograph should depict exactly one plant.",
                     state.getError(),
                     JOptionPane.PLAIN_MESSAGE
             );

@@ -70,12 +70,7 @@ public class UploadConfirmView extends JPanel implements PropertyChangeListener 
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 if (image != null) {
-                    int thumbWidth = Math.min(image.getWidth(), image.getHeight());
-                    BufferedImage thumbnail = image.getSubimage(
-                            (image.getWidth() - thumbWidth) / 2,
-                            (image.getHeight() - thumbWidth) / 2,
-                            thumbWidth, thumbWidth);
-                    g.drawImage(thumbnail, 0, 0,
+                    g.drawImage(image, 0, 0,
                             UploadConfirmViewModel.IMAGE_WIDTH,
                             UploadConfirmViewModel.IMAGE_HEIGHT,
                             this
@@ -100,17 +95,10 @@ public class UploadConfirmView extends JPanel implements PropertyChangeListener 
 
     private void setFields(UploadConfirmState state) {
         this.imagePath = state.getImagePath();
-        this.setImage(imagePath);
-    }
+        this.image = ViewComponentFactory.buildCroppedImage(this.imagePath);
 
-    private void setImage(String imagePath) {
-        try {
-            image = ImageIO.read(new File(imagePath));
-            this.revalidate();
-            this.repaint();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+        this.revalidate();
+        this.repaint();
     }
 
     @Override

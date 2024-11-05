@@ -1,5 +1,6 @@
 package use_case.upload;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -16,6 +17,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import javax.imageio.ImageIO;
 
 public class UploadInteractor implements UploadInputBoundary {
     private final UploadOutputBoundary presenter;
@@ -112,11 +115,16 @@ public class UploadInteractor implements UploadInputBoundary {
     }
 
     @Override
-    public void saveUpload(UploadInputData inputData) {
-        // TODO: save images as cropped
-
-
-        Plant plant = new Plant();
+    public void saveUpload(UploadSaveInputData inputData) {
+        String imageID = imageDataBase.addImage(inputData.getImage());
+        Plant plant = new Plant(
+                imageID,
+                inputData.getPlantSpecies(),
+                owner,
+                inputData.getUserNotes(),
+                inputData.isPublic()
+        );
+        plantDataBase.addPlant(plant);
 
         this.escapeMap.run();
     }
