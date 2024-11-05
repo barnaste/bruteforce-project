@@ -61,6 +61,7 @@ public final class ViewComponentFactory {
             p.add(components.get(components.size() - 1));
         }
         return p;
+    }
 
     public static BufferedImage buildCroppedImage(String imagePath) {
         BufferedImage image = null;
@@ -77,6 +78,5 @@ public final class ViewComponentFactory {
             System.out.println(e.getMessage());
         }
         return image;
-
     }
 }
