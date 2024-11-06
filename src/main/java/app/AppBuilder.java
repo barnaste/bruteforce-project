@@ -44,12 +44,12 @@ public class AppBuilder {
 
     private final MongoUserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
 
-    private SignupView signupView;
-    private SignupViewModel signupViewModel;
-    private LoginViewModel loginViewModel = new LoginViewModel();
-    private MainViewModel mainViewModel;
-    private MainView mainView;
-    private LoginView loginView;
+    private final SignupViewModel signupViewModel = new SignupViewModel();
+    private final LoginViewModel loginViewModel = new LoginViewModel();
+    private final SignupView signupView = new SignupView(signupViewModel);;
+    private final MainViewModel mainViewModel = new MainViewModel();
+    private final MainView mainView = new MainView(mainViewModel);
+    private final LoginView loginView = new LoginView(loginViewModel);
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -60,8 +60,6 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addStartView() {
-        // Initialize view models for StartView dependencies
-        signupViewModel = new SignupViewModel();
 
         // Create StartView with required view models
         StartView startView = new StartView(signupViewModel, loginViewModel, viewManagerModel);
@@ -76,8 +74,6 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addSignupView() {
-        signupViewModel = new SignupViewModel();
-        signupView = new SignupView(signupViewModel);
         cardPanel.add(signupView, signupView.getViewName());
         return this;
     }
@@ -87,7 +83,6 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLoginView() {
-        loginView = new LoginView(loginViewModel);
         cardPanel.add(loginView, loginView.getViewName());
         return this;
     }
@@ -97,8 +92,6 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLoggedInView() {
-        mainViewModel = new MainViewModel();
-        mainView = new MainView(mainViewModel);
         cardPanel.add(mainView, mainView.getViewName());
         return this;
     }
