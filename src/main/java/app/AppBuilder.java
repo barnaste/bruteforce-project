@@ -46,7 +46,7 @@ public class AppBuilder {
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
-    private LoginViewModel loginViewModel;
+    private LoginViewModel loginViewModel = new LoginViewModel();
     private MainViewModel mainViewModel;
     private MainView mainView;
     private LoginView loginView;
@@ -62,7 +62,6 @@ public class AppBuilder {
     public AppBuilder addStartView() {
         // Initialize view models for StartView dependencies
         signupViewModel = new SignupViewModel();
-        loginViewModel = new LoginViewModel();
 
         // Create StartView with required view models
         StartView startView = new StartView(signupViewModel, loginViewModel, viewManagerModel);
@@ -88,7 +87,6 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLoginView() {
-        loginViewModel = new LoginViewModel();
         loginView = new LoginView(loginViewModel);
         cardPanel.add(loginView, loginView.getViewName());
         return this;
