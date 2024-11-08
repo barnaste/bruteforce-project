@@ -9,6 +9,8 @@ public class MainState {
     private String password = "";
     private String passwordError;
 
+    private boolean isPublic;
+
     public MainState(MainState copy) {
         username = copy.username;
         password = copy.password;
@@ -39,4 +41,17 @@ public class MainState {
     public String getPassword() {
         return password;
     }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic() {
+        this.isPublic = true;
+    }
+
+    public void setPrivate() {
+        this.isPublic = false;
+    }
+
 }

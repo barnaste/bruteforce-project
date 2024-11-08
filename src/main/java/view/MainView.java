@@ -12,8 +12,6 @@ import interface_adapter.logout.LogoutController;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 
-import interface_adapter.sort.SortController;
-
 /**
  * The Main View, for when the user is logged into the program.
  */
@@ -23,7 +21,6 @@ public class MainView extends JPanel implements PropertyChangeListener {
     private final MainViewModel mainViewModel;
 
     private LogoutController logoutController;
-    private SortController sortController;
 
     private final JLabel username;
 
@@ -49,10 +46,7 @@ public class MainView extends JPanel implements PropertyChangeListener {
         buttons.add(logOut);
         buttons.add(sort);
 
-        final JPanel gallery = new JPanel();
-        // Temporarily give the gallery panel a border so it's visible
-        gallery.setPreferredSize(new Dimension(800, 500));
-        gallery.setBorder(BorderFactory.createLineBorder(Color.black));
+        final UserGalleryPanel gallery = new UserGalleryPanel();
 
         final JPanel mainPanel = new JPanel();
         mainPanel.add(buttons);
@@ -94,15 +88,6 @@ public class MainView extends JPanel implements PropertyChangeListener {
                 }
         );
 
-        sort.addActionListener(
-                evt -> {
-                    if (evt.getSource().equals(sort)) {
-                        // TODO: Implement
-                        sortController.execute();
-                    }
-                }
-        );
-
         this.add(title);
         this.add(usernameInfo);
         this.add(username);
@@ -126,7 +111,4 @@ public class MainView extends JPanel implements PropertyChangeListener {
         this.logoutController = logoutController;
     }
 
-    public void setSortController(SortController sortController) {
-        this.sortController = sortController;
-    }
 }
