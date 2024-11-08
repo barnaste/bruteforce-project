@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import data_access.MongoImageDataAccessObject;
 import data_access.MongoPlantDataAccessObject;
@@ -33,7 +31,7 @@ import view.upload.UploadSelectView;
 /**
  * The Main View, for when the user is logged into the program.
  */
-public class MainView extends JLayeredPane implements PropertyChangeListener {
+public class    MainView extends JLayeredPane implements PropertyChangeListener {
     private final int OVERLAY_COLOR = 0x40829181;
     private final int DISPLAY_WIDTH = 1080;
     private final int DISPLAY_HEIGHT = 720;
@@ -50,8 +48,6 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
     private final JButton logOut;
     private final JButton upload;
 
-    private final JTextField passwordInputField = new JTextField(15);
-
     public MainView(MainViewModel mainViewModel) {
         this.mainViewModel = mainViewModel;
         this.mainViewModel.addPropertyChangeListener(this);
@@ -61,31 +57,6 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
-
-        // TODO: what is the purpose of this passwordInputField? do we need it?
-        passwordInputField.getDocument().addDocumentListener(new DocumentListener() {
-
-            private void documentListenerHelper() {
-                final MainState currentState = mainViewModel.getState();
-                currentState.setPassword(passwordInputField.getText());
-                mainViewModel.setState(currentState);
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-        });
 
         final JLabel title = new JLabel("Main View");
         final JPanel header = ViewComponentFactory.buildHorizontalPanel(List.of(title, userLabel));
