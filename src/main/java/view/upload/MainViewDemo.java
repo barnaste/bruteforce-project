@@ -32,9 +32,6 @@ class MainViewDemo {
     private final JButton upload;
 
     public MainViewDemo() {
-        // TODO: this is just a demo setup so that the use case can be launched --
-        //  it is expected that the MainView class will overwrite what is found here.
-        //  (if looking for inspiration this is not a bad place to start though)
         mainView = new JLayeredPane();
         mainView.setLayout(new OverlayLayout(mainView));
 
@@ -69,10 +66,6 @@ class MainViewDemo {
         frame.setVisible(true);
     }
 
-    // TODO: IMPORTANT -- this method and enableInteraction must both be implemented
-    //  each method disables and enables all buttons on the main view, respectively.
-    //  Otherwise, these buttons will be clickable while there is an overlay, resulting
-    //  in undesirable effects.
     private void disableInteraction() {
         upload.setEnabled(false);
     }
@@ -118,8 +111,6 @@ class MainViewDemo {
                 confirmViewModel,
                 resultViewModel
         );
-        // TODO: this is a makeshift setup -- the userDataAccessObject should already exist and
-        //  is expected to be injected into the main view, or accessible by the main view somehow
         UserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
         userDataAccessObject.setCurrentUsername("Charles Kyle Andrews Henderson the III");
         UploadInputBoundary uploadInteractor = new UploadInteractor(
@@ -141,8 +132,6 @@ class MainViewDemo {
         overlay(cardPanel, uploadInteractor::setEscapeMap);
     }
 
-    // TODO: it is recommended that we maintain this overlay method within the final
-    //  copy of the Main View -- it will prove useful for all overlays within the application.
     public void overlay(JPanel overlayPanel, Consumer<Runnable> setOverlayEscape) {
         // disable any interaction outside the overlay
         this.disableInteraction();
