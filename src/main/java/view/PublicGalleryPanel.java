@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PublicGalleryPanel extends JPanel {
@@ -15,15 +16,14 @@ public class PublicGalleryPanel extends JPanel {
     private int pageSize = 16;
     private int currentPage = 0;
 
-    private final PublicGalleryController controller;
+    private PublicGalleryController controller;
     private final PublicGalleryViewModel viewModel;
 
     private final JPanel imagesGrid;
     private final JButton nextPageButton;
     private final JButton previousPageButton;
 
-    public PublicGalleryPanel(PublicGalleryController controller, PublicGalleryViewModel viewModel) {
-        this.controller = controller;
+    public PublicGalleryPanel(PublicGalleryViewModel viewModel) {
         this.viewModel = viewModel;
 
         // Set up the layout
@@ -58,13 +58,20 @@ public class PublicGalleryPanel extends JPanel {
         loadPage(currentPage);
     }
 
+    public void setPublicGalleryController(PublicGalleryController controller) {
+        this.controller = controller;
+    }
+
     private void loadPage(int pageNumber) {
-        // Request images for the specified page
-        controller.loadPage(pageNumber);
+        // Only use controller if it's set
+        if (controller != null) {
+            controller.loadPage(pageNumber);
+        }
 
         // Assume images are provided by the viewModel when loaded
         updateImageGrid();
     }
+
 
     private void loadNextPage() {
         currentPage++;
@@ -82,7 +89,9 @@ public class PublicGalleryPanel extends JPanel {
         imagesGrid.removeAll();
 
         // Retrieve images from the view model
-        List<BufferedImage> images = viewModel.getBufferedImages();
+        // TODO: implement
+        // List<BufferedImage> images = viewModel.getBufferedImages();
+        List<BufferedImage> images = new ArrayList<BufferedImage>();
 
         // Display each image as a JLabel with an ImageIcon
         for (BufferedImage image : images) {
