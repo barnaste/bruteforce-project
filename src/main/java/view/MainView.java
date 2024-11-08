@@ -29,7 +29,7 @@ public class MainView extends JPanel implements PropertyChangeListener {
     private final JLabel username;
 
     private final JButton logOut;
-    private final JButton sort;
+    private final JButton upload;
 
     private final JTextField passwordInputField = new JTextField(15);
 
@@ -65,9 +65,9 @@ public class MainView extends JPanel implements PropertyChangeListener {
             }
         });
 
+        upload = ViewComponentFactory.buildButton("Upload");
         logOut = ViewComponentFactory.buildButton("Log Out");
-        sort = ViewComponentFactory.buildButton("Sort");
-        final JPanel buttons = ViewComponentFactory.buildVerticalPanel(List.of(logOut, sort));
+        final JPanel buttons = ViewComponentFactory.buildVerticalPanel(List.of(upload, logOut));
 
         logOut.addActionListener(
                 // This creates an anonymous subclass of ActionListener and instantiates it.
@@ -79,10 +79,10 @@ public class MainView extends JPanel implements PropertyChangeListener {
                 }
         );
 
-        sort.addActionListener(
+        upload.addActionListener(
                 evt -> {
-                    if (evt.getSource().equals(sort)) {
-                        // TODO: Implement
+                    if (evt.getSource().equals(upload)) {
+                        //TODO: implement this.
                         sortController.execute();
                     }
                 }
