@@ -27,13 +27,6 @@ public interface LoginUserDataAccessInterface {
      */
     User getUser(String username);
 
-    /**
-     * A method that deletes a user from the database.
-     * @param username is the username of the user.
-     * @return true if the user was successfully deleted, false otherwise.
-     */
-    boolean deleteUser(String username);
-
     void setCurrentUsername(String username);
 
 }
