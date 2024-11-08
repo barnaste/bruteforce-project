@@ -13,12 +13,10 @@
 
 ## User Stories
 
-1. As a gardener, I want to be able to save and view images of plants in my garden : ***Team***
-2. As a traveler, I want to be able to identify unfamiliar plants : ***Xiangyu***
-3. I want to be able to edit information about plants that I previously inputted : ***Stefan***
-4. I want to be able to discover plant pictures that other users have posted and want to make public and to 
-   showcase my plants to unknown users : ***Ali***
-5. I want my family and friends to be able to create an accounts for their own plants : ***Avi***
-6. As a botanist, I want to add notes to each identified plant photo to record specific
-   details and observations (e.g. any damage) : ***Areez***
-7. I wish to set some special photos as favorites and be able to view them in one place: ***Serene***
+1. I want my family and friends to be able to create an accounts : ***Team***
+2. I want to upload images and information about my plants : ***Stefan***
+3. I want to view details of plants that I have previously uploaded : ***Ali***
+4. I want to view images of plants I've uploaded in a gallery : ***Xiangyu***
+5. I want to recover my account in case I forget my password : ***Avi***
+6. I want to edit the information I have previously uploaded about my plant : ***Areez***
+7. I want to view images of plants that others have made public : ***Serene***
