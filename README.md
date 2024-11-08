@@ -16,7 +16,7 @@
 1. I want my family and friends to be able to create an accounts : ***Team***
 2. I want to upload images and information about my plants : ***Stefan***
 3. I want to view details of plants that I have previously uploaded : ***Ali***
-4. I want to view images of plants I've uploaded in a gallery : ***Xiangyu***
-5. I want to recover my account in case I forget my password : ***Avi***
+4. I want to view images of plants that I uploaded and those that others have made publicly available: ***Serene***
+5. I want to switch between the two galleries mentioned in 4 : ***Xiangyu***
 6. I want to edit the information I have previously uploaded about my plant : ***Areez***
-7. I want to view images of plants that others have made public : ***Serene***
+7. I want to recover my account in case I forget my password : ***Avi***
