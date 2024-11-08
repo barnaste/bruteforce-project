@@ -12,4 +12,16 @@ public class MainViewModel extends ViewModel<MainState> {
         setState(new MainState());
     }
 
+    // Accessor for current mode
+    public MainState.Mode getCurrentMode() {
+        return getState().getCurrentMode();
+    }
+
+    // Mutator for current mode
+    public void setCurrentMode(MainState.Mode mode) {
+        MainState state = getState();
+        state.setCurrentMode(mode);
+        firePropertyChanged("state");  // Notify listeners of state change
+    }
+
 }
