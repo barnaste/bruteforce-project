@@ -19,7 +19,6 @@ public class Main {
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addLogoutUseCase()
-                .addSortUseCase()
                 .build();
 
         application.pack();

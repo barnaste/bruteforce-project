@@ -13,8 +13,6 @@ import interface_adapter.logout.LogoutController;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 
-import interface_adapter.sort.SortController;
-
 /**
  * The Main View, for when the user is logged into the program.
  */
@@ -24,7 +22,6 @@ public class MainView extends JPanel implements PropertyChangeListener {
     private final MainViewModel mainViewModel;
 
     private LogoutController logoutController;
-    private SortController sortController;
 
     private final JLabel username;
 
@@ -83,7 +80,6 @@ public class MainView extends JPanel implements PropertyChangeListener {
                 evt -> {
                     if (evt.getSource().equals(upload)) {
                         //TODO: implement this.
-                        sortController.execute();
                     }
                 }
         );
@@ -114,9 +110,5 @@ public class MainView extends JPanel implements PropertyChangeListener {
 
     public void setLogoutController(LogoutController logoutController) {
         this.logoutController = logoutController;
-    }
-
-    public void setSortController(SortController sortController) {
-        this.sortController = sortController;
     }
 }
