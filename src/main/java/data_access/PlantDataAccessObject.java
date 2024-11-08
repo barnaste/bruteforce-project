@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * PlantDB is an interface that defines the methods that the PlantDB class must implement.
  */
-public interface PlantDataBase {
+public interface PlantDataAccessObject {
     /**
      * A method that returns plants for a given user in the database.
      * The plants are sorted by the last modified date in descending order.
@@ -48,4 +48,19 @@ public interface PlantDataBase {
      * @return true if the plant has been successfully deleted, false otherwise
      */
     boolean deletePlant(ObjectId fileID);
+
+    /**
+     * Retrieves the total number of public plants in the database.
+     *
+     * @return the count of public plants
+     */
+    int getNumberOfPublicPlants();
+
+    /**
+     * Retrieves the total number of plants owned by a specific user.
+     *
+     * @param username the username of the user whose plant count is to be retrieved
+     * @return the count of plants owned by the user
+     */
+    int getNumberOfUserPlants(String username);
 }
