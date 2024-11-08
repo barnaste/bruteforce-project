@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 /**
  * ImageDB is an interface that defines the methods that the ImageDB class must implement.
  */
-public interface ImageDataBase {
+public interface ImageDataAccessObject {
     /**
      * A method that returns the image with the given id.
      * @param id is the unique id of the desired image
