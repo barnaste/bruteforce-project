@@ -97,8 +97,7 @@ public class PublicGalleryView extends JPanel {
     }
 
     private void updateNavigationButtons() {
-        // TODO: implement
-        // int totalPages = viewModel.getTotalPages();
+        // TODO: implement getTotalPages
         int totalPages = 3;
         previousPageButton.setEnabled(currentPage > 0);
         nextPageButton.setEnabled(currentPage < totalPages - 1);
