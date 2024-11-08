@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PublicGalleryPanel extends JPanel {
+public class PublicGalleryView extends JPanel {
     private final String viewName = "public gallery";
     private int pageSize = 16;
     private int currentPage = 0;
@@ -23,7 +23,7 @@ public class PublicGalleryPanel extends JPanel {
     private final JButton nextPageButton;
     private final JButton previousPageButton;
 
-    public PublicGalleryPanel(PublicGalleryViewModel viewModel) {
+    public PublicGalleryView(PublicGalleryViewModel viewModel) {
         this.viewModel = viewModel;
 
         // Set up the layout
@@ -63,13 +63,10 @@ public class PublicGalleryPanel extends JPanel {
     }
 
     private void loadPage(int pageNumber) {
-        // Only use controller if it's set
         if (controller != null) {
             controller.loadPage(pageNumber);
         }
-
-        // Assume images are provided by the viewModel when loaded
-        updateImageGrid();
+        updateNavigationButtons();
     }
 
 
@@ -85,13 +82,8 @@ public class PublicGalleryPanel extends JPanel {
         }
     }
 
-    private void updateImageGrid() {
+    public void displayImages(List<BufferedImage> images) {
         imagesGrid.removeAll();
-
-        // Retrieve images from the view model
-        // TODO: implement
-        // List<BufferedImage> images = viewModel.getBufferedImages();
-        List<BufferedImage> images = new ArrayList<BufferedImage>();
 
         // Display each image as a JLabel with an ImageIcon
         for (BufferedImage image : images) {
@@ -102,6 +94,14 @@ public class PublicGalleryPanel extends JPanel {
         // Refresh the grid to show new images
         imagesGrid.revalidate();
         imagesGrid.repaint();
+    }
+
+    private void updateNavigationButtons() {
+        // TODO: implement
+        // int totalPages = viewModel.getTotalPages();
+        int totalPages = 3;
+        previousPageButton.setEnabled(currentPage > 0);
+        nextPageButton.setEnabled(currentPage < totalPages - 1);
     }
 
     public String getViewName() {

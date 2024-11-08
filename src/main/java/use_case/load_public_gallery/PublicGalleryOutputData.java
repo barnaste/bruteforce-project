@@ -5,18 +5,18 @@ import java.util.List;
 
 public class PublicGalleryOutputData {
     private final List<BufferedImage> images;
-    private final int totalPages;
+    private final int page;
 
     public PublicGalleryOutputData(List<BufferedImage> images, int totalPages) {
         this.images = images;
-        this.totalPages = totalPages;
+        this.page = totalPages;
     }
 
     public List<BufferedImage> getImages() {
         return images;
     }
 
-    public int getTotalPages() {
-        return totalPages;
+    public int getPage() {
+        return page;
     }
 }

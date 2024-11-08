@@ -20,11 +20,19 @@ public class PublicGalleryPresenter implements PublicGalleryOutputBoundary {
 
     @Override
     public void prepareSuccessView(PublicGalleryOutputData response) {
-        // Update the gallery view with images.
-        final MainState mainState = mainViewModel.getState();
+        // Update the public gallery state in the view model
+        PublicGalleryState galleryState = publicGalleryViewModel.getState();
+        galleryState.setPlantImages(response.getImages());
+        publicGalleryViewModel.firePropertyChanged();
+
+        // Update the main state to reflect the gallery mode as public
+        MainState mainState = mainViewModel.getState();
         mainState.setPublic();
-        this.mainViewModel.setState(mainState);
-        this.mainViewModel.firePropertyChanged();
+        mainViewModel.setState(mainState);
+        mainViewModel.firePropertyChanged();
+
+        // Transition to the public gallery view
+        switchToPublicGalleryView(response);
 
         this.viewManagerModel.setState(mainViewModel.getViewName());
         this.viewManagerModel.firePropertyChanged();

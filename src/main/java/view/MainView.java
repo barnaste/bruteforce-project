@@ -15,6 +15,8 @@ import data_access.MongoPlantDataAccessObject;
 import data_access.MongoUserDataAccessObject;
 import data_access.UserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.load_public_gallery.PublicGalleryController;
+import interface_adapter.load_public_gallery.PublicGalleryViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
@@ -42,6 +44,10 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
     private final String viewName = "main view";
     private final MainViewModel mainViewModel;
 
+    private PublicGalleryView publicGalleryView;
+    private PublicGalleryController publicGalleryController;
+    private final JPanel galleryPanel;
+
     private LogoutController logoutController;
 
     private String currentUser = "";
@@ -52,9 +58,12 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
 
     private final JTextField passwordInputField = new JTextField(15);
 
-    public MainView(MainViewModel mainViewModel) {
+    public MainView(MainViewModel mainViewModel, PublicGalleryViewModel publicGalleryViewModel) {
         this.mainViewModel = mainViewModel;
         this.mainViewModel.addPropertyChangeListener(this);
+
+        publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
+        publicGalleryView.setPublicGalleryController(publicGalleryController);
 
         this.setLayout(new OverlayLayout(this));
         this.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
@@ -99,14 +108,21 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
 
         final JPanel buttons = ViewComponentFactory.buildVerticalPanel(List.of(upload, logOut));
 
-        final JPanel gallery = new JPanel();
-        // Temporarily give the gallery panel a border so it's visible
-        gallery.setPreferredSize(new Dimension(800, 500));
-        gallery.setBorder(BorderFactory.createLineBorder(Color.black));
-        final JPanel body = ViewComponentFactory.buildHorizontalPanel(List.of(buttons, gallery));
+        galleryPanel = new JPanel(new CardLayout());
+        galleryPanel.setPreferredSize(new Dimension(800, 500));
+        galleryPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        // Add PublicGalleryView as a component in the CardLayout panel
+        galleryPanel.add(publicGalleryView, publicGalleryView.getViewName());
 
+        final JPanel body = ViewComponentFactory.buildHorizontalPanel(List.of(buttons, galleryPanel));
         mainPanel.add(ViewComponentFactory.buildVerticalPanel(List.of(header, body)));
         this.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
+    }
+
+    private void switchToPublicGallery() {
+        // Cast galleryPanel to JPanel and get the CardLayout to switch views
+        CardLayout cl = (CardLayout) galleryPanel.getLayout();
+        cl.show(galleryPanel, publicGalleryView.getViewName());
     }
 
     private void disableInteraction() {
@@ -216,6 +232,11 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
         this.logoutController = logoutController;
     }
 
+    public void setPublicGalleryController(PublicGalleryController publicGalleryController) {
+        this.publicGalleryController = publicGalleryController;
+        publicGalleryView.setPublicGalleryController(publicGalleryController);
+    }
+
     public String getViewName() {
         return viewName;
     }
@@ -226,6 +247,12 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
             final MainState state = (MainState) evt.getNewValue();
             currentUser = state.getUsername();
             userLabel.setText("Currently logged in: " + this.currentUser);
+
+            if (state.isPublic()) {
+                switchToPublicGallery();
+                publicGalleryController.loadPage(0); // Load first page when switching to public gallery
+            }
         }
+
     }
 }

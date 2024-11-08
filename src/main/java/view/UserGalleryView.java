@@ -11,14 +11,14 @@ import java.util.List;
 /**
  * GalleryPanel displays a collection of images in a grid layout.
  */
-public class UserGalleryPanel extends JPanel {
+public class UserGalleryView extends JPanel {
 
     private final List<BufferedImage> images; // All images in the gallery
     private int totalUserImages;
     private int currentPage;
     private final int pageSize = 16;
 
-    public UserGalleryPanel() {
+    public UserGalleryView() {
         this.images = new ArrayList<>();
         this.setLayout(new GridLayout(4, 4, 10, 10)); // Adjust grid size and spacing as needed
         this.setPreferredSize(new Dimension(500, 300));

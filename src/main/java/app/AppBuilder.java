@@ -3,8 +3,6 @@ package app;
 import data_access.MongoImageDataAccessObject;
 import data_access.MongoPlantDataAccessObject;
 import data_access.MongoUserDataAccessObject;
-import data_access.UserDataAccessObject;
-import entity.Plant;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.load_public_gallery.PublicGalleryController;
 import interface_adapter.load_public_gallery.PublicGalleryPresenter;
@@ -34,7 +32,6 @@ import view.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
@@ -64,10 +61,10 @@ public class AppBuilder {
 
     // Views for different app states
     private final SignupView signupView = new SignupView(signupViewModel);
-    private final MainView mainView = new MainView(mainViewModel);
+    private final MainView mainView = new MainView(mainViewModel, publicGalleryViewModel);
     private final LoginView loginView = new LoginView(loginViewModel);
     // TODO: fix
-    private final PublicGalleryPanel publicGalleryView = new PublicGalleryPanel(publicGalleryViewModel);
+    private final PublicGalleryView publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
     private final StartView startView = new StartView(signupViewModel, loginViewModel, viewManagerModel);
 
     // Initializes CardLayout for the card panel
