@@ -15,6 +15,5 @@ public interface UserGalleryPlantDataAccessInterface {
      */
     List<Plant> getPlants(String username, int skip, int limit) ;
 
-
     int getNumOfUserImages(String username);
 }

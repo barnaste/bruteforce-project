@@ -3,6 +3,9 @@ package app;
 import data_access.MongoUserDataAccessObject;
 import data_access.UserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.load_public_gallery.PublicGalleryController;
+import interface_adapter.load_public_gallery.PublicGalleryPresenter;
+import interface_adapter.load_public_gallery.PublicGalleryViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.main.MainViewModel;
@@ -12,6 +15,8 @@ import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
+import use_case.load_public_gallery.PublicGalleryInputBoundary;
+import use_case.load_public_gallery.PublicGalleryInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -47,11 +52,14 @@ public class AppBuilder {
     private final SignupViewModel signupViewModel = new SignupViewModel();
     private final LoginViewModel loginViewModel = new LoginViewModel();
     private final MainViewModel mainViewModel = new MainViewModel();
+    private final PublicGalleryViewModel publicGalleryViewModel = new PublicGalleryViewModel();
 
     // Views for different app states
     private final SignupView signupView = new SignupView(signupViewModel);;
     private final MainView mainView = new MainView(mainViewModel);
     private final LoginView loginView = new LoginView(loginViewModel);
+    // TODO: fix
+    private final PublicGalleryPanel publicGalleryView = new PublicGalleryPanel(new PublicGalleryController(), publicGalleryViewModel);
     private final StartView startView = new StartView(signupViewModel, loginViewModel, viewManagerModel);
 
     // Initializes CardLayout for the card panel
@@ -93,6 +101,8 @@ public class AppBuilder {
      */
     public AppBuilder addLoggedInView() {
         cardPanel.add(mainView, mainView.getViewName());
+        // TODO: replace with user view once implemented
+        cardPanel.add(publicGalleryView, publicGalleryView.getViewName());
         return this;
     }
 
@@ -138,6 +148,23 @@ public class AppBuilder {
 
         final LogoutController logoutController = new LogoutController(logoutInteractor);
         mainView.setLogoutController(logoutController);
+        return this;
+    }
+
+    /**
+     * Adds the Public Gallery Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addPublicGalleryUseCase() {
+        // Set up the output boundary (presenter)
+        final PublicGalleryPresenter publicGalleryPresenter = new PublicGalleryPresenter(publicGalleryViewModel, mainViewModel, viewManagerModel);
+
+        // Set up the use case interactor
+        final PublicGalleryInputBoundary publicGalleryInteractor = new PublicGalleryInteractor(publicGalleryPresenter);
+
+        // Now wire it with the view
+        publicGalleryView.setPublicGalleryController(publicGalleryInteractor);
+
         return this;
     }
 
