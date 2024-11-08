@@ -1,6 +1,7 @@
 package app;
 
 import data_access.MongoUserDataAccessObject;
+import data_access.UserDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
@@ -36,21 +37,29 @@ import java.awt.*;
  * This is done by adding each View and then adding related Use Cases.
  */
 public class AppBuilder {
+    // Panel to hold views, managed by CardLayout
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
 
+    // Model and manager to handle view transitions
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
+    // Data access object for user data (MongoDB)
     private final MongoUserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
 
+    // ViewModels for different views
     private final SignupViewModel signupViewModel = new SignupViewModel();
     private final LoginViewModel loginViewModel = new LoginViewModel();
-    private final SignupView signupView = new SignupView(signupViewModel);;
     private final MainViewModel mainViewModel = new MainViewModel();
+
+    // Views for different app states
+    private final SignupView signupView = new SignupView(signupViewModel);;
     private final MainView mainView = new MainView(mainViewModel);
     private final LoginView loginView = new LoginView(loginViewModel);
+    private final StartView startView = new StartView(signupViewModel, loginViewModel, viewManagerModel);
 
+    // Initializes CardLayout for the card panel
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
     }
@@ -60,10 +69,6 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addStartView() {
-
-        // Create StartView with required view models
-        StartView startView = new StartView(signupViewModel, loginViewModel, viewManagerModel);
-
         // Add StartView to card panel with a unique name
         cardPanel.add(startView, "StartView");
         return this;
@@ -165,6 +170,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
+        // Set initial view to "StartView"
         viewManagerModel.setState("StartView");
         viewManagerModel.firePropertyChanged();
 
