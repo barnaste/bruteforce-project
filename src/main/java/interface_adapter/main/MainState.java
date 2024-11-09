@@ -5,17 +5,13 @@ package interface_adapter.main;
  */
 public class MainState {
     private String username = "";
+    private Mode currentMode = Mode.MY_PLANTS;
 
-    private String password = "";
-    private String passwordError;
-
-    public MainState(MainState copy) {
-        username = copy.username;
-        password = copy.password;
-        passwordError = copy.passwordError;
+    public enum Mode {
+        DISCOVER,
+        MY_PLANTS
     }
 
-    // Because of the previous copy constructor, the default constructor must be explicit.
     public MainState() {
 
     }
@@ -28,15 +24,11 @@ public class MainState {
         this.username = username;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public Mode getCurrentMode() {
+        return currentMode;
     }
 
-    public void setPasswordError(String passwordError) {
-        this.passwordError = passwordError;
-    }
-
-    public String getPassword() {
-        return password;
+    public void setCurrentMode(Mode mode) {
+        this.currentMode = mode;
     }
 }
