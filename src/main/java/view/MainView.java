@@ -80,38 +80,20 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
         SwapGalleryInputBoundary interactor = new SwapGalleryInteractor(presenter, mainViewModel);
         this.swapGalleryController = new SwapGalleryController(interactor);
 
-        // Upload button action (opens overlay for uploading)
         upload = ViewComponentFactory.buildButton("Upload");
-        upload.addActionListener(evt -> overlayUploadView());
-
-        // Log out button action (logs out the current user)
         logOut = ViewComponentFactory.buildButton("Log Out");
+        myPlantsButton = ViewComponentFactory.buildToggleButton("My Plants");
+        discoverButton = ViewComponentFactory.buildToggleButton("Discover");
+
+        upload.addActionListener(evt -> overlayUploadView());
         logOut.addActionListener(e -> logoutController.execute(mainViewModel.getState().getUsername()));
-
-        // Mode toggle buttons to switch between "My Plants" and "Discover"
-        myPlantsButton = new JToggleButton("My Plants");
-        discoverButton = new JToggleButton("Discover");
-
-        // Add action listeners to toggle buttons for mode switching
         myPlantsButton.addActionListener(e -> swapGalleryController.switchMode(MainState.Mode.MY_PLANTS));
         discoverButton.addActionListener(e -> swapGalleryController.switchMode(MainState.Mode.DISCOVER));
 
-        // Make all the buttons the same size
-        myPlantsButton.setPreferredSize(buttonSize);
-        myPlantsButton.setMinimumSize(buttonSize);
-        myPlantsButton.setMaximumSize(buttonSize);
-
-        discoverButton.setPreferredSize(buttonSize);
-        discoverButton.setMinimumSize(buttonSize);
-        discoverButton.setMaximumSize(buttonSize);
-
-        logOut.setPreferredSize(buttonSize);
-        logOut.setMinimumSize(buttonSize);
-        logOut.setMaximumSize(buttonSize);
-
-        upload.setPreferredSize(buttonSize);
-        upload.setMinimumSize(buttonSize);
-        upload.setMaximumSize(buttonSize);
+        ViewComponentFactory.setButtonSize(myPlantsButton, buttonSize);
+        ViewComponentFactory.setButtonSize(logOut, buttonSize);
+        ViewComponentFactory.setButtonSize(upload, buttonSize);
+        ViewComponentFactory.setButtonSize(discoverButton, buttonSize);
 
         // Make the logout button red
         logOut.setForeground(Color.RED);
@@ -120,9 +102,7 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
         final JPanel buttons = ViewComponentFactory.buildVerticalPanel(List.of(upload, myPlantsButton, discoverButton, logOut));
 
         // Gallery panel (to display gallery contents)
-        final JPanel gallery = new JPanel();
-        gallery.setPreferredSize(new Dimension(800, 500));  // Set gallery size
-        gallery.setBorder(BorderFactory.createLineBorder(Color.black));  // Temporary border for visibility
+        final JPanel gallery = makeGallery();
 
         // Combine buttons and gallery in the body panel
         final JPanel body = ViewComponentFactory.buildHorizontalPanel(List.of(buttons, gallery));
@@ -134,8 +114,11 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
         this.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
     }
 
-    public void setUserLabel(String labelText) {
-        userLabel.setText(labelText);  // Update the user label on the UI
+    private JPanel makeGallery() {
+        JPanel gallery = new JPanel();
+        gallery.setPreferredSize(new Dimension(800, 500));  // Set gallery size
+        gallery.setBorder(BorderFactory.createLineBorder(Color.black)); // Temporary border for visibility
+        return gallery;
     }
 
     private void disableInteraction() {
