@@ -12,6 +12,8 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 public class UploadResultView extends JPanel implements PropertyChangeListener {
     private final String viewName = "upload result";
@@ -220,7 +222,8 @@ public class UploadResultView extends JPanel implements PropertyChangeListener {
         this.scientificNameLabel.setText(state.getScientificName());
         this.familyLabel.setText(state.getFamily());
 
-        DecimalFormat roundingFormat = new DecimalFormat("###.##");
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+        DecimalFormat roundingFormat = new DecimalFormat("###.##", symbols);
         this.certaintyLabel.setText(Double.valueOf(roundingFormat.format(state.getCertainty() * 100)) +
                 "% certainty");
 
