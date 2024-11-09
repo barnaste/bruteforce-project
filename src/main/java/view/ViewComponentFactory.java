@@ -3,6 +3,7 @@ package view;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.List;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -78,5 +79,19 @@ public final class ViewComponentFactory {
             System.out.println(e.getMessage());
         }
         return image;
+    }
+
+    public static void setButtonSize(AbstractButton button, Dimension buttonSize) {
+        button.setPreferredSize(buttonSize);
+        button.setMinimumSize(buttonSize);
+        button.setMaximumSize(buttonSize);
+    }
+
+    public static JToggleButton buildToggleButton(String text) {
+        JToggleButton toggleButton = new JToggleButton(text);
+        toggleButton.setBorderPainted(true);
+        toggleButton.setContentAreaFilled(false);
+        toggleButton.setFocusPainted(false);
+        return toggleButton;
     }
 }

@@ -38,23 +38,23 @@ import view.upload.UploadSelectView;
  * The Main View, for when the user is logged into the program.
  */
 public class MainView extends JLayeredPane implements PropertyChangeListener {
-    private final int OVERLAY_COLOR = 0x40829181;  // Overlay color with transparency
-    private final int DISPLAY_WIDTH = 1080;        // Width of the display
-    private final int DISPLAY_HEIGHT = 720;        // Height of the display
+    private final int OVERLAY_COLOR = 0x40829181;
+    private final int DISPLAY_WIDTH = 1080;
+    private final int DISPLAY_HEIGHT = 720;
 
     final Dimension buttonSize = new Dimension(200, 50);
-    // View-related attributes
+
     private final String viewName = "main view";
     private final MainViewModel mainViewModel;
 
-    private LogoutController logoutController;  // Controller for logging out
-    private SwapGalleryController swapGalleryController;  // Controller for mode switching
+    private LogoutController logoutController;
+    private SwapGalleryController swapGalleryController;
 
-    private String currentUser = "";  // Current logged-in user
-    private final JLabel userLabel = new JLabel();  // Label to display current user
+    private String currentUser = "";
+    private final JLabel userLabel = new JLabel();
 
-    private final JButton logOut;  // Log out button
-    private final JButton upload;  // Upload button
+    private final JButton logOut;
+    private final JButton upload;
 
     // Mode toggle buttons (My Plants / Discover)
     private final JToggleButton myPlantsButton;
@@ -62,17 +62,20 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
 
     public MainView(MainViewModel mainViewModel) {
         this.mainViewModel = mainViewModel;
-        this.mainViewModel.addPropertyChangeListener(this);  // Listen for state changes
+        this.mainViewModel.addPropertyChangeListener(this);
 
-        this.setLayout(new OverlayLayout(this));  // Set layout to Overlay
-        this.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));  // Set display size
+        this.setLayout(new OverlayLayout(this));
+        this.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
 
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridBagLayout());  // GridBagLayout for main panel
+        mainPanel.setLayout(new GridBagLayout());
 
         // Header section with title and user label
-        final JLabel title = new JLabel("Main View");
-        final JPanel header = ViewComponentFactory.buildHorizontalPanel(List.of(title, userLabel));
+        final JLabel title = new JLabel("Gallery");
+        title.setFont(new Font("Arial", Font.BOLD, 18));
+        title.setForeground(new Color(0x123456));
+
+        final JPanel header = ViewComponentFactory.buildVerticalPanel(List.of(title, userLabel));
         header.setOpaque(false);
 
         // Set up SwapGallery functionality (mode switching)
@@ -80,62 +83,52 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
         SwapGalleryInputBoundary interactor = new SwapGalleryInteractor(presenter, mainViewModel);
         this.swapGalleryController = new SwapGalleryController(interactor);
 
-        // Upload button action (opens overlay for uploading)
         upload = ViewComponentFactory.buildButton("Upload");
-        upload.addActionListener(evt -> overlayUploadView());
-
-        // Log out button action (logs out the current user)
         logOut = ViewComponentFactory.buildButton("Log Out");
+        myPlantsButton = ViewComponentFactory.buildToggleButton("My Plants");
+        discoverButton = ViewComponentFactory.buildToggleButton("Discover");
+
+        upload.addActionListener(evt -> overlayUploadView());
         logOut.addActionListener(e -> logoutController.execute(mainViewModel.getState().getUsername()));
-
-        // Mode toggle buttons to switch between "My Plants" and "Discover"
-        myPlantsButton = new JToggleButton("My Plants");
-        discoverButton = new JToggleButton("Discover");
-
-        // Add action listeners to toggle buttons for mode switching
         myPlantsButton.addActionListener(e -> swapGalleryController.switchMode(MainState.Mode.MY_PLANTS));
         discoverButton.addActionListener(e -> swapGalleryController.switchMode(MainState.Mode.DISCOVER));
 
-        // Make all the buttons the same size
-        myPlantsButton.setPreferredSize(buttonSize);
-        myPlantsButton.setMinimumSize(buttonSize);
-        myPlantsButton.setMaximumSize(buttonSize);
-
-        discoverButton.setPreferredSize(buttonSize);
-        discoverButton.setMinimumSize(buttonSize);
-        discoverButton.setMaximumSize(buttonSize);
-
-        logOut.setPreferredSize(buttonSize);
-        logOut.setMinimumSize(buttonSize);
-        logOut.setMaximumSize(buttonSize);
-
-        upload.setPreferredSize(buttonSize);
-        upload.setMinimumSize(buttonSize);
-        upload.setMaximumSize(buttonSize);
+        ViewComponentFactory.setButtonSize(myPlantsButton, buttonSize);
+        ViewComponentFactory.setButtonSize(logOut, buttonSize);
+        ViewComponentFactory.setButtonSize(upload, buttonSize);
+        ViewComponentFactory.setButtonSize(discoverButton, buttonSize);
 
         // Make the logout button red
         logOut.setForeground(Color.RED);
 
-        // Buttons panel (Upload, mode toggle, and Log Out)
-        final JPanel buttons = ViewComponentFactory.buildVerticalPanel(List.of(upload, myPlantsButton, discoverButton, logOut));
+        // Make the panel on the left of the screen (Upload, mode toggle, and Log Out)
+        JPanel spacer1 = new JPanel();
+        spacer1.setOpaque(false);
+        spacer1.setPreferredSize(new Dimension(10, 160));
+
+        JPanel spacer2 = new JPanel();
+        spacer2.setOpaque(false);
+        spacer2.setPreferredSize(new Dimension(10, 20));
+
+        final JPanel actionPanel = ViewComponentFactory.buildVerticalPanel(List.of(title, header, spacer2, upload, myPlantsButton, discoverButton, spacer1, logOut));
 
         // Gallery panel (to display gallery contents)
-        final JPanel gallery = new JPanel();
-        gallery.setPreferredSize(new Dimension(800, 500));  // Set gallery size
-        gallery.setBorder(BorderFactory.createLineBorder(Color.black));  // Temporary border for visibility
+        final JPanel gallery = makeGallery();
 
         // Combine buttons and gallery in the body panel
-        final JPanel body = ViewComponentFactory.buildHorizontalPanel(List.of(buttons, gallery));
+        final JPanel body = ViewComponentFactory.buildHorizontalPanel(List.of(actionPanel, gallery));
 
         // Add header and body to the main panel
-        mainPanel.add(ViewComponentFactory.buildVerticalPanel(List.of(header, body)));
+        mainPanel.add(ViewComponentFactory.buildHorizontalPanel(List.of(actionPanel, gallery)));
 
-        // Add the main panel to the layered pane
         this.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
     }
 
-    public void setUserLabel(String labelText) {
-        userLabel.setText(labelText);  // Update the user label on the UI
+    private JPanel makeGallery() {
+        JPanel gallery = new JPanel();
+        gallery.setPreferredSize(new Dimension(840, 700)); // Set gallery size
+        gallery.setBorder(BorderFactory.createLineBorder(Color.black)); // Temporary border for visibility
+        return gallery;
     }
 
     private void disableInteraction() {
@@ -266,7 +259,7 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
         if (evt.getPropertyName().equals("state")) {
             final MainState state = (MainState) evt.getNewValue();
             currentUser = state.getUsername();
-            userLabel.setText("Currently logged in: " + this.currentUser);
+            userLabel.setText("Hello " + this.currentUser + "!");
 
             // Handle mode change
             updateModeUI(state.getCurrentMode());
