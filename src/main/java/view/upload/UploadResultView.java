@@ -13,6 +13,8 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 public class UploadResultView extends PlantView implements PropertyChangeListener {
     private final String viewName = "upload result";
@@ -78,8 +80,9 @@ public class UploadResultView extends PlantView implements PropertyChangeListene
         this.getScientificNameLabel().setText(state.getScientificName());
         this.getFamilyLabel().setText(state.getFamily());
 
-        DecimalFormat roundingFormat = new DecimalFormat("###.##");
-        this.getCertaintyLabel().setText(Double.valueOf(roundingFormat.format(state.getCertainty() * 100)) +
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+        DecimalFormat roundingFormat = new DecimalFormat("###.##", symbols);
+        this.certaintyLabel.setText(Double.valueOf(roundingFormat.format(state.getCertainty() * 100)) +
                 "% certainty");
 
         this.getNotesField().setText("My notes...");
