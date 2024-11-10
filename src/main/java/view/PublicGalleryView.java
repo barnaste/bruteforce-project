@@ -28,7 +28,7 @@ public class PublicGalleryView extends JPanel {
         // Set up the layout
         setLayout(new BorderLayout());
         imagesGrid = new JPanel(new GridLayout(4, 4, 5, 5)); // 16x16 grid with spacing
-        imagesGrid.setPreferredSize(new Dimension(750, 600)); // Make grid larger
+        imagesGrid.setPreferredSize(new Dimension(835, 640)); // Make grid larger
         add(new JScrollPane(imagesGrid), BorderLayout.CENTER);
 
         // Navigation buttons panel
