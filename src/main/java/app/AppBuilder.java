@@ -18,7 +18,6 @@ import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
 import use_case.load_public_gallery.PublicGalleryInputBoundary;
 import use_case.load_public_gallery.PublicGalleryInteractor;
-import use_case.load_public_gallery.PublicGalleryPlantDataAccessInterface;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -50,7 +49,7 @@ public class AppBuilder {
     // Data access object for user data (MongoDB)
     private final MongoUserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
 
-    private final PublicGalleryPlantDataAccessInterface galleryDataAccessObject = new MongoPlantDataAccessObject();
+    private final MongoPlantDataAccessObject galleryDataAccessObject = new MongoPlantDataAccessObject();
     private final MongoImageDataAccessObject imageDataAccessObject = new MongoImageDataAccessObject();
 
     // ViewModels for different views

@@ -13,6 +13,7 @@ import data_access.MongoPlantDataAccessObject;
 import data_access.MongoUserDataAccessObject;
 import data_access.UserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.load_public_gallery.PublicGalleryViewModel;
 import interface_adapter.login.LoginState;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.main.MainState;
@@ -46,6 +47,7 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
 
     private final String viewName = "main view";
     private final MainViewModel mainViewModel;
+    private final PublicGalleryViewModel publicGalleryViewModel;
 
     private LogoutController logoutController;
     private SwapGalleryController swapGalleryController;
@@ -60,8 +62,9 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
     private final JToggleButton myPlantsButton;
     private final JToggleButton discoverButton;
 
-    public MainView(MainViewModel mainViewModel) {
+    public MainView(MainViewModel mainViewModel, PublicGalleryViewModel publicGalleryViewModel) {
         this.mainViewModel = mainViewModel;
+        this.publicGalleryViewModel = publicGalleryViewModel;
         this.mainViewModel.addPropertyChangeListener(this);
 
         this.setLayout(new OverlayLayout(this));

@@ -27,7 +27,6 @@ public class PublicGalleryPresenter implements PublicGalleryOutputBoundary {
 
         // Update the main state to reflect the gallery mode as public
         MainState mainState = mainViewModel.getState();
-        mainState.setPublic();
         mainViewModel.setState(mainState);
         mainViewModel.firePropertyChanged();
 

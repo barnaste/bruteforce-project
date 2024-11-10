@@ -1,6 +1,8 @@
 package use_case.load_public_gallery;
 
 import data_access.MongoImageDataAccessObject;
+import data_access.MongoPlantDataAccessObject;
+import data_access.PlantDataAccessObject;
 import entity.Plant;
 
 import java.awt.image.BufferedImage;
@@ -8,14 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
-    private final PublicGalleryPlantDataAccessInterface galleryDataAccessObject;
+    private final PlantDataAccessObject plantDataAccessObject;
     private final PublicGalleryOutputBoundary galleryPresenter;
     private final MongoImageDataAccessObject imageDataAccessObject;
     private final int pageSize = 16;
 
-    public PublicGalleryInteractor(PublicGalleryPlantDataAccessInterface galleryDataAccessObject,
+    public PublicGalleryInteractor(MongoPlantDataAccessObject galleryDataAccessObject,
                                    PublicGalleryOutputBoundary galleryPresenter, MongoImageDataAccessObject imageDataAccessObject) {
-        this.galleryDataAccessObject = galleryDataAccessObject;
+        this.plantDataAccessObject = galleryDataAccessObject;
         this.galleryPresenter = galleryPresenter;
         this.imageDataAccessObject = imageDataAccessObject;
     }
@@ -27,7 +29,7 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
 
         try {
             // Fetch paginated list of Plant objects
-            List<Plant> plants = galleryDataAccessObject.getPublicPlants(skip, pageSize);
+            List<Plant> plants = plantDataAccessObject.getPublicPlants(skip, pageSize);
 
             if (plants == null || plants.isEmpty()) {
                 galleryPresenter.prepareFailView("No images available for the public gallery.");
