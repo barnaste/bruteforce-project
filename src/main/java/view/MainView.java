@@ -15,7 +15,6 @@ import data_access.UserDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.load_public_gallery.PublicGalleryController;
 import interface_adapter.load_public_gallery.PublicGalleryViewModel;
-import interface_adapter.login.LoginState;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
@@ -48,7 +47,8 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
 
     private PublicGalleryView publicGalleryView;
     private PublicGalleryController publicGalleryController;
-    private JPanel galleryPanel;
+
+    private JPanel currentGalleryPanel;
 
     private final String viewName = "main view";
     private final MainViewModel mainViewModel;
@@ -123,24 +123,12 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
 
         final JPanel actionPanel = ViewComponentFactory.buildVerticalPanel(List.of(title, header, spacer2, upload, myPlantsButton, discoverButton, spacer1, logOut));
 
-        // Gallery panel (to display gallery contents)
-        final JPanel gallery = makeGallery();
+        currentGalleryPanel = new JPanel();
+        setDiscoverPanel();
 
-        // Combine buttons and gallery in the body panel
-        final JPanel body = ViewComponentFactory.buildHorizontalPanel(List.of(actionPanel, gallery));
-
-        // Add header and body to the main panel
-        mainPanel.add(ViewComponentFactory.buildHorizontalPanel(List.of(actionPanel, gallery)));
+        mainPanel.add(ViewComponentFactory.buildHorizontalPanel(List.of(actionPanel, currentGalleryPanel)));
 
         this.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
-    }
-
-    private JPanel makeGallery() {
-        galleryPanel = new JPanel();
-        galleryPanel.setPreferredSize(new Dimension(840, 700));
-        galleryPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-        galleryPanel.add(publicGalleryView, publicGalleryView.getViewName());
-        return galleryPanel;
     }
 
     private void disableInteraction() {
@@ -255,12 +243,16 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
     }
 
     private void updateModeUI(MainState.Mode mode) {
+        if (currentGalleryPanel != null)
+            this.remove(currentGalleryPanel);
         if (mode == MainState.Mode.DISCOVER) {
             // Update UI for "Discover" mode
+            setDiscoverPanel();
             myPlantsButton.setSelected(false);
             discoverButton.setSelected(true);
         } else if (mode == MainState.Mode.MY_PLANTS) {
             // Update UI for "My Plants" mode
+            setMyPlantsPanel();
             myPlantsButton.setSelected(true);
             discoverButton.setSelected(false);
         }
@@ -276,5 +268,29 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
             // Handle mode change
             updateModeUI(state.getCurrentMode());
         }
+    }
+
+    // Create "My Plants" panel
+    private void setMyPlantsPanel() {
+        currentGalleryPanel.removeAll();
+
+        currentGalleryPanel.setPreferredSize(new Dimension(840, 700));
+        currentGalleryPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+
+        currentGalleryPanel.revalidate();
+        currentGalleryPanel.repaint();
+    }
+
+    // Create "Discover" panel
+    private void setDiscoverPanel() {
+        currentGalleryPanel.removeAll();
+
+        currentGalleryPanel.setPreferredSize(new Dimension(840, 700));
+        currentGalleryPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+
+        currentGalleryPanel.add(publicGalleryView, publicGalleryView.getViewName());
+
+        currentGalleryPanel.revalidate();
+        currentGalleryPanel.repaint();
     }
 }
