@@ -5,5 +5,4 @@ import use_case.login.LoginOutputData;
 public interface PublicGalleryOutputBoundary {
     void prepareSuccessView(PublicGalleryOutputData outputData);
     void prepareFailView(String errorMessage);
-    void switchToPublicGalleryView(PublicGalleryOutputData outputData);
 }

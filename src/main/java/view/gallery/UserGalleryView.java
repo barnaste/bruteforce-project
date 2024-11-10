@@ -1,12 +1,10 @@
-package view;
+package view.gallery;
 
 import interface_adapter.load_user_gallery.UserGalleryController;
 import interface_adapter.load_user_gallery.UserGalleryViewModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.List;
 

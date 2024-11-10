@@ -35,6 +35,7 @@
     import use_case.upload.UploadInputBoundary;
     import use_case.upload.UploadInteractor;
     import use_case.upload.UploadOutputBoundary;
+    import view.gallery.PublicGalleryView;
     import view.upload.UploadConfirmView;
     import view.upload.UploadResultView;
     import view.upload.UploadSelectView;
@@ -84,6 +85,7 @@
             this.publicGalleryController = new PublicGalleryController(publicGalleryInteractor);
             publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
             publicGalleryView.setPublicGalleryController(publicGalleryController);
+            publicGalleryViewModel.firePropertyChanged();
 
             this.setLayout(new OverlayLayout(this));
             this.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
@@ -289,7 +291,6 @@
             currentGalleryPanel.removeAll();
 
             currentGalleryPanel.setPreferredSize(new Dimension(840, 700));
-            currentGalleryPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 
             // currentGalleryPanel.add(userGalleryView, userGalleryView.getViewName());
 
@@ -302,7 +303,6 @@
             currentGalleryPanel.removeAll();
 
             currentGalleryPanel.setPreferredSize(new Dimension(840, 700));
-            currentGalleryPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 
             currentGalleryPanel.add(publicGalleryView, publicGalleryView.getViewName());
 

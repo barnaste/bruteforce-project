@@ -1,9 +1,8 @@
-package view;
+package view.gallery;
 
 import interface_adapter.load_public_gallery.PublicGalleryController;
 import interface_adapter.load_public_gallery.PublicGalleryState;
 import interface_adapter.load_public_gallery.PublicGalleryViewModel;
-import interface_adapter.upload.result.UploadResultState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,25 +12,27 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 
 public class PublicGalleryView extends JPanel implements PropertyChangeListener {
+    private final int NUM_OF_COLUMNS = 5;
+    private final int NUM_OF_ROWS = 4;
     private final String viewName = "public gallery";
     private int currentPage = 0;
-    private int totalPages = 0;
+    private int totalPages = 3;
 
     private PublicGalleryController controller;
-    private final PublicGalleryViewModel viewModel;
+    private final PublicGalleryViewModel publicGalleryViewModel;
 
     private final JPanel imagesGrid;
     private final JButton nextPageButton;
     private final JButton previousPageButton;
 
-    public PublicGalleryView(PublicGalleryViewModel viewModel) {
-        this.viewModel = viewModel;
-        viewModel.addPropertyChangeListener(this);
+    public PublicGalleryView(PublicGalleryViewModel publicGalleryViewModel) {
+        this.publicGalleryViewModel = publicGalleryViewModel;
+        publicGalleryViewModel.addPropertyChangeListener(this);
 
         // Set up the layout
         setLayout(new BorderLayout());
-        imagesGrid = new JPanel(new GridLayout(4, 4, 5, 5)); // 16x16 grid with spacing
-        imagesGrid.setPreferredSize(new Dimension(835, 640)); // Make grid larger
+        imagesGrid = new JPanel(new GridLayout(NUM_OF_ROWS, NUM_OF_COLUMNS, 5, 5)); // 16x16 grid with spacing
+        imagesGrid.setPreferredSize(new Dimension(835, 650)); // Make grid larger
         add(new JScrollPane(imagesGrid), BorderLayout.CENTER);
 
         // Navigation buttons panel
@@ -50,8 +51,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
         loadPage(currentPage);
     }
 
-    public void setPublicGalleryController(PublicGalleryController controller)
-    {
+    public void setPublicGalleryController(PublicGalleryController controller) {
         this.controller = controller;
     }
 
@@ -78,13 +78,23 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     public void displayImages(List<BufferedImage> images) {
         imagesGrid.removeAll();
 
-        // Display each image as a JLabel with an ImageIcon
-        for (BufferedImage image : images) {
-            JLabel imageLabel = new JLabel(new ImageIcon(image));
-            imagesGrid.add(imageLabel);
+        for (int i = 0; i < NUM_OF_ROWS * NUM_OF_COLUMNS; i++) {
+            imagesGrid.add(new JLabel());
         }
 
-        // Refresh the grid to show new images
+        // Add each image to the grid in row-major order
+        for (int i = 0; i < images.size(); i++) {
+
+            BufferedImage image = images.get(i);
+            Image scaledImage = image.getScaledInstance(160, 160, Image.SCALE_SMOOTH);
+
+            Component component = imagesGrid.getComponent(i);  // Get the correct grid cell
+            if (component instanceof JLabel) {
+                ((JLabel) component).setIcon(new ImageIcon(scaledImage));  // Set the image at this index
+            }
+        }
+
+        // Refresh the grid layout to show the images
         imagesGrid.revalidate();
         imagesGrid.repaint();
     }
@@ -101,7 +111,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         PublicGalleryState state = (PublicGalleryState) evt.getNewValue();
-        totalPages = state.getTotalPages();
         displayImages(state.getPlantImages());
+        // TODO: this needs to be fixed.
     }
 }
