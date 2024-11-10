@@ -46,12 +46,10 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
     private final int OVERLAY_COLOR = 0x40829181;
     private final int DISPLAY_WIDTH = 1080;
     private final int DISPLAY_HEIGHT = 720;
-
     final Dimension buttonSize = new Dimension(200, 50);
 
     private PublicGalleryView publicGalleryView;
     private PublicGalleryController publicGalleryController;
-
     private JPanel currentGalleryPanel;
 
     private final String viewName = "main view";
@@ -62,12 +60,13 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
     private SwapGalleryController swapGalleryController;
 
     private String currentUser = "";
+    private String currentGalleryMode = "";
     private final JLabel userLabel = new JLabel();
+    private final JLabel title = new JLabel();
 
     private final JButton logOut;
     private final JButton upload;
 
-    // Mode toggle buttons (My Plants / Discover)
     private final JToggleButton myPlantsButton;
     private final JToggleButton discoverButton;
 
@@ -92,8 +91,8 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
 
-        // Header section with title and user label
-        final JLabel title = new JLabel("Gallery");
+        currentGalleryMode = "My Plants Gallery";
+        title.setText(currentGalleryMode);
         title.setFont(new Font("Arial", Font.BOLD, 18));
         title.setForeground(new Color(0x123456));
 
@@ -259,11 +258,15 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
         if (mode == MainState.Mode.DISCOVER) {
             // Update UI for "Discover" mode
             setDiscoverPanel();
+            currentGalleryMode = "Discover Gallery";
+            title.setText(currentGalleryMode);
             myPlantsButton.setSelected(false);
             discoverButton.setSelected(true);
         } else if (mode == MainState.Mode.MY_PLANTS) {
             // Update UI for "My Plants" mode
             setMyPlantsPanel();
+            currentGalleryMode = "My Plants Gallery";
+            title.setText(currentGalleryMode);
             myPlantsButton.setSelected(true);
             discoverButton.setSelected(false);
         }
