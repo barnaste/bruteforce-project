@@ -13,6 +13,7 @@ import data_access.MongoPlantDataAccessObject;
 import data_access.MongoUserDataAccessObject;
 import data_access.UserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.load_public_gallery.PublicGalleryController;
 import interface_adapter.load_public_gallery.PublicGalleryViewModel;
 import interface_adapter.login.LoginState;
 import interface_adapter.logout.LogoutController;
@@ -45,6 +46,10 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
 
     final Dimension buttonSize = new Dimension(200, 50);
 
+    private PublicGalleryView publicGalleryView;
+    private PublicGalleryController publicGalleryController;
+    private JPanel galleryPanel;
+
     private final String viewName = "main view";
     private final MainViewModel mainViewModel;
     private final PublicGalleryViewModel publicGalleryViewModel;
@@ -66,6 +71,9 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
         this.mainViewModel = mainViewModel;
         this.publicGalleryViewModel = publicGalleryViewModel;
         this.mainViewModel.addPropertyChangeListener(this);
+
+        publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
+        publicGalleryView.setPublicGalleryController(publicGalleryController);
 
         this.setLayout(new OverlayLayout(this));
         this.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
@@ -128,10 +136,11 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
     }
 
     private JPanel makeGallery() {
-        JPanel gallery = new JPanel();
-        gallery.setPreferredSize(new Dimension(840, 700)); // Set gallery size
-        gallery.setBorder(BorderFactory.createLineBorder(Color.black)); // Temporary border for visibility
-        return gallery;
+        galleryPanel = new JPanel();
+        galleryPanel.setPreferredSize(new Dimension(840, 700));
+        galleryPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        galleryPanel.add(publicGalleryView, publicGalleryView.getViewName());
+        return galleryPanel;
     }
 
     private void disableInteraction() {
