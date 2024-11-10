@@ -8,8 +8,6 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
-import use_case.load_public_gallery.PublicGalleryPlantDataAccessInterface;
-import use_case.load_user_gallery.UserGalleryPlantDataAccessInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +18,7 @@ import static com.mongodb.client.model.Sorts.descending;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-public class MongoPlantDataAccessObject implements UserGalleryPlantDataAccessInterface, PlantDataBase, PublicGalleryPlantDataAccessInterface {
+public class MongoPlantDataAccessObject implements PlantDataAccessObject {
     final String CONNECTIONSTRING = "mongodb+srv://brute_force:CSC207-F24@cluster0.upye6.mongodb.net/" +
             "?retryWrites=true&w=majority&appName=Cluster0";
     CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
@@ -47,15 +45,6 @@ public class MongoPlantDataAccessObject implements UserGalleryPlantDataAccessInt
             System.out.println(e.getMessage());
             return null; // Handle errors
         }
-    }
-
-    @Override
-    public int getNumOfUserImages(String username) {
-        return 0;
-    }
-
-    public int getNumOfPublicImages(String username) {
-        return 0;
     }
 
     public List<Plant> getPublicPlants(int skip, int limit) {
@@ -126,5 +115,37 @@ public class MongoPlantDataAccessObject implements UserGalleryPlantDataAccessInt
     private MongoCollection<Plant> getPlantsCollection(MongoClient mongoClient) {
         MongoDatabase database = mongoClient.getDatabase("appDB").withCodecRegistry(pojoCodecRegistry);
         return database.getCollection("plants", Plant.class);
+    }
+
+    @Override
+    public int getNumberOfPublicPlants() {
+        try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
+            MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
+
+            // Count the number of public plants in the collection
+            long count = collection.countDocuments(eq("isPublic", true));
+
+            // Return the count as an int (casting from long)
+            return (int) count; // MongoDB countDocuments returns a long, so we cast it to int
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return 0; // Return 0 in case of an error
+        }
+    }
+
+    @Override
+    public int getNumberOfUserPlants(String username) {
+        try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
+            MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
+
+            // Count the number of plants owned by the user
+            long count = collection.countDocuments(eq("owner", username));
+
+            // Return the count as an int
+            return (int) count; // MongoDB countDocuments returns a long, so we cast it to int
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return 0; // Return 0 in case of an error
+        }
     }
 }
