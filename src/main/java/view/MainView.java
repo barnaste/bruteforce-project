@@ -14,6 +14,7 @@ import data_access.MongoUserDataAccessObject;
 import data_access.UserDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.load_public_gallery.PublicGalleryController;
+import interface_adapter.load_public_gallery.PublicGalleryPresenter;
 import interface_adapter.load_public_gallery.PublicGalleryViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.main.MainState;
@@ -25,6 +26,9 @@ import interface_adapter.upload.UploadPresenter;
 import interface_adapter.upload.confirm.UploadConfirmViewModel;
 import interface_adapter.upload.result.UploadResultViewModel;
 import interface_adapter.upload.select.UploadSelectViewModel;
+import use_case.load_public_gallery.PublicGalleryInputBoundary;
+import use_case.load_public_gallery.PublicGalleryInteractor;
+import use_case.load_public_gallery.PublicGalleryOutputBoundary;
 import use_case.swap_gallery.SwapGalleryInputBoundary;
 import use_case.swap_gallery.SwapGalleryInteractor;
 import use_case.swap_gallery.SwapGalleryOutputBoundary;
@@ -72,6 +76,13 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
         this.publicGalleryViewModel = publicGalleryViewModel;
         this.mainViewModel.addPropertyChangeListener(this);
 
+        MongoPlantDataAccessObject plantDataAccessObject = new MongoPlantDataAccessObject();
+        MongoImageDataAccessObject imageDataAccessObject = new MongoImageDataAccessObject();
+        ViewManagerModel galleryManagerModel = new ViewManagerModel();
+        PublicGalleryOutputBoundary galleryPresenter = new PublicGalleryPresenter(publicGalleryViewModel, mainViewModel, galleryManagerModel);
+        PublicGalleryInputBoundary publicGalleryInteractor = new PublicGalleryInteractor(plantDataAccessObject,
+                 galleryPresenter,  imageDataAccessObject);
+        this.publicGalleryController = new PublicGalleryController(publicGalleryInteractor);
         publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
         publicGalleryView.setPublicGalleryController(publicGalleryController);
 
