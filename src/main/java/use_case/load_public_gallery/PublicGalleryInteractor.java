@@ -48,7 +48,8 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
             }
 
             // Prepare output data and send to presenter
-            PublicGalleryOutputData outputData = new PublicGalleryOutputData(images, page);
+            int totalPages = plantDataAccessObject.getNumberOfPublicPlants();
+            PublicGalleryOutputData outputData = new PublicGalleryOutputData(images, page, totalPages);
             galleryPresenter.prepareSuccessView(outputData);
 
         } catch (Exception e) {

@@ -1,19 +1,21 @@
 package view;
 
 import interface_adapter.load_public_gallery.PublicGalleryController;
+import interface_adapter.load_public_gallery.PublicGalleryState;
 import interface_adapter.load_public_gallery.PublicGalleryViewModel;
+import interface_adapter.upload.result.UploadResultState;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
-public class PublicGalleryView extends JPanel {
+public class PublicGalleryView extends JPanel implements PropertyChangeListener {
     private final String viewName = "public gallery";
-    private int pageSize = 16;
     private int currentPage = 0;
+    private int totalPages = 0;
 
     private PublicGalleryController controller;
     private final PublicGalleryViewModel viewModel;
@@ -24,6 +26,7 @@ public class PublicGalleryView extends JPanel {
 
     public PublicGalleryView(PublicGalleryViewModel viewModel) {
         this.viewModel = viewModel;
+        viewModel.addPropertyChangeListener(this);
 
         // Set up the layout
         setLayout(new BorderLayout());
@@ -37,7 +40,6 @@ public class PublicGalleryView extends JPanel {
         nextPageButton = new JButton("Next Page");
 
         previousPageButton.addActionListener(e -> loadPreviousPage());
-
         nextPageButton.addActionListener(e -> loadNextPage());
 
         navigationPanel.add(previousPageButton);
@@ -48,7 +50,8 @@ public class PublicGalleryView extends JPanel {
         loadPage(currentPage);
     }
 
-    public void setPublicGalleryController(PublicGalleryController controller) {
+    public void setPublicGalleryController(PublicGalleryController controller)
+    {
         this.controller = controller;
     }
 
@@ -87,8 +90,6 @@ public class PublicGalleryView extends JPanel {
     }
 
     private void updateNavigationButtons() {
-        // TODO: implement getTotalPages
-        int totalPages = 3;
         previousPageButton.setEnabled(currentPage > 0);
         nextPageButton.setEnabled(currentPage < totalPages - 1);
     }
@@ -97,4 +98,10 @@ public class PublicGalleryView extends JPanel {
         return viewName;
     }
 
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        PublicGalleryState state = (PublicGalleryState) evt.getNewValue();
+        totalPages = state.getTotalPages();
+        displayImages(state.getPlantImages());
+    }
 }
