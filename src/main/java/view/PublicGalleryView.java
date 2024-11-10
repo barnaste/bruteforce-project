@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PublicGalleryView extends JPanel {
@@ -29,6 +28,7 @@ public class PublicGalleryView extends JPanel {
         // Set up the layout
         setLayout(new BorderLayout());
         imagesGrid = new JPanel(new GridLayout(4, 4, 5, 5)); // 16x16 grid with spacing
+        imagesGrid.setPreferredSize(new Dimension(750, 600)); // Make grid larger
         add(new JScrollPane(imagesGrid), BorderLayout.CENTER);
 
         // Navigation buttons panel
@@ -36,19 +36,9 @@ public class PublicGalleryView extends JPanel {
         previousPageButton = new JButton("Previous Page");
         nextPageButton = new JButton("Next Page");
 
-        previousPageButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadPreviousPage();
-            }
-        });
+        previousPageButton.addActionListener(e -> loadPreviousPage());
 
-        nextPageButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadNextPage();
-            }
-        });
+        nextPageButton.addActionListener(e -> loadNextPage());
 
         navigationPanel.add(previousPageButton);
         navigationPanel.add(nextPageButton);
