@@ -13,7 +13,7 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
     private final PlantDataAccessObject plantDataAccessObject;
     private final PublicGalleryOutputBoundary galleryPresenter;
     private final MongoImageDataAccessObject imageDataAccessObject;
-    private final int imagesPerPage = 20;
+    private static final int IMAGES_PER_PAGE = 15;
 
     public PublicGalleryInteractor(MongoPlantDataAccessObject galleryDataAccessObject,
                                    PublicGalleryOutputBoundary galleryPresenter, MongoImageDataAccessObject imageDataAccessObject) {
@@ -25,31 +25,31 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
     @Override
     public void execute(PublicGalleryInputData galleryInputData) {
         int page = galleryInputData.getPage();
-        int skip = page * imagesPerPage;  // Calculate the offset based on the page
+        int skip = page * IMAGES_PER_PAGE;  // Calculate the offset based on the page
 
         try {
-            // Fetch paginated list of Plant objects
-            List<Plant> plants = plantDataAccessObject.getPublicPlants(skip, imagesPerPage);
+            // Retrieve the correct slice of Plant objects from database
+            List<Plant> plants = plantDataAccessObject.getPublicPlants(skip, IMAGES_PER_PAGE);
 
             if (plants == null || plants.isEmpty()) {
                 galleryPresenter.prepareFailView("No images available for the public gallery.");
                 return;
             }
 
-            // Extract images from Plant objects
+            // Get images from Plant objects
             List<BufferedImage> images = new ArrayList<>();
             for (Plant plant : plants) {
                 BufferedImage image = imageDataAccessObject.getImageFromID(plant.getImageID());
                 if (image != null) {
                     images.add(image);
-                } else {
-                    System.out.println("Image with ID " + plant.getImageID() + " not found.");
+                // } else {
+                //    System.out.println("Image with ID " + plant.getImageID() + " not found.");
                 }
             }
 
             // Prepare output data and send to presenter
             int totalPlants = plantDataAccessObject.getNumberOfPublicPlants();
-            int totalPages = (int) Math.ceil((double) totalPlants / imagesPerPage);
+            int totalPages = (int) Math.ceil((double) totalPlants / IMAGES_PER_PAGE);
             PublicGalleryOutputData outputData = new PublicGalleryOutputData(images, page, totalPages);
             galleryPresenter.prepareSuccessView(outputData);
 

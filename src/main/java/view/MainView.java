@@ -44,23 +44,22 @@
      * The Main View, for when the user is logged into the program.
      */
     public class MainView extends JLayeredPane implements PropertyChangeListener {
-        private final int OVERLAY_COLOR = 0x40829181;
-        private final int DISPLAY_WIDTH = 1080;
-        private final int DISPLAY_HEIGHT = 720;
+        private static final int OVERLAY_COLOR = 0x40829181;
+        private static final int DISPLAY_WIDTH = 1080;
+        private static final int DISPLAY_HEIGHT = 720;
         final Dimension buttonSize = new Dimension(200, 50);
-
-        private PublicGalleryView publicGalleryView;
-        private JPanel currentGalleryPanel;
 
         private final String viewName = "main view";
         private final MainViewModel mainViewModel;
         private final PublicGalleryViewModel publicGalleryViewModel;
+        private PublicGalleryView publicGalleryView;
 
         private LogoutController logoutController;
-        private SwapGalleryController swapGalleryController;
+        private final SwapGalleryController swapGalleryController;
 
         private String currentUser = "";
         private String currentGalleryMode = "";
+        private final JPanel currentGalleryPanel;
         private final JLabel userLabel = new JLabel();
         private final JLabel title = new JLabel();
 
@@ -86,7 +85,7 @@
             currentGalleryMode = "My Plants Gallery";
             title.setText(currentGalleryMode);
             title.setFont(new Font("Arial", Font.BOLD, 18));
-            title.setForeground(new Color(0x123456));
+            title.setForeground(new Color(0x3C7339));
 
             final JPanel header = ViewComponentFactory.buildVerticalPanel(List.of(title, userLabel));
             header.setOpaque(false);
@@ -112,7 +111,7 @@
             ViewComponentFactory.setButtonSize(discoverButton, buttonSize);
 
             // Make the logout button red
-            logOut.setForeground(Color.RED);
+            logOut.setForeground(new Color(150, 32, 32));
 
             // Make the panel on the left of the screen (Upload, mode toggle, and Log Out)
             JPanel spacer1 = new JPanel();
@@ -154,6 +153,7 @@
 
             // Initialize the PublicGalleryController and View
             PublicGalleryController publicGalleryController = new PublicGalleryController(publicGalleryInteractor);
+            publicGalleryViewModel.firePropertyChanged();
             this.publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
             publicGalleryView.setPublicGalleryController(publicGalleryController);
 

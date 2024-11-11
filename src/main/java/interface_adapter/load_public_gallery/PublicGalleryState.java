@@ -14,17 +14,17 @@ public class PublicGalleryState {
         return plantImages;
     }
 
-    public String getGalleryError() {
-        return galleryError;
-    }
+//    public String getGalleryError() {
+//        return galleryError;
+//    }
 
     public void setPlantImages(List<BufferedImage> plantImages) {
         this.plantImages = plantImages;
     }
 
-    public void setGalleryError(String galleryError) {
-        this.galleryError = galleryError;
-    }
+//    public void setGalleryError(String galleryError) {
+//        this.galleryError = galleryError;
+//    }
 
     public int getCurrentPage() {
         return currentPage;

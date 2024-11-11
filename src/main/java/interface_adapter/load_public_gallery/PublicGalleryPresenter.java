@@ -32,8 +32,8 @@ public class PublicGalleryPresenter implements PublicGalleryOutputBoundary {
 
     @Override
     public void prepareFailView(String error) {
-        final PublicGalleryState galleryState = publicGalleryViewModel.getState();
-        galleryState.setGalleryError(error);
+        // final PublicGalleryState galleryState = publicGalleryViewModel.getState();
+        // galleryState.setGalleryError(error);
         publicGalleryViewModel.firePropertyChanged();
     }
 
