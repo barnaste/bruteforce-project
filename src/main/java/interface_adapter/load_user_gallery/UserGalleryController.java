@@ -1,6 +1,5 @@
 package interface_adapter.load_user_gallery;
 
-import use_case.load_user_gallery.UserGalleryInputBoundary;
 import use_case.load_user_gallery.UserGalleryInputData;
 import use_case.load_user_gallery.UserGalleryInputBoundary;
 

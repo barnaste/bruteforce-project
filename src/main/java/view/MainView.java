@@ -159,7 +159,7 @@
 
             // Initial gallery state
             publicGalleryController.loadPage(0);  // Load the first page by default
-            publicGalleryViewModel.firePropertyChanged();  // Trigger initial view model update
+            // publicGalleryViewModel.firePropertyChanged();  // Trigger initial view model update
         }
 
         public void overlayUploadView() {

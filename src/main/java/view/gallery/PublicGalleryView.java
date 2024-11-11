@@ -16,7 +16,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     private final int NUM_OF_ROWS = 4;
     private final String viewName = "public gallery";
     private int currentPage = 0;
-    private int totalPages = 5;
+    private int totalPages = 10; // note this is updated with the real totalPages number when nextPage is clicked for the first time
 
     private PublicGalleryController controller;
     private final PublicGalleryViewModel publicGalleryViewModel;
@@ -77,7 +77,6 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     }
 
     public void displayImages(List<BufferedImage> images) {
-        // TODO: for debugging
         System.out.println("Displaying " + images.size() + " images for page " + currentPage);
         imagesGrid.removeAll();
 
@@ -94,7 +93,6 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
 
         // Add each image to the grid in row-major order
         for (int i = 0; i < images.size(); i++) {
-
             BufferedImage image = images.get(i);
             Image scaledImage = image.getScaledInstance(160, 160, Image.SCALE_SMOOTH);
 
@@ -120,12 +118,10 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        // TODO: for debugging
-        System.out.println("Property change triggered for page: " + currentPage);
+        // System.out.println("Property change triggered for page: " + currentPage);
         PublicGalleryState state = (PublicGalleryState) evt.getNewValue();
         currentPage = state.getCurrentPage();
         totalPages = state.getTotalPages();
         displayImages(state.getPlantImages());
-        // TODO: this needs to be fixed.
     }
 }

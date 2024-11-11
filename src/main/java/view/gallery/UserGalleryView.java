@@ -10,7 +10,7 @@ import java.util.List;
 
 public class UserGalleryView extends JPanel {
     private final String viewName = "public gallery";
-    private int pageSize = 16;
+    private final int pageSize = 16;
     private int currentPage = 0;
 
     private UserGalleryController controller;

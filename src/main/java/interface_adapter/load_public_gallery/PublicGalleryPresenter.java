@@ -1,7 +1,6 @@
 package interface_adapter.load_public_gallery;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import use_case.load_public_gallery.PublicGalleryOutputBoundary;
 import use_case.load_public_gallery.PublicGalleryOutputData;
