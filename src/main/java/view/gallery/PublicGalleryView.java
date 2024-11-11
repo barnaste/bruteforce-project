@@ -16,7 +16,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     private final int NUM_OF_ROWS = 4;
     private final String viewName = "public gallery";
     private int currentPage = 0;
-    private int totalPages = 3;
+    private int totalPages = 5;
 
     private PublicGalleryController controller;
     private final PublicGalleryViewModel publicGalleryViewModel;
@@ -46,9 +46,10 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
         navigationPanel.add(previousPageButton);
         navigationPanel.add(nextPageButton);
         add(navigationPanel, BorderLayout.SOUTH);
+        updateNavigationButtons();
 
         // Initial page load
-        loadPage(currentPage);
+        // loadPage(currentPage);
     }
 
     public void setPublicGalleryController(PublicGalleryController controller) {
@@ -76,10 +77,19 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     }
 
     public void displayImages(List<BufferedImage> images) {
+        // TODO: for debugging
+        System.out.println("Displaying " + images.size() + " images for page " + currentPage);
         imagesGrid.removeAll();
 
         for (int i = 0; i < NUM_OF_ROWS * NUM_OF_COLUMNS; i++) {
             imagesGrid.add(new JLabel());
+        }
+
+        // Check if images is null or empty
+        if (images == null || images.isEmpty()) {
+            imagesGrid.revalidate();
+            imagesGrid.repaint();
+            return; // Exit the method if there are no images to display
         }
 
         // Add each image to the grid in row-major order
@@ -110,7 +120,11 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        // TODO: for debugging
+        System.out.println("Property change triggered for page: " + currentPage);
         PublicGalleryState state = (PublicGalleryState) evt.getNewValue();
+        currentPage = state.getCurrentPage();
+        totalPages = state.getTotalPages();
         displayImages(state.getPlantImages());
         // TODO: this needs to be fixed.
     }

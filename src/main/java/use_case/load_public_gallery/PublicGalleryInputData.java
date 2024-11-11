@@ -1,13 +1,13 @@
 package use_case.load_public_gallery;
 
 public class PublicGalleryInputData {
-    private final int pageIndex;
+    private final int page;
 
-    public PublicGalleryInputData(int pageIndex){
-        this.pageIndex = pageIndex;
+    public PublicGalleryInputData(int page){
+        this.page = page;
     }
 
     public int getPage() {
-        return pageIndex;
+        return page;
     }
 }

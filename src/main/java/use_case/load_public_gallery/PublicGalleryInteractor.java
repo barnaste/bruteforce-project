@@ -13,7 +13,7 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
     private final PlantDataAccessObject plantDataAccessObject;
     private final PublicGalleryOutputBoundary galleryPresenter;
     private final MongoImageDataAccessObject imageDataAccessObject;
-    private final int pageSize = 16;
+    private final int imagesPerPage = 20;
 
     public PublicGalleryInteractor(MongoPlantDataAccessObject galleryDataAccessObject,
                                    PublicGalleryOutputBoundary galleryPresenter, MongoImageDataAccessObject imageDataAccessObject) {
@@ -25,11 +25,11 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
     @Override
     public void execute(PublicGalleryInputData galleryInputData) {
         int page = galleryInputData.getPage();
-        int skip = (page - 1) * pageSize;  // Calculate the offset based on the page
+        int skip = page * imagesPerPage;  // Calculate the offset based on the page
 
         try {
             // Fetch paginated list of Plant objects
-            List<Plant> plants = plantDataAccessObject.getPublicPlants(skip, pageSize);
+            List<Plant> plants = plantDataAccessObject.getPublicPlants(skip, imagesPerPage);
 
             if (plants == null || plants.isEmpty()) {
                 galleryPresenter.prepareFailView("No images available for the public gallery.");
@@ -48,7 +48,8 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
             }
 
             // Prepare output data and send to presenter
-            int totalPages = plantDataAccessObject.getNumberOfPublicPlants();
+            int totalPlants = plantDataAccessObject.getNumberOfPublicPlants();
+            int totalPages = (int) Math.ceil((double) totalPlants / imagesPerPage);
             PublicGalleryOutputData outputData = new PublicGalleryOutputData(images, page, totalPages);
             galleryPresenter.prepareSuccessView(outputData);
 

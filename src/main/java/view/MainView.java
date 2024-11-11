@@ -50,7 +50,6 @@
         final Dimension buttonSize = new Dimension(200, 50);
 
         private PublicGalleryView publicGalleryView;
-        private PublicGalleryController publicGalleryController;
         private JPanel currentGalleryPanel;
 
         private final String viewName = "main view";
@@ -76,16 +75,7 @@
             this.publicGalleryViewModel = publicGalleryViewModel;
             this.mainViewModel.addPropertyChangeListener(this);
 
-            MongoPlantDataAccessObject plantDataAccessObject = new MongoPlantDataAccessObject();
-            MongoImageDataAccessObject imageDataAccessObject = new MongoImageDataAccessObject();
-            ViewManagerModel galleryManagerModel = new ViewManagerModel();
-            PublicGalleryOutputBoundary galleryPresenter = new PublicGalleryPresenter(publicGalleryViewModel, mainViewModel, galleryManagerModel);
-            PublicGalleryInputBoundary publicGalleryInteractor = new PublicGalleryInteractor(plantDataAccessObject,
-                     galleryPresenter,  imageDataAccessObject);
-            this.publicGalleryController = new PublicGalleryController(publicGalleryInteractor);
-            publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
-            publicGalleryView.setPublicGalleryController(publicGalleryController);
-            publicGalleryViewModel.firePropertyChanged();
+            setUpPublicGallery();
 
             this.setLayout(new OverlayLayout(this));
             this.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
@@ -151,6 +141,25 @@
         private void enableInteraction() {
             logOut.setEnabled(true);
             upload.setEnabled(true);
+        }
+
+        private void setUpPublicGallery() {
+            MongoPlantDataAccessObject plantDataAccessObject = new MongoPlantDataAccessObject();
+            MongoImageDataAccessObject imageDataAccessObject = new MongoImageDataAccessObject();
+            ViewManagerModel galleryManagerModel = new ViewManagerModel();
+
+            // Set up the PublicGalleryPresenter and PublicGalleryInteractor
+            PublicGalleryOutputBoundary galleryPresenter = new PublicGalleryPresenter(publicGalleryViewModel, mainViewModel, galleryManagerModel);
+            PublicGalleryInputBoundary publicGalleryInteractor = new PublicGalleryInteractor(plantDataAccessObject, galleryPresenter, imageDataAccessObject);
+
+            // Initialize the PublicGalleryController and View
+            PublicGalleryController publicGalleryController = new PublicGalleryController(publicGalleryInteractor);
+            this.publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
+            publicGalleryView.setPublicGalleryController(publicGalleryController);
+
+            // Initial gallery state
+            publicGalleryController.loadPage(0);  // Load the first page by default
+            publicGalleryViewModel.firePropertyChanged();  // Trigger initial view model update
         }
 
         public void overlayUploadView() {

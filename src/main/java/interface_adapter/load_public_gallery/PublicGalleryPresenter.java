@@ -17,18 +17,18 @@ public class PublicGalleryPresenter implements PublicGalleryOutputBoundary {
     }
 
     @Override
-    public void prepareSuccessView(PublicGalleryOutputData response) {
+    public void prepareSuccessView(PublicGalleryOutputData outputData) {
         // Update the public gallery state in the view model
         PublicGalleryState galleryState = publicGalleryViewModel.getState();
-        galleryState.setPlantImages(response.getImages());
-        galleryState.setCurrentPage(response.getPage());
-        galleryState.setTotalPages(response.getTotalPages());
+        galleryState.setPlantImages(outputData.getImages());
+        galleryState.setCurrentPage(outputData.getPage());
+        galleryState.setTotalPages(outputData.getTotalPages());
 
         publicGalleryViewModel.setState(galleryState);
         publicGalleryViewModel.firePropertyChanged();
 
-        this.viewManagerModel.setState(publicGalleryViewModel.getViewName());
-        this.viewManagerModel.firePropertyChanged();
+        viewManagerModel.setState(publicGalleryViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
     }
 
     @Override
