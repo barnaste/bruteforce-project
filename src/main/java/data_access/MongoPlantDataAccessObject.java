@@ -1,6 +1,7 @@
 package data_access;
 
 import com.mongodb.client.*;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
 import entity.Plant;
 import org.bson.codecs.configuration.CodecProvider;
@@ -146,6 +147,26 @@ public class MongoPlantDataAccessObject implements PlantDataAccessObject {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return 0; // Return 0 in case of an error
+        }
+    }
+
+    /**
+     * Deletes all plants from the MongoDB collection.
+     * This method removes all documents from the "plants" collection.
+     *
+     * @throws RuntimeException if an error occurs while deleting plants.
+     */
+    public void deleteAll() {
+        try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
+            MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
+
+            // Delete all plants in the collection by using an empty filter
+            DeleteResult result = collection.deleteMany(Filters.empty());
+
+            // Optionally, you could check result.getDeletedCount(), but this is not needed if you don't care about the result
+        } catch (Exception e) {
+            // Wrap and throw the exception as a RuntimeException
+            throw new RuntimeException("Error deleting all plants: " + e.getMessage(), e);
         }
     }
 }
