@@ -21,12 +21,14 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     private int totalPages = 10;
 
     private PublicGalleryController controller;
+    private final PublicGalleryViewModel publicGalleryViewModel;
 
     private final JPanel imagesGrid;
     private final JButton nextPageButton;
     private final JButton previousPageButton;
 
     public PublicGalleryView(PublicGalleryViewModel publicGalleryViewModel) {
+        this.publicGalleryViewModel = publicGalleryViewModel;
         publicGalleryViewModel.addPropertyChangeListener(this);
 
         // Set up the layout
@@ -44,7 +46,6 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
         previousPageButton.addActionListener(e -> loadPreviousPage());
         nextPageButton.addActionListener(e -> loadNextPage());
 
-        publicGalleryViewModel.firePropertyChanged();
         navigationPanel.add(previousPageButton);
         navigationPanel.add(nextPageButton);
         add(navigationPanel, BorderLayout.SOUTH);
@@ -103,20 +104,20 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
 
                 JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
                 buttonPanel.setBackground(new Color(236, 245, 233));
-                JButton editButton = new JButton("Edit");
+//                JButton editButton = new JButton("Edit");
                 JButton infoButton = new JButton("Info");
 
-                editButton.setBackground(new Color(224, 242, 213));
+//                editButton.setBackground(new Color(224, 242, 213));
                 infoButton.setBackground(new Color(224, 242, 213));
 
-                editButton.addActionListener(e -> {
-                    System.out.println("Edit button clicked");
-                });
+//                editButton.addActionListener(e -> {
+//                    System.out.println("Edit button clicked");
+//                });
                 infoButton.addActionListener(e -> {
                     System.out.println("Info button clicked");
                 });
 
-                buttonPanel.add(editButton);
+//                buttonPanel.add(editButton);
                 buttonPanel.add(infoButton);
 
                 GridBagConstraints gbc = new GridBagConstraints();
