@@ -69,50 +69,44 @@ public class UploadInteractor implements UploadInputBoundary {
             httpResponse = client.execute(request);
             String jsonString = EntityUtils.toString(httpResponse.getEntity());
 
-            // TIP: there should be no thrown exceptions as we are guaranteed a JSON from the httpResponse
-            try {
-                JSONObject jsonObject = new JSONObject(jsonString);
+            JSONObject jsonObject = new JSONObject(jsonString);
+            if (jsonObject.has("error")) {
+                UploadSelectOutputData outputData = new UploadSelectOutputData(jsonObject.getString("message"));
+                this.presenter.switchToSelectView(outputData);
+            } else {
+                // find relevant information in jsonObject
+                String name = jsonObject
+                        .getJSONArray("results")
+                        .getJSONObject(0)
+                        .getJSONObject("species")
+                        .getJSONArray("commonNames")
+                        .getString(0);
+                String scientific = jsonObject
+                        .getJSONArray("results")
+                        .getJSONObject(0)
+                        .getJSONObject("species")
+                        .getString("scientificNameWithoutAuthor");
+                String family = jsonObject
+                        .getJSONArray("results")
+                        .getJSONObject(0)
+                        .getJSONObject("species")
+                        .getJSONObject("family")
+                        .getString("scientificNameWithoutAuthor");
+                double score = jsonObject
+                        .getJSONArray("results")
+                        .getJSONObject(0)
+                        .getDouble("score");
 
-                if (jsonObject.has("error")) {
-                    UploadSelectOutputData outputData = new UploadSelectOutputData(jsonObject.getString("message"));
-                    this.presenter.switchToSelectView(outputData);
-                } else {
-                    // find relevant information in jsonObject
-                    String name = jsonObject
-                            .getJSONArray("results")
-                            .getJSONObject(0)
-                            .getJSONObject("species")
-                            .getJSONArray("commonNames")
-                            .getString(0);
-                    String scientific = jsonObject
-                            .getJSONArray("results")
-                            .getJSONObject(0)
-                            .getJSONObject("species")
-                            .getString("scientificNameWithoutAuthor");
-                    String family = jsonObject
-                            .getJSONArray("results")
-                            .getJSONObject(0)
-                            .getJSONObject("species")
-                            .getJSONObject("family")
-                            .getString("scientificNameWithoutAuthor");
-                    double score = jsonObject
-                            .getJSONArray("results")
-                            .getJSONObject(0)
-                            .getDouble("score");
-
-                    UploadResultOutputData outputData = new UploadResultOutputData(
-                            uploadInputData.getImage(),
-                            name,
-                            scientific,
-                            family,
-                            score
-                    );
-                    this.presenter.switchToResultView(outputData);
-                }
-            } catch (JSONException e) {
-                System.out.println(e.getMessage());
+                UploadResultOutputData outputData = new UploadResultOutputData(
+                        uploadInputData.getImage(),
+                        name,
+                        scientific,
+                        family,
+                        score
+                );
+                this.presenter.switchToResultView(outputData);
             }
-        } catch (IOException e) {
+        } catch (JSONException | IOException e) {
             System.out.println(e.getMessage());
         }
     }
