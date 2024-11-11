@@ -13,6 +13,7 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
     private final PlantDataAccessObject plantDataAccessObject;
     private final PublicGalleryOutputBoundary galleryPresenter;
     private final MongoImageDataAccessObject imageDataAccessObject;
+    // TODO this should only be in the view
     private static final int IMAGES_PER_PAGE = 15;
 
     public PublicGalleryInteractor(MongoPlantDataAccessObject galleryDataAccessObject,
@@ -20,6 +21,10 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
         this.plantDataAccessObject = galleryDataAccessObject;
         this.galleryPresenter = galleryPresenter;
         this.imageDataAccessObject = imageDataAccessObject;
+    }
+
+    public int getNumberOfPublicPlants(){
+        return (int) Math.ceil((double) plantDataAccessObject.getNumberOfPublicPlants() / IMAGES_PER_PAGE);
     }
 
     @Override
@@ -48,8 +53,7 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
             }
 
             // Prepare output data and send to presenter
-            int totalPlants = plantDataAccessObject.getNumberOfPublicPlants();
-            int totalPages = (int) Math.ceil((double) totalPlants / IMAGES_PER_PAGE);
+            int totalPages = getNumberOfPublicPlants();
             PublicGalleryOutputData outputData = new PublicGalleryOutputData(images, page, totalPages);
             galleryPresenter.prepareSuccessView(outputData);
 

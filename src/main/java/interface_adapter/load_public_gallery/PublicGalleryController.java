@@ -19,4 +19,8 @@ public class PublicGalleryController {
         final PublicGalleryInputData galleryInputData = new PublicGalleryInputData(page);
         galleryUseCaseInteractor.execute(galleryInputData);
     }
+
+    public int getNumberOfPublicPlants(){
+        return galleryUseCaseInteractor.getNumberOfPublicPlants();
+    }
 }

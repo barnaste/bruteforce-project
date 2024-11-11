@@ -153,13 +153,13 @@
 
             // Initialize the PublicGalleryController and View
             PublicGalleryController publicGalleryController = new PublicGalleryController(publicGalleryInteractor);
+            int totalPages = publicGalleryController.getNumberOfPublicPlants();
             publicGalleryViewModel.firePropertyChanged();
-            this.publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
+            this.publicGalleryView = new PublicGalleryView(publicGalleryViewModel, totalPages);
             publicGalleryView.setPublicGalleryController(publicGalleryController);
 
-            // Initial gallery state
-            publicGalleryController.loadPage(0);  // Load the first page by default
-            // publicGalleryViewModel.firePropertyChanged();  // Trigger initial view model update
+            // Load the first page by default
+            publicGalleryController.loadPage(0);
         }
 
         public void overlayUploadView() {

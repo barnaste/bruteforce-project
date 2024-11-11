@@ -6,4 +6,6 @@ public interface PublicGalleryInputBoundary {
      * @param galleryInputData the input data
      */
     void execute(PublicGalleryInputData galleryInputData);
+
+    int getNumberOfPublicPlants();
 }

@@ -16,9 +16,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     private final int NUM_OF_ROWS = 3;
     private final String viewName = "public gallery";
     private int currentPage = 0;
-    // note totalPages is updated with the real totalPages number when nextPage is clicked for the first time
-    // TODO: fix the next button being initially clickable when the gallery is only one page
-    private int totalPages = 10;
+    private int totalPages;
 
     private PublicGalleryController controller;
     private final PublicGalleryViewModel publicGalleryViewModel;
@@ -27,8 +25,9 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     private final JButton nextPageButton;
     private final JButton previousPageButton;
 
-    public PublicGalleryView(PublicGalleryViewModel publicGalleryViewModel) {
+    public PublicGalleryView(PublicGalleryViewModel publicGalleryViewModel, int totalPages) {
         this.publicGalleryViewModel = publicGalleryViewModel;
+        this.totalPages = totalPages;
         publicGalleryViewModel.addPropertyChangeListener(this);
 
         // Set up the layout
@@ -50,9 +49,6 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
         navigationPanel.add(nextPageButton);
         add(navigationPanel, BorderLayout.SOUTH);
         updateNavigationButtons();
-
-        // Initial page load
-        // loadPage(currentPage);
     }
 
     public void setPublicGalleryController(PublicGalleryController controller) {
