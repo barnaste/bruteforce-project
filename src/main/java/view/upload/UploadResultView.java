@@ -3,13 +3,11 @@ package view.upload;
 import interface_adapter.upload.UploadController;
 import interface_adapter.upload.result.UploadResultState;
 import interface_adapter.upload.result.UploadResultViewModel;
-import view.PlantView;
+import view.plant_view.PlantView;
 import view.ViewComponentFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;

@@ -1,4 +1,4 @@
-package view;
+package view.plant_view;
 
 import interface_adapter.upload.result.UploadResultViewModel;
 
@@ -19,7 +19,7 @@ public class PlantView extends JPanel {
 
     public PlantView() {
         this.setLayout(new GridBagLayout());
-        this.setBackground(new Color(UploadResultViewModel.TRANSPARENT, true));
+        this.setBackground(new Color(PlantViewData.TRANSPARENT, true));
 
         // position each component nicely within the view area using a GridBagLayout
         GridBagConstraints constraints = new GridBagConstraints();
@@ -57,10 +57,10 @@ public class PlantView extends JPanel {
     protected JPanel createTopPanel() {
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BorderLayout());
-        topPanel.setBackground(new Color(UploadResultViewModel.TOP_PANEL_COLOR, true));
+        topPanel.setBackground(new Color(PlantViewData.TOP_PANEL_COLOR, true));
         topPanel.setPreferredSize(new Dimension(
-                UploadResultViewModel.PANEL_WIDTH,
-                UploadResultViewModel.TOP_PANEL_HEIGHT
+                PlantViewData.PANEL_WIDTH,
+                PlantViewData.TOP_PANEL_HEIGHT
         ));
 
         return topPanel;
@@ -70,7 +70,7 @@ public class PlantView extends JPanel {
         JPanel contentPanel = new JPanel();
         SpringLayout layout = new SpringLayout();
         contentPanel.setLayout(layout);
-        contentPanel.setBackground(new Color(UploadResultViewModel.CONTENT_PANEL_COLOR, true));
+        contentPanel.setBackground(new Color(PlantViewData.CONTENT_PANEL_COLOR, true));
 
         Font font = nameLabel.getFont();
         nameLabel.setFont(font.deriveFont(Font.BOLD).deriveFont(20f));
@@ -98,7 +98,7 @@ public class PlantView extends JPanel {
         notesField.setLineWrap(true);
         notesField.setWrapStyleWord(true);
         notesField.setMargin(new Insets(10, 10, 10, 10));
-        notesField.setBackground(new Color(UploadResultViewModel.CONTENT_PANEL_COLOR, true));
+        notesField.setBackground(new Color(PlantViewData.CONTENT_PANEL_COLOR, true));
         JScrollPane notesScrollPane = new JScrollPane(notesField);
 
         layout.putConstraint(SpringLayout.WEST, notesScrollPane, 20, SpringLayout.WEST, contentPanel);
@@ -114,9 +114,9 @@ public class PlantView extends JPanel {
         togglePublic.setFocusPainted(false);
         togglePublic.setText("\uD83D\uDD12");
         // enable a different color when privacy is toggled
-        togglePublic.setBackground(new Color(UploadResultViewModel.PRIVATE_TOGGLE_COLOR, true));
+        togglePublic.setBackground(new Color(PlantViewData.PRIVATE_TOGGLE_COLOR, true));
         UIManager.put("ToggleButton.select",
-                new Color(UploadResultViewModel.PUBLIC_TOGGLE_COLOR, true));
+                new Color(PlantViewData.PUBLIC_TOGGLE_COLOR, true));
         SwingUtilities.updateComponentTreeUI(togglePublic);
         // enable user feedback when they toggle privacy
         togglePublic.addItemListener((e) -> {
@@ -142,16 +142,16 @@ public class PlantView extends JPanel {
                 super.paintComponent(g);
                 if (image != null) {
                     g.drawImage(image, 0, 0,
-                            UploadResultViewModel.IMAGE_WIDTH,
-                            UploadResultViewModel.IMAGE_HEIGHT,
+                            PlantViewData.IMAGE_WIDTH,
+                            PlantViewData.IMAGE_HEIGHT,
                             this
                     );
                 }
             }
         };
         imagePanel.setPreferredSize(new Dimension(
-                UploadResultViewModel.IMAGE_WIDTH,
-                UploadResultViewModel.IMAGE_HEIGHT
+                PlantViewData.IMAGE_WIDTH,
+                PlantViewData.IMAGE_HEIGHT
         ));
         return imagePanel;
     }
@@ -159,7 +159,7 @@ public class PlantView extends JPanel {
     protected JPanel createActionPanel() {
         JPanel actionPanel = new JPanel();
         actionPanel.setLayout(new GridBagLayout());
-        actionPanel.setBackground(new Color(UploadResultViewModel.ACTION_PANEL_COLOR));
+        actionPanel.setBackground(new Color(PlantViewData.ACTION_PANEL_COLOR));
 
         return actionPanel;
     }
