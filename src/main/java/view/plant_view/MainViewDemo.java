@@ -1,22 +1,9 @@
-package view.upload;
+package view.plant_view;
 
-import data_access.MongoImageDataAccessObject;
-import data_access.MongoPlantDataAccessObject;
-import data_access.MongoUserDataAccessObject;
-import data_access.UserDataAccessObject;
+import data_access.*;
 import entity.Plant;
-import interface_adapter.ViewManagerModel;
-import interface_adapter.edit_plant.EditPlantViewModel;
-import interface_adapter.upload.UploadController;
-import interface_adapter.upload.UploadPresenter;
-import interface_adapter.upload.confirm.UploadConfirmViewModel;
-import interface_adapter.upload.result.UploadResultViewModel;
-import interface_adapter.upload.select.UploadSelectViewModel;
-import use_case.upload.UploadInputBoundary;
-import use_case.upload.UploadInteractor;
-import use_case.upload.UploadOutputBoundary;
-import view.ViewManager;
-import view.plant_view.EditPlantView;
+import interface_adapter.edit_plant.EditPlantController;
+import use_case.edit_plant.EditPlantInteractor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,57 +58,36 @@ class MainViewDemo {
     }
 
     private void overlayEditPlantView() {
-        JPanel cardPanel = new JPanel();
         // NOTE: we extend CardLayout so that whenever the top card is swapped, the
         // ENTIRE view is redrawn, and not just the region the card occupied.
         // This is because cards may be of variant dimensions. We would otherwise
         // have artefacts from previous cards if they were of larger dimensions.
-        CardLayout cardLayout = new CardLayout() {
-            @Override
-            public void show(Container parent, String name) {
-                super.show(parent, name);
-                mainView.revalidate();
-                mainView.repaint();
-            }
-        };
 
-        cardPanel.setLayout(cardLayout);
-        EditPlantViewModel selectorViewModel = new EditPlantViewModel();
-        UploadSelectView selectorView = new UploadSelectView(selectorViewModel);
-        cardPanel.add(selectorView, selectorView.getViewName());
-
-        UploadConfirmViewModel confirmViewModel = new UploadConfirmViewModel();
-        UploadConfirmView confirmView = new UploadConfirmView(confirmViewModel);
-        cardPanel.add(confirmView, confirmView.getViewName());
-
-        UploadResultViewModel resultViewModel = new UploadResultViewModel();
-        UploadResultView resultView = new UploadResultView(resultViewModel);
-        cardPanel.add(resultView, resultView.getViewName());
-
-        ViewManagerModel uploadManagerModel = new ViewManagerModel();
-        new ViewManager(cardPanel, cardLayout, uploadManagerModel);
-
-        UploadOutputBoundary uploadOutputBoundary = new UploadPresenter(
-                uploadManagerModel,
-                selectorViewModel,
-                confirmViewModel,
-                resultViewModel
+        // TODO: we assume that the plant is somehow passed to this point. For now, we use a placeholder.
+        Plant plant = new Plant(
+            "6731575d73cd45672d2ee35e",
+            "Ctenanthe setose",
+            "admin",
+            "My notes...",
+            false
         );
-        UserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
-        userDataAccessObject.setCurrentUsername("Charles Kyle Andrews Henderson the III");
-        UploadInputBoundary uploadInteractor = new UploadInteractor(
-                uploadOutputBoundary,
-                new MongoImageDataAccessObject(),
-                new MongoPlantDataAccessObject(),
-                userDataAccessObject
+
+        ImageDataAccessObject imageAccess = new MongoImageDataAccessObject();
+        PlantDataAccessObject plantAccess = new MongoPlantDataAccessObject();
+
+        JPanel overlay = new JPanel();
+        EditPlantView view = new EditPlantView(plant, imageAccess.getImageFromID(plant.getImageID()));
+        overlay.add(view, imageAccess);
+
+        EditPlantInteractor interactor = new EditPlantInteractor(
+                imageAccess,
+                plantAccess
         );
-        UploadController controller = new UploadController(uploadInteractor);
+        interactor.setPlant(plant);
+        EditPlantController controller = new EditPlantController(interactor);
+        view.setController(controller);
 
-        selectorView.setController(controller);
-        confirmView.setController(controller);
-        resultView.setController(controller);
-
-        this.overlay(new EditPlantView(new Plant()), uploadInteractor::setEscapeMap);
+        this.overlay(view, interactor::setEscapeMap);
     }
 
     private void disableInteraction() {
@@ -130,64 +96,6 @@ class MainViewDemo {
 
     private void enableInteraction() {
         upload.setEnabled(true);
-    }
-
-    public void overlayUploadView() {
-        JPanel cardPanel = new JPanel();
-        // NOTE: we extend CardLayout so that whenever the top card is swapped, the
-        // ENTIRE view is redrawn, and not just the region the card occupied.
-        // This is because cards may be of variant dimensions. We would otherwise
-        // have artefacts from previous cards if they were of larger dimensions.
-        CardLayout cardLayout = new CardLayout() {
-            @Override
-            public void show(Container parent, String name) {
-                super.show(parent, name);
-                mainView.revalidate();
-                mainView.repaint();
-            }
-        };
-        cardPanel.setLayout(cardLayout);
-
-        UploadSelectViewModel selectorViewModel = new UploadSelectViewModel();
-        UploadSelectView selectorView = new UploadSelectView(selectorViewModel);
-        cardPanel.add(selectorView, selectorView.getViewName());
-
-        UploadConfirmViewModel confirmViewModel = new UploadConfirmViewModel();
-        UploadConfirmView confirmView = new UploadConfirmView(confirmViewModel);
-        cardPanel.add(confirmView, confirmView.getViewName());
-
-        UploadResultViewModel resultViewModel = new UploadResultViewModel();
-        UploadResultView resultView = new UploadResultView(resultViewModel);
-        cardPanel.add(resultView, resultView.getViewName());
-
-        ViewManagerModel uploadManagerModel = new ViewManagerModel();
-        new ViewManager(cardPanel, cardLayout, uploadManagerModel);
-
-        UploadOutputBoundary uploadOutputBoundary = new UploadPresenter(
-                uploadManagerModel,
-                selectorViewModel,
-                confirmViewModel,
-                resultViewModel
-        );
-        UserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
-        userDataAccessObject.setCurrentUsername("Charles Kyle Andrews Henderson the III");
-        UploadInputBoundary uploadInteractor = new UploadInteractor(
-                uploadOutputBoundary,
-                new MongoImageDataAccessObject(),
-                new MongoPlantDataAccessObject(),
-                userDataAccessObject
-        );
-        UploadController controller = new UploadController(uploadInteractor);
-
-        selectorView.setController(controller);
-        confirmView.setController(controller);
-        resultView.setController(controller);
-
-        uploadManagerModel.setState(selectorView.getViewName());
-        uploadManagerModel.firePropertyChanged();
-
-        // create an overlay with the created cardPanel as the popup
-        overlay(cardPanel, uploadInteractor::setEscapeMap);
     }
 
     public void overlay(JPanel overlayPanel, Consumer<Runnable> setOverlayEscape) {

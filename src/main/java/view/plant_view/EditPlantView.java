@@ -1,21 +1,26 @@
 package view.plant_view;
 
 import entity.Plant;
+import interface_adapter.edit_plant.EditPlantController;
 import interface_adapter.edit_plant.EditPlantViewModel;
 import view.ViewComponentFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class EditPlantView extends PlantView implements PropertyChangeListener {
-    private final String viewName = "plant editor";
+    private EditPlantController controller;
 
-    // TODO: add a controller
-
-    public EditPlantView(Plant plant) {
-
+    public EditPlantView(Plant plant, BufferedImage image) {
+        this.setImage(image);
+        this.getScientificNameLabel().setText(plant.getSpecies());
+        this.getNotesField().setText(plant.getComments());
+        this.getTogglePublic().setSelected(plant.getIsPublic());
+        this.getFamilyLabel().setText("not me B)");
+        this.getNameLabel().setText("who knows?");
     }
 
     protected JPanel createTopPanel() {
@@ -23,8 +28,7 @@ public class EditPlantView extends PlantView implements PropertyChangeListener {
         JButton returnBtn = ViewComponentFactory.buildButton(EditPlantViewModel.RETURN_BUTTON_LABEL);
         returnBtn.setBorderPainted(false);
 
-        // TODO: add a controller action
-        // returnBtn.addActionListener((e) -> controller.switchToSelectView());
+        returnBtn.addActionListener((e) -> controller.escape());
         topPanel.add(returnBtn, BorderLayout.WEST);
         return topPanel;
     }
@@ -35,20 +39,16 @@ public class EditPlantView extends PlantView implements PropertyChangeListener {
         JButton saveBtn = ViewComponentFactory.buildButton(EditPlantViewModel.SAVE_BUTTON_LABEL);
         saveBtn.setPreferredSize(new Dimension(100, 30));
 
-        // TODO: add a controller action
-//        saveBtn.addActionListener((e) -> controller.saveUpload(
-//                getImage(),
-//                getScientificNameLabel().getText(),
-//                getNotesField().getText(),
-//                getTogglePublic().isSelected()
-//        ));
+        saveBtn.addActionListener((e) -> controller.savePlant(
+                getNotesField().getText(),
+                getTogglePublic().isSelected()
+        ));
         // NOTE: we negate privacyToggle as the controller needs to know if the image is public,
         //  not if the image is private.
         JButton discardBtn = ViewComponentFactory.buildButton(EditPlantViewModel.DELETE_BUTTON_LABEL);
         discardBtn.setPreferredSize(new Dimension(100, 30));
 
-        // TODO: add a controller action
-//        discardBtn.addActionListener((e) -> controller.escape());
+        discardBtn.addActionListener((e) -> controller.deletePlant());
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
@@ -60,6 +60,10 @@ public class EditPlantView extends PlantView implements PropertyChangeListener {
         actionPanel.add(saveBtn, constraints);
 
         return actionPanel;
+    }
+
+    public void setController(EditPlantController controller) {
+        this.controller = controller;
     }
 
     @Override
