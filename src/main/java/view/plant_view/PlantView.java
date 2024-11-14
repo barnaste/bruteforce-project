@@ -1,4 +1,4 @@
-package view;
+package view.plant_view;
 
 import interface_adapter.upload.result.UploadResultViewModel;
 
@@ -66,7 +66,7 @@ public class PlantView extends JPanel {
         return topPanel;
     }
 
-    private JPanel createContentPanel() {
+    protected JPanel createContentPanel() {
         JPanel contentPanel = new JPanel();
         SpringLayout layout = new SpringLayout();
         contentPanel.setLayout(layout);

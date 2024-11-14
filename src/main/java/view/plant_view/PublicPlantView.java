@@ -19,8 +19,10 @@ public class PublicPlantView extends PlantView implements PropertyChangeListener
         this.setImage(image);
         this.getScientificNameLabel().setText(plant.getSpecies());
         this.getNotesField().setText(plant.getComments());
-        this.getFamilyLabel().setText("Hello, just some text");
-        this.getNameLabel().setText("and more text...");
+        this.getNotesField().setEditable(false);
+        this.getFamilyLabel().setText("More Name Text...");
+        this.getNameLabel().setText("Some name text");
+
     }
 
     protected JPanel createTopPanel() {
@@ -32,6 +34,15 @@ public class PublicPlantView extends PlantView implements PropertyChangeListener
         topPanel.add(returnBtn, BorderLayout.WEST);
         return topPanel;
     }
+
+    protected JPanel createContentPanel() {
+        JPanel contentPanel = super.createContentPanel();
+        contentPanel.remove(this.getTogglePublic()); // Completely remove the button
+        return contentPanel;
+    }
+
+
+
 
     public void setController(PublicPlantViewController controller) {
         this.controller = controller;
