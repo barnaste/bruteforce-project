@@ -15,6 +15,7 @@ import java.beans.PropertyChangeListener;
 public class PublicPlantView extends PlantView implements PropertyChangeListener {
     private PublicPlantViewController controller;
 
+
     public PublicPlantView(Plant plant, BufferedImage image) {
         this.setImage(image);
         this.getScientificNameLabel().setText(plant.getSpecies());
@@ -22,7 +23,7 @@ public class PublicPlantView extends PlantView implements PropertyChangeListener
         this.getNotesField().setEditable(false);
         this.getFamilyLabel().setText("More Name Text...");
         this.getNameLabel().setText("Some name text");
-
+        this.getOwnerLabel().setText("Posted by " + plant.getOwner());
     }
 
     protected JPanel createTopPanel() {
@@ -36,8 +37,9 @@ public class PublicPlantView extends PlantView implements PropertyChangeListener
     }
 
     protected JPanel createContentPanel() {
+
         JPanel contentPanel = super.createContentPanel();
-        contentPanel.remove(this.getTogglePublic()); // Completely remove the button
+        contentPanel.remove(this.getTogglePublic());// Completely remove the button
         return contentPanel;
     }
 

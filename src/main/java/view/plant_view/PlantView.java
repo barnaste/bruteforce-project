@@ -12,6 +12,7 @@ public class PlantView extends JPanel {
     private final JLabel scientificNameLabel = new JLabel();
     private final JLabel familyLabel = new JLabel();
     private final JLabel certaintyLabel = new JLabel();
+    private final JLabel ownerLabel = new JLabel();
     private final JTextArea notesField = new JTextArea();
     private final JToggleButton togglePublic = new JToggleButton();
 
@@ -92,6 +93,12 @@ public class PlantView extends JPanel {
         layout.putConstraint(SpringLayout.WEST, certaintyLabel, 20, SpringLayout.WEST, contentPanel);
         layout.putConstraint(SpringLayout.NORTH, certaintyLabel, 15, SpringLayout.SOUTH, familyLabel);
         contentPanel.add(certaintyLabel);
+
+        ownerLabel.setFont(font.deriveFont(Font.PLAIN).deriveFont(14f));
+        layout.putConstraint(SpringLayout.WEST, ownerLabel, 20, SpringLayout.WEST, contentPanel);
+        layout.putConstraint(SpringLayout.NORTH, ownerLabel, 8, SpringLayout.SOUTH, certaintyLabel);
+        contentPanel.add(ownerLabel);
+
 
         notesField.setRows(10);
         notesField.setFont(font.deriveFont(Font.PLAIN).deriveFont(12f));
@@ -179,6 +186,8 @@ public class PlantView extends JPanel {
     public JLabel getCertaintyLabel() {
         return certaintyLabel;
     }
+
+    public JLabel getOwnerLabel() { return ownerLabel; }
 
     public JTextArea getNotesField() {
         return notesField;
