@@ -12,6 +12,9 @@ public class Plant {
     private String comments;
     private Boolean isPublic;
     private Date lastChanged;
+    private String family;
+    private String scientificName;
+    private int numOfLikes;
 
     /**
      * A constructor for Plant that initializes a plant with lastChanged as the current date.
@@ -21,8 +24,10 @@ public class Plant {
      * @param comments is any comments that the user inputted regarding this image
      * @param isPublic is whether the user set the image as public
      */
-    public Plant(String imageID, String species, String owner, String comments, Boolean isPublic) {
+    public Plant(String imageID, String species, String family, String scientificName, String owner, String comments, Boolean isPublic) {
         this.owner = owner;
+        this.family = family;
+        this.scientificName = scientificName;
         this.comments = comments;
         this.isPublic = isPublic;
         this.imageID = imageID;
@@ -51,6 +56,12 @@ public class Plant {
         return fileID;
     }
     public String getSpecies() { return species; }
+    public String getFamily() { return family; }
+    public String getScientificName() { return scientificName; }
+    public int getNumOfLikes() { return numOfLikes; }
+    public void setNumOfLikes(int numOfLikes) { this.numOfLikes = numOfLikes; }
+    public void setFamily(String family) { this.family = family;}
+    public void setScientificName(String scientificName) { this.scientificName = scientificName; }
     public void setSpecies(String species) { this.species = species; }
     public void setFileID(ObjectId fileID) { this.fileID = fileID; }
     public void setLastChanged(Date lastChanged) { this.lastChanged = lastChanged; }
