@@ -24,6 +24,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     private final JPanel imagesGrid;
     private final JButton nextPageButton;
     private final JButton previousPageButton;
+    private final JLabel pageLabel;
 
     public PublicGalleryView(PublicGalleryViewModel publicGalleryViewModel, int totalPages) {
         this.publicGalleryViewModel = publicGalleryViewModel;
@@ -41,11 +42,13 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
         JPanel navigationPanel = new JPanel();
         previousPageButton = new JButton("Previous Page");
         nextPageButton = new JButton("Next Page");
+        pageLabel = new JLabel("Page: " + (currentPage + 1) + " / " + totalPages);
 
         previousPageButton.addActionListener(e -> loadPreviousPage());
         nextPageButton.addActionListener(e -> loadNextPage());
 
         navigationPanel.add(previousPageButton);
+        navigationPanel.add(pageLabel);
         navigationPanel.add(nextPageButton);
         add(navigationPanel, BorderLayout.SOUTH);
         updateNavigationButtons();
@@ -138,6 +141,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     private void updateNavigationButtons() {
         previousPageButton.setEnabled(currentPage > 0);
         nextPageButton.setEnabled(currentPage < totalPages - 1);
+        pageLabel.setText("Page: " + (currentPage + 1) + " / " + totalPages);
     }
 
     public String getViewName() {
