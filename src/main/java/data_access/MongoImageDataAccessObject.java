@@ -80,4 +80,25 @@ public class MongoImageDataAccessObject implements ImageDataAccessObject {
             return false;
         }
     }
+
+    /**
+     * A method that deletes all images.
+     */
+    public boolean deleteAll() {
+        try {
+            // Get all files from the GridFSBucket
+            GridFSFindIterable files = gridFSBucket.find();
+
+            // Loop through the files and delete each one
+            for (GridFSFile file : files) {
+                gridFSBucket.delete(file.getObjectId());
+            }
+
+            return true; // Successfully deleted all files
+        } catch (Exception e) {
+            // Log the exception and return false in case of any error
+            System.out.println("Error deleting all files: " + e.getMessage());
+            return false;
+        }
+    }
 }

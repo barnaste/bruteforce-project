@@ -13,14 +13,20 @@ import data_access.MongoPlantDataAccessObject;
 import data_access.MongoUserDataAccessObject;
 import data_access.UserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.login.LoginState;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
+import interface_adapter.swap_gallery.SwapGalleryController;
+import interface_adapter.swap_gallery.SwapGalleryPresenter;
 import interface_adapter.upload.UploadController;
 import interface_adapter.upload.UploadPresenter;
 import interface_adapter.upload.confirm.UploadConfirmViewModel;
 import interface_adapter.upload.result.UploadResultViewModel;
 import interface_adapter.upload.select.UploadSelectViewModel;
+import use_case.swap_gallery.SwapGalleryInputBoundary;
+import use_case.swap_gallery.SwapGalleryInteractor;
+import use_case.swap_gallery.SwapGalleryOutputBoundary;
 import use_case.upload.UploadInputBoundary;
 import use_case.upload.UploadInteractor;
 import use_case.upload.UploadOutputBoundary;
@@ -31,22 +37,28 @@ import view.upload.UploadSelectView;
 /**
  * The Main View, for when the user is logged into the program.
  */
-public class    MainView extends JLayeredPane implements PropertyChangeListener {
+public class MainView extends JLayeredPane implements PropertyChangeListener {
     private final int OVERLAY_COLOR = 0x40829181;
     private final int DISPLAY_WIDTH = 1080;
     private final int DISPLAY_HEIGHT = 720;
 
-    // class attributes
+    final Dimension buttonSize = new Dimension(200, 50);
+
     private final String viewName = "main view";
     private final MainViewModel mainViewModel;
 
     private LogoutController logoutController;
+    private SwapGalleryController swapGalleryController;
 
     private String currentUser = "";
     private final JLabel userLabel = new JLabel();
 
     private final JButton logOut;
     private final JButton upload;
+
+    // Mode toggle buttons (My Plants / Discover)
+    private final JToggleButton myPlantsButton;
+    private final JToggleButton discoverButton;
 
     public MainView(MainViewModel mainViewModel) {
         this.mainViewModel = mainViewModel;
@@ -58,26 +70,65 @@ public class    MainView extends JLayeredPane implements PropertyChangeListener 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
 
-        final JLabel title = new JLabel("Main View");
-        final JPanel header = ViewComponentFactory.buildHorizontalPanel(List.of(title, userLabel));
+        // Header section with title and user label
+        final JLabel title = new JLabel("Gallery");
+        title.setFont(new Font("Arial", Font.BOLD, 18));
+        title.setForeground(new Color(0x123456));
+
+        final JPanel header = ViewComponentFactory.buildVerticalPanel(List.of(title, userLabel));
         header.setOpaque(false);
 
+        // Set up SwapGallery functionality (mode switching)
+        SwapGalleryOutputBoundary presenter = new SwapGalleryPresenter(mainViewModel);
+        SwapGalleryInputBoundary interactor = new SwapGalleryInteractor(presenter, mainViewModel);
+        this.swapGalleryController = new SwapGalleryController(interactor);
+
         upload = ViewComponentFactory.buildButton("Upload");
-        upload.addActionListener(evt -> overlayUploadView());
-
         logOut = ViewComponentFactory.buildButton("Log Out");
-        logOut.addActionListener( e -> logoutController.execute(mainViewModel.getState().getUsername()));
+        myPlantsButton = ViewComponentFactory.buildToggleButton("My Plants");
+        discoverButton = ViewComponentFactory.buildToggleButton("Discover");
 
-        final JPanel buttons = ViewComponentFactory.buildVerticalPanel(List.of(upload, logOut));
+        upload.addActionListener(evt -> overlayUploadView());
+        logOut.addActionListener(e -> logoutController.execute(mainViewModel.getState().getUsername()));
+        myPlantsButton.addActionListener(e -> swapGalleryController.switchMode(MainState.Mode.MY_PLANTS));
+        discoverButton.addActionListener(e -> swapGalleryController.switchMode(MainState.Mode.DISCOVER));
 
-        final JPanel gallery = new JPanel();
-        // Temporarily give the gallery panel a border so it's visible
-        gallery.setPreferredSize(new Dimension(800, 500));
-        gallery.setBorder(BorderFactory.createLineBorder(Color.black));
-        final JPanel body = ViewComponentFactory.buildHorizontalPanel(List.of(buttons, gallery));
+        ViewComponentFactory.setButtonSize(myPlantsButton, buttonSize);
+        ViewComponentFactory.setButtonSize(logOut, buttonSize);
+        ViewComponentFactory.setButtonSize(upload, buttonSize);
+        ViewComponentFactory.setButtonSize(discoverButton, buttonSize);
 
-        mainPanel.add(ViewComponentFactory.buildVerticalPanel(List.of(header, body)));
+        // Make the logout button red
+        logOut.setForeground(Color.RED);
+
+        // Make the panel on the left of the screen (Upload, mode toggle, and Log Out)
+        JPanel spacer1 = new JPanel();
+        spacer1.setOpaque(false);
+        spacer1.setPreferredSize(new Dimension(10, 160));
+
+        JPanel spacer2 = new JPanel();
+        spacer2.setOpaque(false);
+        spacer2.setPreferredSize(new Dimension(10, 20));
+
+        final JPanel actionPanel = ViewComponentFactory.buildVerticalPanel(List.of(title, header, spacer2, upload, myPlantsButton, discoverButton, spacer1, logOut));
+
+        // Gallery panel (to display gallery contents)
+        final JPanel gallery = makeGallery();
+
+        // Combine buttons and gallery in the body panel
+        final JPanel body = ViewComponentFactory.buildHorizontalPanel(List.of(actionPanel, gallery));
+
+        // Add header and body to the main panel
+        mainPanel.add(ViewComponentFactory.buildHorizontalPanel(List.of(actionPanel, gallery)));
+
         this.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
+    }
+
+    private JPanel makeGallery() {
+        JPanel gallery = new JPanel();
+        gallery.setPreferredSize(new Dimension(840, 700)); // Set gallery size
+        gallery.setBorder(BorderFactory.createLineBorder(Color.black)); // Temporary border for visibility
+        return gallery;
     }
 
     private void disableInteraction() {
@@ -191,12 +242,27 @@ public class    MainView extends JLayeredPane implements PropertyChangeListener 
         return viewName;
     }
 
+    private void updateModeUI(MainState.Mode mode) {
+        if (mode == MainState.Mode.DISCOVER) {
+            // Update UI for "Discover" mode
+            myPlantsButton.setSelected(false);
+            discoverButton.setSelected(true);
+        } else if (mode == MainState.Mode.MY_PLANTS) {
+            // Update UI for "My Plants" mode
+            myPlantsButton.setSelected(true);
+            discoverButton.setSelected(false);
+        }
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("state")) {
             final MainState state = (MainState) evt.getNewValue();
             currentUser = state.getUsername();
-            userLabel.setText("Currently logged in: " + this.currentUser);
+            userLabel.setText("Hello " + this.currentUser + "!");
+
+            // Handle mode change
+            updateModeUI(state.getCurrentMode());
         }
     }
 }
