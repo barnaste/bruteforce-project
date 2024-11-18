@@ -32,6 +32,7 @@ public class Plant {
         this.isPublic = isPublic;
         this.imageID = imageID;
         this.species = species;
+        this.fileID = new ObjectId();
     }
 
     /**
@@ -63,7 +64,6 @@ public class Plant {
     public void setFamily(String family) { this.family = family;}
     public void setScientificName(String scientificName) { this.scientificName = scientificName; }
     public void setSpecies(String species) { this.species = species; }
-    public void setFileID(ObjectId fileID) { this.fileID = fileID; }
     public void setLastChanged(Date lastChanged) { this.lastChanged = lastChanged; }
     public void setImageID(String imageID) {
         this.imageID = imageID;
