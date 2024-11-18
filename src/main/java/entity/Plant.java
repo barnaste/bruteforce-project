@@ -60,6 +60,9 @@ public class Plant {
     public String getFamily() { return family; }
     public String getScientificName() { return scientificName; }
     public int getNumOfLikes() { return numOfLikes; }
+    public void setFileID(ObjectId fileID) {
+        this.fileID = fileID;
+    }
     public void setNumOfLikes(int numOfLikes) { this.numOfLikes = numOfLikes; }
     public void setFamily(String family) { this.family = family;}
     public void setScientificName(String scientificName) { this.scientificName = scientificName; }
