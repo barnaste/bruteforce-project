@@ -116,6 +116,8 @@ public class UploadInteractor implements UploadInputBoundary {
         String imageID = imageDataBase.addImage(inputData.getImage());
         Plant plant = new Plant(
                 imageID,
+                inputData.getPlantName(),
+                inputData.getFamily(),
                 inputData.getPlantSpecies(),
                 userDataBase.getCurrentUsername(),
                 inputData.getUserNotes(),

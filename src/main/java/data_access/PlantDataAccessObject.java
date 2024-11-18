@@ -35,12 +35,14 @@ public interface PlantDataAccessObject {
     void addPlant(Plant plant);
 
     /**
-     * A method that inserts a new plant into the database.
-     * @param fileID is the fileID of the plant being modified
-     * @param newPlant is the plant object containing information to be updated with
-     * @return true if the plant has been successfully modified, false otherwise
+     * Edits the `isPublic` and `comments` fields of a plant identified by its ID.
+     *
+     * @param fileID   the ID of the plant to update
+     * @param isPublic the new value for the `isPublic` field
+     * @param comments the new value for the `comments` field
+     * @return {@code true} if the plant was successfully updated, {@code false} otherwise
      */
-    boolean editPlant(ObjectId fileID, Plant newPlant);
+    boolean editPlant(ObjectId fileID, boolean isPublic, String comments);
 
     /**
      * A method that deletes a plant from the database.
@@ -57,10 +59,26 @@ public interface PlantDataAccessObject {
     int getNumberOfPublicPlants();
 
     /**
+     * Fetches a plant from the database by its unique ID.
+     *
+     * @param fileID the ID of the plant to fetch
+     * @return the plant with the specified ID, or {@code null} if no plant is found or an error occurs
+     */
+    Plant fetchPlantByID(ObjectId fileID);
+
+    /**
      * Retrieves the total number of plants owned by a specific user.
      *
      * @param username the username of the user whose plant count is to be retrieved
      * @return the count of plants owned by the user
      */
     int getNumberOfUserPlants(String username);
+
+    /**
+     * Increments the number of likes for the plant identified by its ID.
+     *
+     * @param fileID the ID of the plant to like
+     * @return {@code true} if the like was successfully recorded, {@code false} otherwise
+     */
+    boolean likePlant(ObjectId fileID);;
 }
