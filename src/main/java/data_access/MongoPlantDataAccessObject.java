@@ -93,7 +93,7 @@ public class MongoPlantDataAccessObject implements PlantDataAccessObject {
             MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
 
             // Update the plant's isPublic and comments fields
-            Bson filter = eq("_id", fileID);
+            Bson filter = eq("fileID", fileID);
             Bson update = new Document("$set", new Document("isPublic", isPublic)
                     .append("comments", comments).append("lastChanged", new Date()));
 
@@ -113,7 +113,7 @@ public class MongoPlantDataAccessObject implements PlantDataAccessObject {
             MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
 
             // Find the plant by its ID
-            return collection.find(eq("_id", fileID)).first();
+            return collection.find(eq("fileID", fileID)).first();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -126,7 +126,7 @@ public class MongoPlantDataAccessObject implements PlantDataAccessObject {
             MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
 
             // Update the numOfLikes field by incrementing it
-            Bson filter = eq("_id", fileID);
+            Bson filter = eq("fileID", fileID);
             Bson update = new Document("$inc", new Document("numOfLikes", 1));
 
             // Perform the update operation
@@ -145,7 +145,7 @@ public class MongoPlantDataAccessObject implements PlantDataAccessObject {
             MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
 
             // Create a filter to find the plant by its ID
-            Bson filter = eq("_id", fileID);
+            Bson filter = eq("fileID", fileID);
 
             // Perform the delete operation
             DeleteResult result = collection.deleteOne(filter);
