@@ -16,11 +16,29 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
     // TODO this is repeated in view
     private static final int IMAGES_PER_PAGE = 15;
 
+    private int currentPage;
+
     public PublicGalleryInteractor(MongoPlantDataAccessObject galleryDataAccessObject,
                                    PublicGalleryOutputBoundary galleryPresenter, MongoImageDataAccessObject imageDataAccessObject) {
         this.plantDataAccessObject = galleryDataAccessObject;
         this.galleryPresenter = galleryPresenter;
         this.imageDataAccessObject = imageDataAccessObject;
+        this.currentPage = 0;
+    }
+
+    public void nextPage() {
+        int totalPages = getNumberOfPublicPlants();
+        if (currentPage < totalPages - 1) {
+            currentPage++;
+            execute(new PublicGalleryInputData(currentPage));
+        }
+    }
+
+    public void previousPage() {
+        if (currentPage > 0) {
+            currentPage--;
+            execute(new PublicGalleryInputData(currentPage));
+        }
     }
 
     public int getNumberOfPublicPlants(){
@@ -30,6 +48,7 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
     @Override
     public void execute(PublicGalleryInputData galleryInputData) {
         int page = galleryInputData.getPage();
+        currentPage = page;
         int skip = page * IMAGES_PER_PAGE;  // Calculate the offset based on the page
 
         try {
@@ -37,7 +56,7 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
             List<Plant> plants = plantDataAccessObject.getPublicPlants(skip, IMAGES_PER_PAGE);
 
             if (plants == null || plants.isEmpty()) {
-                galleryPresenter.prepareFailView("No images available for the public gallery.");
+                galleryPresenter.prepareFailView();
                 return;
             }
 
@@ -47,18 +66,16 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
                 BufferedImage image = imageDataAccessObject.getImageFromID(plant.getImageID());
                 if (image != null) {
                     images.add(image);
-                // } else {
-                //    System.out.println("Image with ID " + plant.getImageID() + " not found.");
                 }
             }
 
             // Prepare output data and send to presenter
             int totalPages = getNumberOfPublicPlants();
-            PublicGalleryOutputData outputData = new PublicGalleryOutputData(images, page, totalPages);
+            PublicGalleryOutputData outputData = new PublicGalleryOutputData(images, currentPage, totalPages);
             galleryPresenter.prepareSuccessView(outputData);
 
         } catch (Exception e) {
-            galleryPresenter.prepareFailView("An error occurred while loading the public gallery: " + e.getMessage());
+            galleryPresenter.prepareFailView();
         }
     }
 }

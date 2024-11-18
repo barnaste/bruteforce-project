@@ -63,7 +63,7 @@ public class AppBuilder {
     private final SignupView signupView = new SignupView(signupViewModel);
     private final MainView mainView = new MainView(mainViewModel, publicGalleryViewModel);
     private final LoginView loginView = new LoginView(loginViewModel);
-    private final PublicGalleryView publicGalleryView = new PublicGalleryView(publicGalleryViewModel, 0);
+    private final PublicGalleryView publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
     private final StartView startView = new StartView(signupViewModel, loginViewModel, viewManagerModel);
 
     // Initializes CardLayout for the card panel

@@ -20,7 +20,11 @@ public class PublicGalleryController {
         galleryUseCaseInteractor.execute(galleryInputData);
     }
 
-    public int getNumberOfPublicPlants(){
-        return galleryUseCaseInteractor.getNumberOfPublicPlants();
+    public void loadNextPage() {
+        galleryUseCaseInteractor.nextPage();
+    }
+
+    public void loadPreviousPage() {
+        galleryUseCaseInteractor.previousPage();
     }
 }

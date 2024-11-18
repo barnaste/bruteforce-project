@@ -8,4 +8,8 @@ public interface PublicGalleryInputBoundary {
     void execute(PublicGalleryInputData galleryInputData);
 
     int getNumberOfPublicPlants();
+
+    void nextPage();
+
+    void previousPage();
 }

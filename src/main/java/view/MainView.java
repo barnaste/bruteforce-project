@@ -153,9 +153,8 @@
 
             // Initialize the PublicGalleryController and View
             PublicGalleryController publicGalleryController = new PublicGalleryController(publicGalleryInteractor);
-            int totalPages = publicGalleryController.getNumberOfPublicPlants();
             publicGalleryViewModel.firePropertyChanged();
-            this.publicGalleryView = new PublicGalleryView(publicGalleryViewModel, totalPages);
+            this.publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
             publicGalleryView.setPublicGalleryController(publicGalleryController);
 
             // Load the first page by default
