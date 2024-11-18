@@ -39,7 +39,8 @@ public class PublicPlantView extends PlantView implements PropertyChangeListener
     protected JPanel createContentPanel() {
 
         JPanel contentPanel = super.createContentPanel();
-        contentPanel.remove(this.getTogglePublic());// Completely remove the button
+        contentPanel.remove(this.getTogglePublic());
+        getOwnerLabel().setVisible(true);
         return contentPanel;
     }
 

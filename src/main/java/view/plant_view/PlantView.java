@@ -97,6 +97,7 @@ public class PlantView extends JPanel {
         ownerLabel.setFont(font.deriveFont(Font.PLAIN).deriveFont(14f));
         layout.putConstraint(SpringLayout.WEST, ownerLabel, 20, SpringLayout.WEST, contentPanel);
         layout.putConstraint(SpringLayout.NORTH, ownerLabel, 8, SpringLayout.SOUTH, certaintyLabel);
+        ownerLabel.setVisible(false);
         contentPanel.add(ownerLabel);
 
 
