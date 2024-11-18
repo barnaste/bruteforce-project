@@ -18,11 +18,11 @@ public class PublicPlantView extends PlantView implements PropertyChangeListener
 
     public PublicPlantView(Plant plant, BufferedImage image) {
         this.setImage(image);
-        this.getScientificNameLabel().setText(plant.getSpecies());
+        this.getScientificNameLabel().setText(plant.getScientificName());
         this.getNotesField().setText(plant.getComments());
         this.getNotesField().setEditable(false);
-        this.getFamilyLabel().setText("More Name Text...");
-        this.getNameLabel().setText("Some name text");
+        this.getFamilyLabel().setText(plant.getFamily());
+        this.getNameLabel().setText(plant.getSpecies());
         this.getOwnerLabel().setText("Posted by " + plant.getOwner());
     }
 
