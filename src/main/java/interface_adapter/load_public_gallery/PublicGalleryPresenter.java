@@ -1,7 +1,6 @@
 package interface_adapter.load_public_gallery;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.main.MainViewModel;
 import use_case.load_public_gallery.PublicGalleryOutputBoundary;
 import use_case.load_public_gallery.PublicGalleryOutputData;
 
@@ -10,7 +9,7 @@ public class PublicGalleryPresenter implements PublicGalleryOutputBoundary {
     private final PublicGalleryViewModel publicGalleryViewModel;
     private final ViewManagerModel viewManagerModel;
 
-    public PublicGalleryPresenter(PublicGalleryViewModel publicGalleryViewModel, MainViewModel mainViewModel, ViewManagerModel viewManagerModel) {
+    public PublicGalleryPresenter(PublicGalleryViewModel publicGalleryViewModel, ViewManagerModel viewManagerModel) {
         this.publicGalleryViewModel = publicGalleryViewModel;
         this.viewManagerModel = viewManagerModel;
     }

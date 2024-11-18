@@ -161,7 +161,7 @@ public class AppBuilder {
      */
     public AppBuilder addPublicGalleryUseCase() {
         // Set up the output boundary (presenter)
-        final PublicGalleryPresenter publicGalleryPresenter = new PublicGalleryPresenter(publicGalleryViewModel, mainViewModel, viewManagerModel);
+        final PublicGalleryPresenter publicGalleryPresenter = new PublicGalleryPresenter(publicGalleryViewModel, viewManagerModel);
 
         // Set up the use case interactor
         final PublicGalleryInputBoundary publicGalleryInteractor = new PublicGalleryInteractor(galleryDataAccessObject, publicGalleryPresenter, imageDataAccessObject);

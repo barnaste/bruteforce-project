@@ -12,12 +12,11 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 
 public class PublicGalleryView extends JPanel implements PropertyChangeListener {
-    private final int NUM_OF_COLUMNS = 5;
-    private final int NUM_OF_ROWS = 3;
+    private static final int NUM_OF_COLUMNS = 5;
+    private static final int NUM_OF_ROWS = 3;
     private final String viewName = "public gallery";
 
     private PublicGalleryController controller;
-    private final PublicGalleryViewModel publicGalleryViewModel;
 
     private final JPanel imagesGrid;
     private final JButton nextPageButton;
@@ -25,7 +24,6 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     private final JLabel pageLabel;
 
     public PublicGalleryView(PublicGalleryViewModel publicGalleryViewModel) {
-        this.publicGalleryViewModel = publicGalleryViewModel;
         publicGalleryViewModel.addPropertyChangeListener(this);
 
         setLayout(new BorderLayout());
@@ -86,20 +84,12 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
 
                 JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
                 buttonPanel.setBackground(new Color(236, 245, 233));
-//                JButton editButton = new JButton("Edit");
+
                 JButton infoButton = new JButton("Info");
-
-//                editButton.setBackground(new Color(224, 242, 213));
                 infoButton.setBackground(new Color(224, 242, 213));
-
-//                editButton.addActionListener(e -> {
-//                    System.out.println("Edit button clicked");
-//                });
-                infoButton.addActionListener(e -> {
+                                infoButton.addActionListener(e -> {
                     System.out.println("Info button clicked");
                 });
-
-//                buttonPanel.add(editButton);
                 buttonPanel.add(infoButton);
 
                 GridBagConstraints gbc = new GridBagConstraints();

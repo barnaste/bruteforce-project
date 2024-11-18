@@ -13,7 +13,6 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
     private final PlantDataAccessObject plantDataAccessObject;
     private final PublicGalleryOutputBoundary galleryPresenter;
     private final MongoImageDataAccessObject imageDataAccessObject;
-    // TODO this is repeated in view
     private static final int IMAGES_PER_PAGE = 15;
 
     private int currentPage;

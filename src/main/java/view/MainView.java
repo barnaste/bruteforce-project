@@ -148,7 +148,7 @@
             ViewManagerModel galleryManagerModel = new ViewManagerModel();
 
             // Set up the PublicGalleryPresenter and PublicGalleryInteractor
-            PublicGalleryOutputBoundary galleryPresenter = new PublicGalleryPresenter(publicGalleryViewModel, mainViewModel, galleryManagerModel);
+            PublicGalleryOutputBoundary galleryPresenter = new PublicGalleryPresenter(publicGalleryViewModel, galleryManagerModel);
             PublicGalleryInputBoundary publicGalleryInteractor = new PublicGalleryInteractor(plantDataAccessObject, galleryPresenter, imageDataAccessObject);
 
             // Initialize the PublicGalleryController and View
