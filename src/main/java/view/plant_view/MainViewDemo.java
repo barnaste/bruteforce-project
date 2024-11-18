@@ -3,6 +3,7 @@ package view.plant_view;
 import data_access.*;
 import entity.Plant;
 import interface_adapter.publicplantview.PublicPlantViewController;
+import org.bson.types.ObjectId;
 import use_case.publicplant.PublicPlantInteractor;
 
 import javax.swing.*;
@@ -63,17 +64,11 @@ class MainViewDemo {
         // This is because cards may be of variant dimensions. We would otherwise
         // have artefacts from previous cards if they were of larger dimensions.
 
-        // TODO: we assume that the plant is somehow passed to this point. For now, we use a placeholder.
-        Plant plant = new Plant(
-                "6731575d73cd45672d2ee35e",
-                "Ctenanthe setose",
-                "admin",
-                "My notes...",
-                false
-        );
-
         ImageDataAccessObject imageAccess = new MongoImageDataAccessObject();
         PlantDataAccessObject plantAccess = new MongoPlantDataAccessObject();
+        Plant plant = plantAccess.fetchPlantByID(new ObjectId("673bbfbd92d5217c01829e1d"));
+
+        plantAccess.editPlant(plant.getFileID(), true, "new comment!");
 
         JPanel overlay = new JPanel();
         PublicPlantView view = new PublicPlantView(plant, imageAccess.getImageFromID(plant.getImageID()));

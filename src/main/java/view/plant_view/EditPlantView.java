@@ -16,11 +16,11 @@ public class EditPlantView extends PlantView implements PropertyChangeListener {
 
     public EditPlantView(Plant plant, BufferedImage image) {
         this.setImage(image);
-        this.getScientificNameLabel().setText(plant.getSpecies());
+        this.getScientificNameLabel().setText(plant.getScientificName());
         this.getNotesField().setText(plant.getComments());
         this.getTogglePublic().setSelected(plant.getIsPublic());
-        this.getFamilyLabel().setText("not me B)");
-        this.getNameLabel().setText("who knows?");
+        this.getFamilyLabel().setText(plant.getFamily());
+        this.getNameLabel().setText(plant.getSpecies());
     }
 
     protected JPanel createTopPanel() {

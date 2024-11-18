@@ -43,6 +43,8 @@ public class UploadResultView extends PlantView implements PropertyChangeListene
 
         saveBtn.addActionListener((e) -> controller.saveUpload(
                 getImage(),
+                getNameLabel().getText(),
+                getFamilyLabel().getText(),
                 getScientificNameLabel().getText(),
                 getNotesField().getText(),
                 getTogglePublic().isSelected()
@@ -82,7 +84,7 @@ public class UploadResultView extends PlantView implements PropertyChangeListene
 
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
         DecimalFormat roundingFormat = new DecimalFormat("###.##", symbols);
-        this.certaintyLabel.setText(Double.valueOf(roundingFormat.format(state.getCertainty() * 100)) +
+        this.getCertaintyLabel().setText(Double.valueOf(roundingFormat.format(state.getCertainty() * 100)) +
                 "% certainty");
 
         this.getNotesField().setText("My notes...");

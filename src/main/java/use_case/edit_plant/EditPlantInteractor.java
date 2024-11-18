@@ -22,9 +22,11 @@ public class EditPlantInteractor implements EditPlantInputBoundary {
 
     @Override
     public void savePlant(EditPlantInputData inputData) {
-        currentPlant.setComments(inputData.getUserNotes());
-        currentPlant.setIsPublic(inputData.isPublic());
-        plantDatabase.editPlant(currentPlant.getFileID(), currentPlant);
+        plantDatabase.editPlant(
+                currentPlant.getFileID(),
+                inputData.isPublic(),
+                inputData.getUserNotes()
+        );
 
         this.escapeMap.run();
     }
