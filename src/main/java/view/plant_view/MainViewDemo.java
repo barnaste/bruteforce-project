@@ -2,8 +2,8 @@ package view.plant_view;
 
 import data_access.*;
 import entity.Plant;
-import interface_adapter.edit_plant.EditPlantController;
-import use_case.edit_plant.EditPlantInteractor;
+import interface_adapter.publicplantview.PublicPlantViewController;
+import use_case.publicplant.PublicPlantInteractor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,8 +25,8 @@ class MainViewDemo {
         mainView = new JLayeredPane();
         mainView.setLayout(new OverlayLayout(mainView));
 
-        // set up main view -- a simple canvas with an "Upload" button
-        upload = new JButton("Upload");
+        // set up main view -- a simple canvas with a "View" button
+        upload = new JButton("View");
         upload.setBorderPainted(true);
         upload.setContentAreaFilled(false);
         upload.setFocusPainted(false);
@@ -40,11 +40,11 @@ class MainViewDemo {
         upload.addActionListener(e -> {
             // NOTICE: this is where the use case is called.
             //  Once the main display and CA classes are implemented, the call path will be along the lines of
-            //  MainController -> MainInteractor -> MainPresenter.overlayUploadView(), which signals a property
+            //  MainController -> MainInteractor -> MainPresenter.overlayPublicPlantView(), which signals a property
             //  change to a class of the developer's choice.
             //  Here, we cut straight to the overlayUploadView method.
-//            overlayUploadView();
-            overlayEditPlantView();
+//            overlayPublicPlantview();
+            overlayPublicPlantView();
         });
 
         // create display frame
@@ -57,7 +57,7 @@ class MainViewDemo {
         frame.setVisible(true);
     }
 
-    private void overlayEditPlantView() {
+    private void overlayPublicPlantView() {
         // NOTE: we extend CardLayout so that whenever the top card is swapped, the
         // ENTIRE view is redrawn, and not just the region the card occupied.
         // This is because cards may be of variant dimensions. We would otherwise
@@ -65,26 +65,26 @@ class MainViewDemo {
 
         // TODO: we assume that the plant is somehow passed to this point. For now, we use a placeholder.
         Plant plant = new Plant(
-            "6731575d73cd45672d2ee35e",
-            "Ctenanthe setose",
-            "admin",
-            "My notes...",
-            false
+                "6731575d73cd45672d2ee35e",
+                "Ctenanthe setose",
+                "admin",
+                "My notes...",
+                false
         );
 
         ImageDataAccessObject imageAccess = new MongoImageDataAccessObject();
         PlantDataAccessObject plantAccess = new MongoPlantDataAccessObject();
 
         JPanel overlay = new JPanel();
-        EditPlantView view = new EditPlantView(plant, imageAccess.getImageFromID(plant.getImageID()));
+        PublicPlantView view = new PublicPlantView(plant, imageAccess.getImageFromID(plant.getImageID()));
         overlay.add(view, imageAccess);
 
-        EditPlantInteractor interactor = new EditPlantInteractor(
+        PublicPlantInteractor interactor = new PublicPlantInteractor(
                 imageAccess,
                 plantAccess
         );
         interactor.setPlant(plant);
-        EditPlantController controller = new EditPlantController(interactor);
+        PublicPlantViewController controller = new PublicPlantViewController(interactor);
         view.setController(controller);
 
         this.overlay(view, interactor::setEscapeMap);
