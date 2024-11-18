@@ -68,8 +68,6 @@ class MainViewDemo {
         PlantDataAccessObject plantAccess = new MongoPlantDataAccessObject();
         Plant plant = plantAccess.fetchPlantByID(new ObjectId("673bbfbd92d5217c01829e1d"));
 
-        plantAccess.editPlant(plant.getFileID(), true, "new comment!");
-
         JPanel overlay = new JPanel();
         PublicPlantView view = new PublicPlantView(plant, imageAccess.getImageFromID(plant.getImageID()));
         overlay.add(view, imageAccess);
