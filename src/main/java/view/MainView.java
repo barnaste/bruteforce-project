@@ -64,9 +64,8 @@
 
         private final JButton logOut;
         private final JButton upload;
-
-        private final JToggleButton myPlantsButton;
-        private final JToggleButton discoverButton;
+        private final JButton myPlantsButton;
+        private final JButton discoverButton;
 
         public MainView(MainViewModel mainViewModel, PublicGalleryViewModel publicGalleryViewModel, ModeSwitchViewModel modeSwitchViewModel) {
             this.mainViewModel = mainViewModel;
@@ -96,13 +95,14 @@
 
             upload = ViewComponentFactory.buildButton("Upload");
             logOut = ViewComponentFactory.buildButton("Log Out");
-            myPlantsButton = ViewComponentFactory.buildToggleButton("My Plants");
-            discoverButton = ViewComponentFactory.buildToggleButton("Discover");
+            myPlantsButton = ViewComponentFactory.buildButton("My Plants");
+            discoverButton = ViewComponentFactory.buildButton("Discover");
 
             upload.addActionListener(evt -> overlayUploadView());
             logOut.addActionListener(e -> logoutController.execute(mainViewModel.getState().getUsername()));
 
             myPlantsButton.addActionListener(e -> modeSwitchController.switchMode());
+            myPlantsButton.setEnabled(false);
             discoverButton.addActionListener(e -> modeSwitchController.switchMode());
 
             ViewComponentFactory.setButtonSize(myPlantsButton, buttonSize);
@@ -125,12 +125,14 @@
             final JPanel actionPanel = ViewComponentFactory.buildVerticalPanel(List.of(title, header, spacer2, upload, myPlantsButton, discoverButton, spacer1, logOut));
 
             currentGalleryPanel = new JPanel();
-            setDiscoverPanel();
+            setMyPlantsPanel();
 
             mainPanel.add(ViewComponentFactory.buildHorizontalPanel(List.of(actionPanel, currentGalleryPanel)));
 
             this.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
         }
+
+        private void setUpModeSwitch() {}
 
         private void disableInteraction() {
             logOut.setEnabled(false);
@@ -274,15 +276,15 @@
                 setDiscoverPanel();
                 currentGalleryMode = "Discover Gallery";
                 title.setText(currentGalleryMode);
-                myPlantsButton.setSelected(false);
-                discoverButton.setSelected(true);
+                myPlantsButton.setEnabled(true);
+                discoverButton.setEnabled(false);
             } else if (mode == ModeSwitchState.Mode.MY_PLANTS) {
                 // Update UI for "My Plants" mode
                 setMyPlantsPanel();
                 currentGalleryMode = "My Plants Gallery";
                 title.setText(currentGalleryMode);
-                myPlantsButton.setSelected(true);
-                discoverButton.setSelected(false);
+                myPlantsButton.setEnabled(false);
+                discoverButton.setEnabled(true);
             }
         }
 
@@ -293,8 +295,8 @@
                 currentUser = state.getUsername();
                 userLabel.setText("Hello " + this.currentUser + "!");
             } if (evt.getPropertyName().equals("mode_switch")) {
-                final ModeSwitchState ModeSwitchState = (ModeSwitchState) evt.getNewValue();
-                updateModeUI(ModeSwitchState.getCurrentMode());
+                final ModeSwitchState modeSwitchState = (ModeSwitchState) evt.getNewValue();
+                updateModeUI(modeSwitchState.getCurrentMode());
             }
         }
 
