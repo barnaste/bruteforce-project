@@ -12,71 +12,51 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 
 public class PublicGalleryView extends JPanel implements PropertyChangeListener {
-    private final int NUM_OF_COLUMNS = 5;
-    private final int NUM_OF_ROWS = 3;
+    private static final int NUM_OF_COLUMNS = 5;
+    private static final int NUM_OF_ROWS = 3;
     private final String viewName = "public gallery";
-    private int currentPage = 0;
-    // note totalPages is updated with the real totalPages number when nextPage is clicked for the first time
-    // TODO: fix the next button being initially clickable when the gallery is only one page
-    private int totalPages = 10;
 
     private PublicGalleryController controller;
-    private final PublicGalleryViewModel publicGalleryViewModel;
 
     private final JPanel imagesGrid;
     private final JButton nextPageButton;
     private final JButton previousPageButton;
+    private final JLabel pageLabel;
 
     public PublicGalleryView(PublicGalleryViewModel publicGalleryViewModel) {
-        this.publicGalleryViewModel = publicGalleryViewModel;
         publicGalleryViewModel.addPropertyChangeListener(this);
 
-        // Set up the layout
         setLayout(new BorderLayout());
         imagesGrid = new JPanel(new GridLayout(NUM_OF_ROWS, NUM_OF_COLUMNS, 5, 5));
-        imagesGrid.setPreferredSize(new Dimension(835, 650));
-        imagesGrid.setBackground(new Color(236, 245, 233));
         add(new JScrollPane(imagesGrid), BorderLayout.CENTER);
 
-        // Navigation buttons panel
         JPanel navigationPanel = new JPanel();
         previousPageButton = new JButton("Previous Page");
         nextPageButton = new JButton("Next Page");
+        pageLabel = new JLabel();
 
-        previousPageButton.addActionListener(e -> loadPreviousPage());
-        nextPageButton.addActionListener(e -> loadNextPage());
+        previousPageButton.addActionListener(e -> {
+            if (controller != null) {
+                controller.loadPreviousPage();
+            }
+        });
+
+        nextPageButton.addActionListener(e -> {
+            if (controller != null) {
+                controller.loadNextPage();
+            }
+        });
 
         navigationPanel.add(previousPageButton);
+        navigationPanel.add(pageLabel);
         navigationPanel.add(nextPageButton);
         add(navigationPanel, BorderLayout.SOUTH);
-        updateNavigationButtons();
 
-        // Initial page load
-        // loadPage(currentPage);
+        updateNavigation(0, 1);
     }
 
     public void setPublicGalleryController(PublicGalleryController controller) {
         this.controller = controller;
-    }
-
-    private void loadPage(int pageNumber) {
-        if (controller != null) {
-            controller.loadPage(pageNumber);
-        }
-        updateNavigationButtons();
-    }
-
-
-    private void loadNextPage() {
-        currentPage++;
-        loadPage(currentPage);
-    }
-
-    private void loadPreviousPage() {
-        if (currentPage > 0) {
-            currentPage--;
-            loadPage(currentPage);
-        }
     }
 
     public void displayImages(List<BufferedImage> images) {
@@ -104,20 +84,12 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
 
                 JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
                 buttonPanel.setBackground(new Color(236, 245, 233));
-//                JButton editButton = new JButton("Edit");
+
                 JButton infoButton = new JButton("Info");
-
-//                editButton.setBackground(new Color(224, 242, 213));
                 infoButton.setBackground(new Color(224, 242, 213));
-
-//                editButton.addActionListener(e -> {
-//                    System.out.println("Edit button clicked");
-//                });
-                infoButton.addActionListener(e -> {
+                                infoButton.addActionListener(e -> {
                     System.out.println("Info button clicked");
                 });
-
-//                buttonPanel.add(editButton);
                 buttonPanel.add(infoButton);
 
                 GridBagConstraints gbc = new GridBagConstraints();
@@ -139,9 +111,10 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
         imagesGrid.repaint();
     }
 
-    private void updateNavigationButtons() {
+    private void updateNavigation(int currentPage, int totalPages) {
         previousPageButton.setEnabled(currentPage > 0);
         nextPageButton.setEnabled(currentPage < totalPages - 1);
+        pageLabel.setText("Page: " + (currentPage + 1) + " / " + totalPages);
     }
 
     public String getViewName() {
@@ -150,10 +123,8 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        // System.out.println("Property change triggered for page: " + currentPage);
         PublicGalleryState state = (PublicGalleryState) evt.getNewValue();
-        currentPage = state.getCurrentPage();
-        totalPages = state.getTotalPages();
         displayImages(state.getPlantImages());
+        updateNavigation(state.getCurrentPage(), state.getTotalPages());
     }
 }

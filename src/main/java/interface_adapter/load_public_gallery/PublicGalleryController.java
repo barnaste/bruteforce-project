@@ -19,4 +19,12 @@ public class PublicGalleryController {
         final PublicGalleryInputData galleryInputData = new PublicGalleryInputData(page);
         galleryUseCaseInteractor.execute(galleryInputData);
     }
+
+    public void loadNextPage() {
+        galleryUseCaseInteractor.nextPage();
+    }
+
+    public void loadPreviousPage() {
+        galleryUseCaseInteractor.previousPage();
+    }
 }

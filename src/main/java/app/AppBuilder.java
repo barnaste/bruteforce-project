@@ -13,6 +13,9 @@ import interface_adapter.main.MainViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.mode_switch.ModeSwitchController;
+import interface_adapter.mode_switch.ModeSwitchPresenter;
+import interface_adapter.mode_switch.ModeSwitchViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -21,6 +24,7 @@ import use_case.load_public_gallery.PublicGalleryInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
+import use_case.mode_switch.ModeSwitchInteractor;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
@@ -58,10 +62,11 @@ public class AppBuilder {
     private final LoginViewModel loginViewModel = new LoginViewModel();
     private final MainViewModel mainViewModel = new MainViewModel();
     private final PublicGalleryViewModel publicGalleryViewModel = new PublicGalleryViewModel();
+    private final ModeSwitchViewModel modeSwitchViewModel = new ModeSwitchViewModel();
 
     // Views for different app states
     private final SignupView signupView = new SignupView(signupViewModel);
-    private final MainView mainView = new MainView(mainViewModel, publicGalleryViewModel);
+    private final MainView mainView = new MainView(mainViewModel, publicGalleryViewModel, modeSwitchViewModel);
     private final LoginView loginView = new LoginView(loginViewModel);
     private final PublicGalleryView publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
     private final StartView startView = new StartView(signupViewModel, loginViewModel, viewManagerModel);
@@ -87,6 +92,19 @@ public class AppBuilder {
      */
     public AppBuilder addSignupView() {
         cardPanel.add(signupView, signupView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addSwitchModeUserCase() {
+        // Set up the output boundary (presenter)
+        final ModeSwitchPresenter modeSwitchPresenter = new ModeSwitchPresenter(modeSwitchViewModel);
+
+        // Set up the use case interactor
+        final ModeSwitchInteractor modeSwitchInteractor = new ModeSwitchInteractor(modeSwitchPresenter);
+
+        // Now wire it with the view
+        mainView.setModeSwitchController(new ModeSwitchController(modeSwitchInteractor));
+
         return this;
     }
 
@@ -161,7 +179,7 @@ public class AppBuilder {
      */
     public AppBuilder addPublicGalleryUseCase() {
         // Set up the output boundary (presenter)
-        final PublicGalleryPresenter publicGalleryPresenter = new PublicGalleryPresenter(publicGalleryViewModel, mainViewModel, viewManagerModel);
+        final PublicGalleryPresenter publicGalleryPresenter = new PublicGalleryPresenter(publicGalleryViewModel, viewManagerModel);
 
         // Set up the use case interactor
         final PublicGalleryInputBoundary publicGalleryInteractor = new PublicGalleryInteractor(galleryDataAccessObject, publicGalleryPresenter, imageDataAccessObject);

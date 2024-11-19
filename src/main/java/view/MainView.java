@@ -19,8 +19,9 @@
     import interface_adapter.logout.LogoutController;
     import interface_adapter.main.MainState;
     import interface_adapter.main.MainViewModel;
-    import interface_adapter.swap_gallery.SwapGalleryController;
-    import interface_adapter.swap_gallery.SwapGalleryPresenter;
+    import interface_adapter.mode_switch.ModeSwitchController;
+    import interface_adapter.mode_switch.ModeSwitchState;
+    import interface_adapter.mode_switch.ModeSwitchViewModel;
     import interface_adapter.upload.UploadController;
     import interface_adapter.upload.UploadPresenter;
     import interface_adapter.upload.confirm.UploadConfirmViewModel;
@@ -29,9 +30,6 @@
     import use_case.load_public_gallery.PublicGalleryInputBoundary;
     import use_case.load_public_gallery.PublicGalleryInteractor;
     import use_case.load_public_gallery.PublicGalleryOutputBoundary;
-    import use_case.swap_gallery.SwapGalleryInputBoundary;
-    import use_case.swap_gallery.SwapGalleryInteractor;
-    import use_case.swap_gallery.SwapGalleryOutputBoundary;
     import use_case.upload.UploadInputBoundary;
     import use_case.upload.UploadInteractor;
     import use_case.upload.UploadOutputBoundary;
@@ -52,10 +50,11 @@
         private final String viewName = "main view";
         private final MainViewModel mainViewModel;
         private final PublicGalleryViewModel publicGalleryViewModel;
+        private final ModeSwitchViewModel modeSwitchViewModel;
         private PublicGalleryView publicGalleryView;
 
         private LogoutController logoutController;
-        private final SwapGalleryController swapGalleryController;
+        private ModeSwitchController modeSwitchController;
 
         private String currentUser = "";
         private String currentGalleryMode = "";
@@ -69,10 +68,14 @@
         private final JToggleButton myPlantsButton;
         private final JToggleButton discoverButton;
 
-        public MainView(MainViewModel mainViewModel, PublicGalleryViewModel publicGalleryViewModel) {
+        public MainView(MainViewModel mainViewModel, PublicGalleryViewModel publicGalleryViewModel, ModeSwitchViewModel modeSwitchViewModel) {
             this.mainViewModel = mainViewModel;
-            this.publicGalleryViewModel = publicGalleryViewModel;
             this.mainViewModel.addPropertyChangeListener(this);
+
+            this.modeSwitchViewModel = modeSwitchViewModel;
+            this.modeSwitchViewModel.addPropertyChangeListener(this);
+
+            this.publicGalleryViewModel = publicGalleryViewModel;
 
             setUpPublicGallery();
 
@@ -83,17 +86,13 @@
             mainPanel.setLayout(new GridBagLayout());
 
             currentGalleryMode = "My Plants Gallery";
+
             title.setText(currentGalleryMode);
             title.setFont(new Font("Arial", Font.BOLD, 18));
             title.setForeground(new Color(0x3C7339));
 
             final JPanel header = ViewComponentFactory.buildVerticalPanel(List.of(title, userLabel));
             header.setOpaque(false);
-
-            // Set up SwapGallery functionality (mode switching)
-            SwapGalleryOutputBoundary presenter = new SwapGalleryPresenter(mainViewModel);
-            SwapGalleryInputBoundary interactor = new SwapGalleryInteractor(presenter, mainViewModel);
-            this.swapGalleryController = new SwapGalleryController(interactor);
 
             upload = ViewComponentFactory.buildButton("Upload");
             logOut = ViewComponentFactory.buildButton("Log Out");
@@ -102,8 +101,9 @@
 
             upload.addActionListener(evt -> overlayUploadView());
             logOut.addActionListener(e -> logoutController.execute(mainViewModel.getState().getUsername()));
-            myPlantsButton.addActionListener(e -> swapGalleryController.switchMode(MainState.Mode.MY_PLANTS));
-            discoverButton.addActionListener(e -> swapGalleryController.switchMode(MainState.Mode.DISCOVER));
+
+            myPlantsButton.addActionListener(e -> modeSwitchController.switchMode());
+            discoverButton.addActionListener(e -> modeSwitchController.switchMode());
 
             ViewComponentFactory.setButtonSize(myPlantsButton, buttonSize);
             ViewComponentFactory.setButtonSize(logOut, buttonSize);
@@ -148,7 +148,7 @@
             ViewManagerModel galleryManagerModel = new ViewManagerModel();
 
             // Set up the PublicGalleryPresenter and PublicGalleryInteractor
-            PublicGalleryOutputBoundary galleryPresenter = new PublicGalleryPresenter(publicGalleryViewModel, mainViewModel, galleryManagerModel);
+            PublicGalleryOutputBoundary galleryPresenter = new PublicGalleryPresenter(publicGalleryViewModel, galleryManagerModel);
             PublicGalleryInputBoundary publicGalleryInteractor = new PublicGalleryInteractor(plantDataAccessObject, galleryPresenter, imageDataAccessObject);
 
             // Initialize the PublicGalleryController and View
@@ -157,9 +157,8 @@
             this.publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
             publicGalleryView.setPublicGalleryController(publicGalleryController);
 
-            // Initial gallery state
-            publicGalleryController.loadPage(0);  // Load the first page by default
-            // publicGalleryViewModel.firePropertyChanged();  // Trigger initial view model update
+            // Load the first page by default
+            publicGalleryController.loadPage(0);
         }
 
         public void overlayUploadView() {
@@ -259,21 +258,25 @@
             this.logoutController = logoutController;
         }
 
+        public void setModeSwitchController(ModeSwitchController modeSwitchController) {
+            this.modeSwitchController = modeSwitchController;
+        }
+
         public String getViewName() {
             return viewName;
         }
 
-        private void updateModeUI(MainState.Mode mode) {
+        private void updateModeUI(ModeSwitchState.Mode mode) {
             if (currentGalleryPanel != null)
                 this.remove(currentGalleryPanel);
-            if (mode == MainState.Mode.DISCOVER) {
+            if (mode == ModeSwitchState.Mode.DISCOVER) {
                 // Update UI for "Discover" mode
                 setDiscoverPanel();
                 currentGalleryMode = "Discover Gallery";
                 title.setText(currentGalleryMode);
                 myPlantsButton.setSelected(false);
                 discoverButton.setSelected(true);
-            } else if (mode == MainState.Mode.MY_PLANTS) {
+            } else if (mode == ModeSwitchState.Mode.MY_PLANTS) {
                 // Update UI for "My Plants" mode
                 setMyPlantsPanel();
                 currentGalleryMode = "My Plants Gallery";
@@ -285,13 +288,13 @@
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            if (evt.getPropertyName().equals("state")) {
+            if (evt.getPropertyName().equals("logged_in")) {
                 final MainState state = (MainState) evt.getNewValue();
                 currentUser = state.getUsername();
                 userLabel.setText("Hello " + this.currentUser + "!");
-
-                // Handle mode change
-                updateModeUI(state.getCurrentMode());
+            } if (evt.getPropertyName().equals("mode_switch")) {
+                final ModeSwitchState ModeSwitchState = (ModeSwitchState) evt.getNewValue();
+                updateModeUI(ModeSwitchState.getCurrentMode());
             }
         }
 

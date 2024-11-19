@@ -5,12 +5,6 @@ package interface_adapter.main;
  */
 public class MainState {
     private String username = "";
-    private Mode currentMode = Mode.MY_PLANTS;
-
-    public enum Mode {
-        DISCOVER,
-        MY_PLANTS
-    }
 
     public MainState() {
 
@@ -22,13 +16,5 @@ public class MainState {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public Mode getCurrentMode() {
-        return currentMode;
-    }
-
-    public void setCurrentMode(Mode mode) {
-        this.currentMode = mode;
     }
 }

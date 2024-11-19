@@ -1,8 +1,11 @@
 package data_access;
 
 import com.mongodb.client.*;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import entity.Plant;
+import org.bson.Document;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
@@ -10,6 +13,7 @@ import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
@@ -49,7 +53,7 @@ public class MongoPlantDataAccessObject implements PlantDataAccessObject {
 
     public List<Plant> getPublicPlants(int skip, int limit) {
         List<Plant> result = new ArrayList<>();
-        Bson sort = descending("lastChanged");
+        Bson sort = descending("numOfLikes");
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
             MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
 
@@ -75,7 +79,8 @@ public class MongoPlantDataAccessObject implements PlantDataAccessObject {
     public void addPlant(Plant plant) {
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
             MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
-
+            plant.setLastChanged(new Date());
+            plant.setNumOfLikes(0);
             // Insert the provided plant object into the collection
             collection.insertOne(plant);
         }
@@ -83,8 +88,55 @@ public class MongoPlantDataAccessObject implements PlantDataAccessObject {
     }
 
     @Override
-    public boolean editPlant(ObjectId fileID, Plant newPlant) {
-        return true;
+    public boolean editPlant(ObjectId fileID, boolean isPublic, String comments) {
+        try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
+            MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
+
+            // Update the plant's isPublic and comments fields
+            Bson filter = eq("fileID", fileID);
+            Bson update = new Document("$set", new Document("isPublic", isPublic)
+                    .append("comments", comments).append("lastChanged", new Date()));
+
+            // Perform the update operation
+            UpdateResult result = collection.updateOne(filter, update);
+
+            return result.getModifiedCount() > 0;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public Plant fetchPlantByID(ObjectId fileID) {
+        try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
+            MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
+
+            // Find the plant by its ID
+            return collection.find(eq("fileID", fileID)).first();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public boolean likePlant(ObjectId fileID) {
+        try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
+            MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
+
+            // Update the numOfLikes field by incrementing it
+            Bson filter = eq("fileID", fileID);
+            Bson update = new Document("$inc", new Document("numOfLikes", 1));
+
+            // Perform the update operation
+            UpdateResult result = collection.updateOne(filter, update);
+
+            return result.getModifiedCount() > 0;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 
     @Override
@@ -93,7 +145,7 @@ public class MongoPlantDataAccessObject implements PlantDataAccessObject {
             MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
 
             // Create a filter to find the plant by its ID
-            Bson filter = eq("_id", fileID);
+            Bson filter = eq("fileID", fileID);
 
             // Perform the delete operation
             DeleteResult result = collection.deleteOne(filter);
@@ -146,6 +198,28 @@ public class MongoPlantDataAccessObject implements PlantDataAccessObject {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return 0; // Return 0 in case of an error
+        }
+    }
+
+
+
+    /**
+     * Deletes all plants from the MongoDB collection.
+     * This method removes all documents from the "plants" collection. This is for testing purposes and testing purposes only.
+     *
+     * @throws RuntimeException if an error occurs while deleting plants.
+     */
+    public void deleteAll() {
+        try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
+            MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
+
+            // Delete all plants in the collection by using an empty filter
+            DeleteResult result = collection.deleteMany(Filters.empty());
+
+            // Optionally, you could check result.getDeletedCount(), but this is not needed if you don't care about the result
+        } catch (Exception e) {
+            // Wrap and throw the exception as a RuntimeException
+            throw new RuntimeException("Error deleting all plants: " + e.getMessage(), e);
         }
     }
 }
