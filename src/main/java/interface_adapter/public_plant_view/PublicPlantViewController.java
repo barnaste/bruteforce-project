@@ -1,4 +1,4 @@
-package interface_adapter.publicplantview;
+package interface_adapter.public_plant_view;
 
 import use_case.publicplant.PublicPlantInputBoundary;
 

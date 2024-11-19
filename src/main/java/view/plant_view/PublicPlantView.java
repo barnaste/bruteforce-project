@@ -1,8 +1,8 @@
 package view.plant_view;
 
 import entity.Plant;
-import interface_adapter.publicplantview.PublicPlantViewController;
-import interface_adapter.publicplantview.PublicPlantViewModel;
+import interface_adapter.public_plant_view.PublicPlantViewController;
+import interface_adapter.public_plant_view.PublicPlantViewModel;
 import view.ViewComponentFactory;
 
 

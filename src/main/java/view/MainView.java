@@ -1,268 +1,324 @@
-package view;
+    package view;
 
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.List;
-import java.util.function.Consumer;
+    import java.awt.*;
+    import java.beans.PropertyChangeEvent;
+    import java.beans.PropertyChangeListener;
+    import java.util.List;
+    import java.util.function.Consumer;
 
-import javax.swing.*;
+    import javax.swing.*;
 
-import data_access.MongoImageDataAccessObject;
-import data_access.MongoPlantDataAccessObject;
-import data_access.MongoUserDataAccessObject;
-import data_access.UserDataAccessObject;
-import interface_adapter.ViewManagerModel;
-import interface_adapter.login.LoginState;
-import interface_adapter.logout.LogoutController;
-import interface_adapter.main.MainState;
-import interface_adapter.main.MainViewModel;
-import interface_adapter.swap_gallery.SwapGalleryController;
-import interface_adapter.swap_gallery.SwapGalleryPresenter;
-import interface_adapter.upload.UploadController;
-import interface_adapter.upload.UploadPresenter;
-import interface_adapter.upload.confirm.UploadConfirmViewModel;
-import interface_adapter.upload.result.UploadResultViewModel;
-import interface_adapter.upload.select.UploadSelectViewModel;
-import use_case.swap_gallery.SwapGalleryInputBoundary;
-import use_case.swap_gallery.SwapGalleryInteractor;
-import use_case.swap_gallery.SwapGalleryOutputBoundary;
-import use_case.upload.UploadInputBoundary;
-import use_case.upload.UploadInteractor;
-import use_case.upload.UploadOutputBoundary;
-import view.upload.UploadConfirmView;
-import view.upload.UploadResultView;
-import view.upload.UploadSelectView;
+    import data_access.MongoImageDataAccessObject;
+    import data_access.MongoPlantDataAccessObject;
+    import data_access.MongoUserDataAccessObject;
+    import data_access.UserDataAccessObject;
+    import interface_adapter.ViewManagerModel;
+    import interface_adapter.load_public_gallery.PublicGalleryController;
+    import interface_adapter.load_public_gallery.PublicGalleryPresenter;
+    import interface_adapter.load_public_gallery.PublicGalleryViewModel;
+    import interface_adapter.logout.LogoutController;
+    import interface_adapter.main.MainState;
+    import interface_adapter.main.MainViewModel;
+    import interface_adapter.mode_switch.ModeSwitchController;
+    import interface_adapter.mode_switch.ModeSwitchState;
+    import interface_adapter.mode_switch.ModeSwitchViewModel;
+    import interface_adapter.upload.UploadController;
+    import interface_adapter.upload.UploadPresenter;
+    import interface_adapter.upload.confirm.UploadConfirmViewModel;
+    import interface_adapter.upload.result.UploadResultViewModel;
+    import interface_adapter.upload.select.UploadSelectViewModel;
+    import use_case.load_public_gallery.PublicGalleryInputBoundary;
+    import use_case.load_public_gallery.PublicGalleryInteractor;
+    import use_case.load_public_gallery.PublicGalleryOutputBoundary;
+    import use_case.upload.UploadInputBoundary;
+    import use_case.upload.UploadInteractor;
+    import use_case.upload.UploadOutputBoundary;
+    import view.gallery.PublicGalleryView;
+    import view.upload.UploadConfirmView;
+    import view.upload.UploadResultView;
+    import view.upload.UploadSelectView;
 
-/**
- * The Main View, for when the user is logged into the program.
- */
-public class MainView extends JLayeredPane implements PropertyChangeListener {
-    private final int OVERLAY_COLOR = 0x40829181;
-    private final int DISPLAY_WIDTH = 1080;
-    private final int DISPLAY_HEIGHT = 720;
+    /**
+     * The Main View, for when the user is logged into the program.
+     */
+    public class MainView extends JLayeredPane implements PropertyChangeListener {
+        private static final int OVERLAY_COLOR = 0x40829181;
+        private static final int DISPLAY_WIDTH = 1080;
+        private static final int DISPLAY_HEIGHT = 720;
+        final Dimension buttonSize = new Dimension(200, 50);
 
-    final Dimension buttonSize = new Dimension(200, 50);
+        private final String viewName = "main view";
+        private final MainViewModel mainViewModel;
+        private final PublicGalleryViewModel publicGalleryViewModel;
+        private final ModeSwitchViewModel modeSwitchViewModel;
+        private PublicGalleryView publicGalleryView;
 
-    private final String viewName = "main view";
-    private final MainViewModel mainViewModel;
+        private LogoutController logoutController;
+        private ModeSwitchController modeSwitchController;
 
-    private LogoutController logoutController;
-    private SwapGalleryController swapGalleryController;
+        private String currentUser = "";
+        private String currentGalleryMode = "";
+        private final JPanel currentGalleryPanel;
+        private final JLabel userLabel = new JLabel();
+        private final JLabel title = new JLabel();
 
-    private String currentUser = "";
-    private final JLabel userLabel = new JLabel();
+        private final JButton logOut;
+        private final JButton upload;
 
-    private final JButton logOut;
-    private final JButton upload;
+        private final JToggleButton myPlantsButton;
+        private final JToggleButton discoverButton;
 
-    // Mode toggle buttons (My Plants / Discover)
-    private final JToggleButton myPlantsButton;
-    private final JToggleButton discoverButton;
+        public MainView(MainViewModel mainViewModel, PublicGalleryViewModel publicGalleryViewModel, ModeSwitchViewModel modeSwitchViewModel) {
+            this.mainViewModel = mainViewModel;
+            this.mainViewModel.addPropertyChangeListener(this);
 
-    public MainView(MainViewModel mainViewModel) {
-        this.mainViewModel = mainViewModel;
-        this.mainViewModel.addPropertyChangeListener(this);
+            this.modeSwitchViewModel = modeSwitchViewModel;
+            this.modeSwitchViewModel.addPropertyChangeListener(this);
 
-        this.setLayout(new OverlayLayout(this));
-        this.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
+            this.publicGalleryViewModel = publicGalleryViewModel;
 
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridBagLayout());
+            setUpPublicGallery();
 
-        // Header section with title and user label
-        final JLabel title = new JLabel("Gallery");
-        title.setFont(new Font("Arial", Font.BOLD, 18));
-        title.setForeground(new Color(0x123456));
+            this.setLayout(new OverlayLayout(this));
+            this.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
 
-        final JPanel header = ViewComponentFactory.buildVerticalPanel(List.of(title, userLabel));
-        header.setOpaque(false);
+            JPanel mainPanel = new JPanel();
+            mainPanel.setLayout(new GridBagLayout());
 
-        // Set up SwapGallery functionality (mode switching)
-        SwapGalleryOutputBoundary presenter = new SwapGalleryPresenter(mainViewModel);
-        SwapGalleryInputBoundary interactor = new SwapGalleryInteractor(presenter, mainViewModel);
-        this.swapGalleryController = new SwapGalleryController(interactor);
+            currentGalleryMode = "My Plants Gallery";
 
-        upload = ViewComponentFactory.buildButton("Upload");
-        logOut = ViewComponentFactory.buildButton("Log Out");
-        myPlantsButton = ViewComponentFactory.buildToggleButton("My Plants");
-        discoverButton = ViewComponentFactory.buildToggleButton("Discover");
+            title.setText(currentGalleryMode);
+            title.setFont(new Font("Arial", Font.BOLD, 18));
+            title.setForeground(new Color(0x3C7339));
 
-        upload.addActionListener(evt -> overlayUploadView());
-        logOut.addActionListener(e -> logoutController.execute(mainViewModel.getState().getUsername()));
-        myPlantsButton.addActionListener(e -> swapGalleryController.switchMode(MainState.Mode.MY_PLANTS));
-        discoverButton.addActionListener(e -> swapGalleryController.switchMode(MainState.Mode.DISCOVER));
+            final JPanel header = ViewComponentFactory.buildVerticalPanel(List.of(title, userLabel));
+            header.setOpaque(false);
 
-        ViewComponentFactory.setButtonSize(myPlantsButton, buttonSize);
-        ViewComponentFactory.setButtonSize(logOut, buttonSize);
-        ViewComponentFactory.setButtonSize(upload, buttonSize);
-        ViewComponentFactory.setButtonSize(discoverButton, buttonSize);
+            upload = ViewComponentFactory.buildButton("Upload");
+            logOut = ViewComponentFactory.buildButton("Log Out");
+            myPlantsButton = ViewComponentFactory.buildToggleButton("My Plants");
+            discoverButton = ViewComponentFactory.buildToggleButton("Discover");
 
-        // Make the logout button red
-        logOut.setForeground(Color.RED);
+            upload.addActionListener(evt -> overlayUploadView());
+            logOut.addActionListener(e -> logoutController.execute(mainViewModel.getState().getUsername()));
 
-        // Make the panel on the left of the screen (Upload, mode toggle, and Log Out)
-        JPanel spacer1 = new JPanel();
-        spacer1.setOpaque(false);
-        spacer1.setPreferredSize(new Dimension(10, 160));
+            myPlantsButton.addActionListener(e -> modeSwitchController.switchMode());
+            discoverButton.addActionListener(e -> modeSwitchController.switchMode());
 
-        JPanel spacer2 = new JPanel();
-        spacer2.setOpaque(false);
-        spacer2.setPreferredSize(new Dimension(10, 20));
+            ViewComponentFactory.setButtonSize(myPlantsButton, buttonSize);
+            ViewComponentFactory.setButtonSize(logOut, buttonSize);
+            ViewComponentFactory.setButtonSize(upload, buttonSize);
+            ViewComponentFactory.setButtonSize(discoverButton, buttonSize);
 
-        final JPanel actionPanel = ViewComponentFactory.buildVerticalPanel(List.of(title, header, spacer2, upload, myPlantsButton, discoverButton, spacer1, logOut));
+            // Make the logout button red
+            logOut.setForeground(new Color(150, 32, 32));
 
-        // Gallery panel (to display gallery contents)
-        final JPanel gallery = makeGallery();
+            // Make the panel on the left of the screen (Upload, mode toggle, and Log Out)
+            JPanel spacer1 = new JPanel();
+            spacer1.setOpaque(false);
+            spacer1.setPreferredSize(new Dimension(10, 160));
 
-        // Combine buttons and gallery in the body panel
-        final JPanel body = ViewComponentFactory.buildHorizontalPanel(List.of(actionPanel, gallery));
+            JPanel spacer2 = new JPanel();
+            spacer2.setOpaque(false);
+            spacer2.setPreferredSize(new Dimension(10, 20));
 
-        // Add header and body to the main panel
-        mainPanel.add(ViewComponentFactory.buildHorizontalPanel(List.of(actionPanel, gallery)));
+            final JPanel actionPanel = ViewComponentFactory.buildVerticalPanel(List.of(title, header, spacer2, upload, myPlantsButton, discoverButton, spacer1, logOut));
 
-        this.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
-    }
+            currentGalleryPanel = new JPanel();
+            setDiscoverPanel();
 
-    private JPanel makeGallery() {
-        JPanel gallery = new JPanel();
-        gallery.setPreferredSize(new Dimension(840, 700)); // Set gallery size
-        gallery.setBorder(BorderFactory.createLineBorder(Color.black)); // Temporary border for visibility
-        return gallery;
-    }
+            mainPanel.add(ViewComponentFactory.buildHorizontalPanel(List.of(actionPanel, currentGalleryPanel)));
 
-    private void disableInteraction() {
-        logOut.setEnabled(false);
-        upload.setEnabled(false);
-    }
+            this.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
+        }
 
-    private void enableInteraction() {
-        logOut.setEnabled(true);
-        upload.setEnabled(true);
-    }
+        private void disableInteraction() {
+            logOut.setEnabled(false);
+            upload.setEnabled(false);
+        }
 
-    public void overlayUploadView() {
-        JPanel cardPanel = new JPanel();
-        // NOTE: we extend CardLayout so that whenever the top card is swapped, the
-        // ENTIRE view is redrawn, and not just the region the card occupied.
-        // This is because cards may be of variant dimensions. We would otherwise
-        // have artefacts from previous cards if they were of larger dimensions.
-        CardLayout cardLayout = new CardLayout() {
-            @Override
-            public void show(Container parent, String name) {
-                super.show(parent, name);
-                revalidate();
-                repaint();
-            }
-        };
-        cardPanel.setLayout(cardLayout);
+        private void enableInteraction() {
+            logOut.setEnabled(true);
+            upload.setEnabled(true);
+        }
 
-        UploadSelectViewModel selectorViewModel = new UploadSelectViewModel();
-        UploadSelectView selectorView = new UploadSelectView(selectorViewModel);
-        cardPanel.add(selectorView, selectorView.getViewName());
+        private void setUpPublicGallery() {
+            MongoPlantDataAccessObject plantDataAccessObject = new MongoPlantDataAccessObject();
+            MongoImageDataAccessObject imageDataAccessObject = new MongoImageDataAccessObject();
+            ViewManagerModel galleryManagerModel = new ViewManagerModel();
 
-        UploadConfirmViewModel confirmViewModel = new UploadConfirmViewModel();
-        UploadConfirmView confirmView = new UploadConfirmView(confirmViewModel);
-        cardPanel.add(confirmView, confirmView.getViewName());
+            // Set up the PublicGalleryPresenter and PublicGalleryInteractor
+            PublicGalleryOutputBoundary galleryPresenter = new PublicGalleryPresenter(publicGalleryViewModel, galleryManagerModel);
+            PublicGalleryInputBoundary publicGalleryInteractor = new PublicGalleryInteractor(plantDataAccessObject, galleryPresenter, imageDataAccessObject);
 
-        UploadResultViewModel resultViewModel = new UploadResultViewModel();
-        UploadResultView resultView = new UploadResultView(resultViewModel);
-        cardPanel.add(resultView, resultView.getViewName());
+            // Initialize the PublicGalleryController and View
+            PublicGalleryController publicGalleryController = new PublicGalleryController(publicGalleryInteractor);
+            publicGalleryViewModel.firePropertyChanged();
+            this.publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
+            publicGalleryView.setPublicGalleryController(publicGalleryController);
 
-        ViewManagerModel uploadManagerModel = new ViewManagerModel();
-        new ViewManager(cardPanel, cardLayout, uploadManagerModel);
+            // Load the first page by default
+            publicGalleryController.loadPage(0);
+        }
 
-        UploadOutputBoundary uploadOutputBoundary = new UploadPresenter(
-                uploadManagerModel,
-                selectorViewModel,
-                confirmViewModel,
-                resultViewModel
-        );
-        // TODO: this is a makeshift setup -- the userDataAccessObject should already exist and
-        //  is expected to be injected into the main view, or accessible by the main view somehow
-        UserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
-        userDataAccessObject.setCurrentUsername(this.currentUser);
-        UploadInputBoundary uploadInteractor = new UploadInteractor(
-                uploadOutputBoundary,
-                new MongoImageDataAccessObject(),
-                new MongoPlantDataAccessObject(),
-                userDataAccessObject
-        );
-        UploadController controller = new UploadController(uploadInteractor);
+        public void overlayUploadView() {
+            JPanel cardPanel = new JPanel();
+            // NOTE: we extend CardLayout so that whenever the top card is swapped, the
+            // ENTIRE view is redrawn, and not just the region the card occupied.
+            // This is because cards may be of variant dimensions. We would otherwise
+            // have artefacts from previous cards if they were of larger dimensions.
+            CardLayout cardLayout = new CardLayout() {
+                @Override
+                public void show(Container parent, String name) {
+                    super.show(parent, name);
+                    revalidate();
+                    repaint();
+                }
+            };
+            cardPanel.setLayout(cardLayout);
 
-        selectorView.setController(controller);
-        confirmView.setController(controller);
-        resultView.setController(controller);
+            UploadSelectViewModel selectorViewModel = new UploadSelectViewModel();
+            UploadSelectView selectorView = new UploadSelectView(selectorViewModel);
+            cardPanel.add(selectorView, selectorView.getViewName());
 
-        uploadManagerModel.setState(selectorView.getViewName());
-        uploadManagerModel.firePropertyChanged();
+            UploadConfirmViewModel confirmViewModel = new UploadConfirmViewModel();
+            UploadConfirmView confirmView = new UploadConfirmView(confirmViewModel);
+            cardPanel.add(confirmView, confirmView.getViewName());
 
-        // create an overlay with the created cardPanel as the popup
-        overlay(cardPanel, uploadInteractor::setEscapeMap);
-    }
+            UploadResultViewModel resultViewModel = new UploadResultViewModel();
+            UploadResultView resultView = new UploadResultView(resultViewModel);
+            cardPanel.add(resultView, resultView.getViewName());
 
-    public void overlay(JPanel overlayPanel, Consumer<Runnable> setOverlayEscape) {
-        // disable any interaction outside the overlay
-        this.disableInteraction();
+            ViewManagerModel uploadManagerModel = new ViewManagerModel();
+            new ViewManager(cardPanel, cardLayout, uploadManagerModel);
 
-        // create a semi-transparent overlay
-        // override painting functionality so that our overlay is semi-transparent
-        JPanel backgroundPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.setColor(new Color(OVERLAY_COLOR, true)); // overlay color with transparency
-                g.fillRect(0, 0, getWidth(), getHeight()); // fill the panel area with color
-            }
-        };
-        backgroundPanel.setOpaque(false);
-        // use a GridBagLayout to keep overlay content centered on the screen
-        backgroundPanel.setLayout(new GridBagLayout());
+            UploadOutputBoundary uploadOutputBoundary = new UploadPresenter(
+                    uploadManagerModel,
+                    selectorViewModel,
+                    confirmViewModel,
+                    resultViewModel
+            );
+            // TODO: this is a makeshift setup -- the userDataAccessObject should already exist and
+            //  is expected to be injected into the main view, or accessible by the main view somehow
+            UserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
+            userDataAccessObject.setCurrentUsername(this.currentUser);
+            UploadInputBoundary uploadInteractor = new UploadInteractor(
+                    uploadOutputBoundary,
+                    new MongoImageDataAccessObject(),
+                    new MongoPlantDataAccessObject(),
+                    userDataAccessObject
+            );
+            UploadController controller = new UploadController(uploadInteractor);
 
-        backgroundPanel.add(overlayPanel);
-        setOverlayEscape.accept(() -> {
-            // enable interaction outside the overlay once the overlay is removed
-            this.enableInteraction();
+            selectorView.setController(controller);
+            confirmView.setController(controller);
+            resultView.setController(controller);
 
-            this.remove(backgroundPanel);
+            uploadManagerModel.setState(selectorView.getViewName());
+            uploadManagerModel.firePropertyChanged();
+
+            // create an overlay with the created cardPanel as the popup
+            overlay(cardPanel, uploadInteractor::setEscapeMap);
+        }
+
+        public void overlay(JPanel overlayPanel, Consumer<Runnable> setOverlayEscape) {
+            // disable any interaction outside the overlay
+            this.disableInteraction();
+
+            // create a semi-transparent overlay
+            // override painting functionality so that our overlay is semi-transparent
+            JPanel backgroundPanel = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    g.setColor(new Color(OVERLAY_COLOR, true)); // overlay color with transparency
+                    g.fillRect(0, 0, getWidth(), getHeight()); // fill the panel area with color
+                }
+            };
+            backgroundPanel.setOpaque(false);
+            // use a GridBagLayout to keep overlay content centered on the screen
+            backgroundPanel.setLayout(new GridBagLayout());
+
+            backgroundPanel.add(overlayPanel);
+            setOverlayEscape.accept(() -> {
+                // enable interaction outside the overlay once the overlay is removed
+                this.enableInteraction();
+
+                this.remove(backgroundPanel);
+                this.revalidate();
+                this.repaint();
+            });
+
+            this.add(backgroundPanel, JLayeredPane.PALETTE_LAYER);
             this.revalidate();
             this.repaint();
-        });
+        }
 
-        this.add(backgroundPanel, JLayeredPane.PALETTE_LAYER);
-        this.revalidate();
-        this.repaint();
-    }
+        public void setLogoutController(LogoutController logoutController) {
+            this.logoutController = logoutController;
+        }
 
-    public void setLogoutController(LogoutController logoutController) {
-        this.logoutController = logoutController;
-    }
+        public void setModeSwitchController(ModeSwitchController modeSwitchController) {
+            this.modeSwitchController = modeSwitchController;
+        }
 
-    public String getViewName() {
-        return viewName;
-    }
+        public String getViewName() {
+            return viewName;
+        }
 
-    private void updateModeUI(MainState.Mode mode) {
-        if (mode == MainState.Mode.DISCOVER) {
-            // Update UI for "Discover" mode
-            myPlantsButton.setSelected(false);
-            discoverButton.setSelected(true);
-        } else if (mode == MainState.Mode.MY_PLANTS) {
-            // Update UI for "My Plants" mode
-            myPlantsButton.setSelected(true);
-            discoverButton.setSelected(false);
+        private void updateModeUI(ModeSwitchState.Mode mode) {
+            if (currentGalleryPanel != null)
+                this.remove(currentGalleryPanel);
+            if (mode == ModeSwitchState.Mode.DISCOVER) {
+                // Update UI for "Discover" mode
+                setDiscoverPanel();
+                currentGalleryMode = "Discover Gallery";
+                title.setText(currentGalleryMode);
+                myPlantsButton.setSelected(false);
+                discoverButton.setSelected(true);
+            } else if (mode == ModeSwitchState.Mode.MY_PLANTS) {
+                // Update UI for "My Plants" mode
+                setMyPlantsPanel();
+                currentGalleryMode = "My Plants Gallery";
+                title.setText(currentGalleryMode);
+                myPlantsButton.setSelected(true);
+                discoverButton.setSelected(false);
+            }
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (evt.getPropertyName().equals("logged_in")) {
+                final MainState state = (MainState) evt.getNewValue();
+                currentUser = state.getUsername();
+                userLabel.setText("Hello " + this.currentUser + "!");
+            } if (evt.getPropertyName().equals("mode_switch")) {
+                final ModeSwitchState ModeSwitchState = (ModeSwitchState) evt.getNewValue();
+                updateModeUI(ModeSwitchState.getCurrentMode());
+            }
+        }
+
+        // Create "My Plants" panel
+        private void setMyPlantsPanel() {
+            currentGalleryPanel.removeAll();
+
+            currentGalleryPanel.setPreferredSize(new Dimension(840, 700));
+
+            // currentGalleryPanel.add(userGalleryView, userGalleryView.getViewName());
+
+            currentGalleryPanel.revalidate();
+            currentGalleryPanel.repaint();
+        }
+
+        // Create "Discover" panel
+        private void setDiscoverPanel() {
+            currentGalleryPanel.removeAll();
+
+            currentGalleryPanel.setPreferredSize(new Dimension(840, 700));
+
+            currentGalleryPanel.add(publicGalleryView, publicGalleryView.getViewName());
+
+            currentGalleryPanel.revalidate();
+            currentGalleryPanel.repaint();
         }
     }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("state")) {
-            final MainState state = (MainState) evt.getNewValue();
-            currentUser = state.getUsername();
-            userLabel.setText("Hello " + this.currentUser + "!");
-
-            // Handle mode change
-            updateModeUI(state.getCurrentMode());
-        }
-    }
-}

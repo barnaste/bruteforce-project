@@ -4,7 +4,7 @@ import data_access.*;
 import entity.Plant;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.edit_plant.EditPlantController;
-import interface_adapter.publicplantview.PublicPlantViewController;
+import interface_adapter.public_plant_view.PublicPlantViewController;
 import interface_adapter.upload.UploadController;
 import interface_adapter.upload.UploadPresenter;
 import interface_adapter.upload.confirm.UploadConfirmViewModel;
