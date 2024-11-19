@@ -13,20 +13,21 @@ import data_access.MongoPlantDataAccessObject;
 import data_access.MongoUserDataAccessObject;
 import data_access.UserDataAccessObject;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.login.LoginState;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
-import interface_adapter.swap_gallery.SwapGalleryController;
-import interface_adapter.swap_gallery.SwapGalleryPresenter;
+import interface_adapter.mode_switch.ModeSwitchController;
+import interface_adapter.mode_switch.ModeSwitchPresenter;
+import interface_adapter.mode_switch.ModeSwitchState;
+import interface_adapter.mode_switch.ModeSwitchViewModel;
 import interface_adapter.upload.UploadController;
 import interface_adapter.upload.UploadPresenter;
 import interface_adapter.upload.confirm.UploadConfirmViewModel;
 import interface_adapter.upload.result.UploadResultViewModel;
 import interface_adapter.upload.select.UploadSelectViewModel;
-import use_case.swap_gallery.SwapGalleryInputBoundary;
-import use_case.swap_gallery.SwapGalleryInteractor;
-import use_case.swap_gallery.SwapGalleryOutputBoundary;
+import use_case.mode_switch.ModeSwitchInputBoundary;
+import use_case.mode_switch.ModeSwitchInteractor;
+import use_case.mode_switch.ModeSwitchOutputBoundary;
 import use_case.upload.UploadInputBoundary;
 import use_case.upload.UploadInteractor;
 import use_case.upload.UploadOutputBoundary;
@@ -48,13 +49,15 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
     private final MainViewModel mainViewModel;
 
     private LogoutController logoutController;
-    private SwapGalleryController swapGalleryController;
+    private ModeSwitchController swapGalleryController;
 
     private String currentUser = "";
     private final JLabel userLabel = new JLabel();
 
     private final JButton logOut;
     private final JButton upload;
+
+    private final ModeSwitchViewModel modeSwitchViewModel = new ModeSwitchViewModel();
 
     // Mode toggle buttons (My Plants / Discover)
     private final JToggleButton myPlantsButton;
@@ -63,6 +66,8 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
     public MainView(MainViewModel mainViewModel) {
         this.mainViewModel = mainViewModel;
         this.mainViewModel.addPropertyChangeListener(this);
+
+        modeSwitchViewModel.addPropertyChangeListener(this);
 
         this.setLayout(new OverlayLayout(this));
         this.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
@@ -78,11 +83,6 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
         final JPanel header = ViewComponentFactory.buildVerticalPanel(List.of(title, userLabel));
         header.setOpaque(false);
 
-        // Set up SwapGallery functionality (mode switching)
-        SwapGalleryOutputBoundary presenter = new SwapGalleryPresenter(mainViewModel);
-        SwapGalleryInputBoundary interactor = new SwapGalleryInteractor(presenter, mainViewModel);
-        this.swapGalleryController = new SwapGalleryController(interactor);
-
         upload = ViewComponentFactory.buildButton("Upload");
         logOut = ViewComponentFactory.buildButton("Log Out");
         myPlantsButton = ViewComponentFactory.buildToggleButton("My Plants");
@@ -90,8 +90,18 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
 
         upload.addActionListener(evt -> overlayUploadView());
         logOut.addActionListener(e -> logoutController.execute(mainViewModel.getState().getUsername()));
-        myPlantsButton.addActionListener(e -> swapGalleryController.switchMode(MainState.Mode.MY_PLANTS));
-        discoverButton.addActionListener(e -> swapGalleryController.switchMode(MainState.Mode.DISCOVER));
+
+        ModeSwitchController modeSwitchController = new ModeSwitchController(modeSwitchViewModel);
+
+        myPlantsButton.addActionListener(e -> {
+            // Trigger mode switch (should notify presenter/view)
+            modeSwitchController.switchMode(ModeSwitchState.Mode.MY_PLANTS);  // Call the controller to switch mode
+        });
+
+        discoverButton.addActionListener(e -> {
+            // Trigger mode switch (should notify presenter/view)
+            modeSwitchController.switchMode(ModeSwitchState.Mode.DISCOVER);  // Call the controller to switch mode
+        });
 
         ViewComponentFactory.setButtonSize(myPlantsButton, buttonSize);
         ViewComponentFactory.setButtonSize(logOut, buttonSize);
@@ -242,12 +252,12 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
         return viewName;
     }
 
-    private void updateModeUI(MainState.Mode mode) {
-        if (mode == MainState.Mode.DISCOVER) {
+    private void updateModeUI(ModeSwitchState.Mode mode) {
+        if (mode == ModeSwitchState.Mode.DISCOVER) {
             // Update UI for "Discover" mode
             myPlantsButton.setSelected(false);
             discoverButton.setSelected(true);
-        } else if (mode == MainState.Mode.MY_PLANTS) {
+        } else if (mode == ModeSwitchState.Mode.MY_PLANTS) {
             // Update UI for "My Plants" mode
             myPlantsButton.setSelected(true);
             discoverButton.setSelected(false);
@@ -261,8 +271,7 @@ public class MainView extends JLayeredPane implements PropertyChangeListener {
             currentUser = state.getUsername();
             userLabel.setText("Hello " + this.currentUser + "!");
 
-            // Handle mode change
-            updateModeUI(state.getCurrentMode());
+
         }
     }
 }
