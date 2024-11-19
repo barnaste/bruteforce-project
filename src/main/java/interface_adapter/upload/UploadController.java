@@ -31,8 +31,10 @@ public class UploadController {
         uploadUseCaseInteractor.escape();
     }
 
-    public void saveUpload(BufferedImage image, String plantSpecies, String userNotes, boolean isPublic) {
-        final UploadSaveInputData inputData = new UploadSaveInputData(image, plantSpecies, userNotes, isPublic);
+    public void saveUpload(BufferedImage image, String plantName, String family, String plantSpecies,
+                           String userNotes, boolean isPublic) {
+        final UploadSaveInputData inputData = new UploadSaveInputData(image, plantName, family, plantSpecies,
+                userNotes, isPublic);
         uploadUseCaseInteractor.saveUpload(inputData);
     }
 }
