@@ -1,8 +1,12 @@
 package app;
 
+import data_access.MongoImageDataAccessObject;
+import data_access.MongoPlantDataAccessObject;
 import data_access.MongoUserDataAccessObject;
-import data_access.UserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.load_public_gallery.PublicGalleryController;
+import interface_adapter.load_public_gallery.PublicGalleryPresenter;
+import interface_adapter.load_public_gallery.PublicGalleryViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.main.MainViewModel;
@@ -12,6 +16,8 @@ import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
+import use_case.load_public_gallery.PublicGalleryInputBoundary;
+import use_case.load_public_gallery.PublicGalleryInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -22,6 +28,7 @@ import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
 import view.*;
+import view.gallery.PublicGalleryView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,15 +50,20 @@ public class AppBuilder {
     // Data access object for user data (MongoDB)
     private final MongoUserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
 
+    private final MongoPlantDataAccessObject galleryDataAccessObject = new MongoPlantDataAccessObject();
+    private final MongoImageDataAccessObject imageDataAccessObject = new MongoImageDataAccessObject();
+
     // ViewModels for different views
     private final SignupViewModel signupViewModel = new SignupViewModel();
     private final LoginViewModel loginViewModel = new LoginViewModel();
     private final MainViewModel mainViewModel = new MainViewModel();
+    private final PublicGalleryViewModel publicGalleryViewModel = new PublicGalleryViewModel();
 
     // Views for different app states
-    private final SignupView signupView = new SignupView(signupViewModel);;
-    private final MainView mainView = new MainView(mainViewModel);
+    private final SignupView signupView = new SignupView(signupViewModel);
+    private final MainView mainView = new MainView(mainViewModel, publicGalleryViewModel);
     private final LoginView loginView = new LoginView(loginViewModel);
+    private final PublicGalleryView publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
     private final StartView startView = new StartView(signupViewModel, loginViewModel, viewManagerModel);
 
     // Initializes CardLayout for the card panel
@@ -93,6 +105,8 @@ public class AppBuilder {
      */
     public AppBuilder addLoggedInView() {
         cardPanel.add(mainView, mainView.getViewName());
+        // TODO: replace with user view once implemented
+        cardPanel.add(publicGalleryView, publicGalleryView.getViewName());
         return this;
     }
 
@@ -138,6 +152,23 @@ public class AppBuilder {
 
         final LogoutController logoutController = new LogoutController(logoutInteractor);
         mainView.setLogoutController(logoutController);
+        return this;
+    }
+
+    /**
+     * Adds the Public Gallery Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addPublicGalleryUseCase() {
+        // Set up the output boundary (presenter)
+        final PublicGalleryPresenter publicGalleryPresenter = new PublicGalleryPresenter(publicGalleryViewModel, viewManagerModel);
+
+        // Set up the use case interactor
+        final PublicGalleryInputBoundary publicGalleryInteractor = new PublicGalleryInteractor(galleryDataAccessObject, publicGalleryPresenter, imageDataAccessObject);
+
+        // Now wire it with the view
+        publicGalleryView.setPublicGalleryController(new PublicGalleryController(publicGalleryInteractor));
+
         return this;
     }
 
