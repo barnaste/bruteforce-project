@@ -13,8 +13,4 @@ public class ModeSwitchState {
     public void setCurrentMode(Mode currentMode) {
         this.currentMode = currentMode;
     }
-
-    public ModeSwitchState() {
-
-    }
 }

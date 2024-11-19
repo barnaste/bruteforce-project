@@ -1,7 +1,4 @@
-package interface_adapter.publicplantview;
-
-import interface_adapter.ViewModel;
-
+package interface_adapter.public_plant_view;
 
 public class PublicPlantViewModel {
 

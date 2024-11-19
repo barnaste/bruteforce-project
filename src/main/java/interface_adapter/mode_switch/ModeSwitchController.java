@@ -1,17 +1,15 @@
 package interface_adapter.mode_switch;
 
-public class ModeSwitchController {
-    private final ModeSwitchViewModel modeSwitchViewModel;
+import use_case.mode_switch.ModeSwitchInteractor;
 
-    public ModeSwitchController(ModeSwitchViewModel modeSwitchViewModel) {
-        this.modeSwitchViewModel = modeSwitchViewModel;
+public class ModeSwitchController {
+    private final ModeSwitchInteractor modeSwitchInteractor;
+
+    public ModeSwitchController(ModeSwitchInteractor modeSwitchInteractor) {
+        this.modeSwitchInteractor = modeSwitchInteractor;
     }
 
-    public void switchMode(ModeSwitchState.Mode newMode) {
-        // Update view model's current mode
-        modeSwitchViewModel.setCurrentMode(newMode);
-
-        // Notify the presenter about the mode change
-        // This should trigger the view update (main view)
+    public void switchMode(){
+        modeSwitchInteractor.switchMode();
     }
 }

@@ -1,8 +1,6 @@
 package interface_adapter.mode_switch;
 
 import use_case.mode_switch.ModeSwitchOutputBoundary;
-import use_case.mode_switch.ModeSwitchOutputData;
-import interface_adapter.main.MainViewModel;
 
 public class ModeSwitchPresenter implements ModeSwitchOutputBoundary {
     private final ModeSwitchViewModel modeSwitchViewModel;
@@ -12,8 +10,12 @@ public class ModeSwitchPresenter implements ModeSwitchOutputBoundary {
     }
 
     @Override
-    public void present(ModeSwitchOutputData outputData) {
-        // Set the updated mode in the view model, which will trigger UI updates
-        modeSwitchViewModel.setCurrentMode(outputData.getUpdatedMode());
+    public void presentModeSwitch() {
+        if (modeSwitchViewModel.getState().getCurrentMode().equals(ModeSwitchState.Mode.DISCOVER)) {
+            modeSwitchViewModel.getState().setCurrentMode(ModeSwitchState.Mode.MY_PLANTS);
+        } else {
+            modeSwitchViewModel.getState().setCurrentMode(ModeSwitchState.Mode.DISCOVER);
+        }
+        modeSwitchViewModel.firePropertyChanged("mode_switch");
     }
 }
