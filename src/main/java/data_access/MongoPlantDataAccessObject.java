@@ -29,7 +29,7 @@ public class MongoPlantDataAccessObject implements PlantDataAccessObject {
     CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
 
     @Override
-    public List<Plant> getPlants(String username, int skip, int limit) {
+    public List<Plant> getUserPlants(String username, int skip, int limit) {
         List<Plant> result = new ArrayList<>();
         Bson sort = descending("lastChanged");
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
@@ -40,6 +40,26 @@ public class MongoPlantDataAccessObject implements PlantDataAccessObject {
                     .sort(sort)
                     .skip(skip)
                     .limit(limit);
+
+            for (Plant plant : iterable) {
+                result.add(plant); // Add each plant to the result
+            }
+            return result; // Return the list of plants
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null; // Handle errors
+        }
+    }
+
+    @Override
+    public List<Plant> getUserPlants(String username) {
+        List<Plant> result = new ArrayList<>();
+        Bson sort = descending("lastChanged");
+        try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
+            MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
+
+            // Find user's plants, sorted and paginated
+            FindIterable<Plant> iterable = collection.find(eq("owner", username));
 
             for (Plant plant : iterable) {
                 result.add(plant); // Add each plant to the result
