@@ -13,6 +13,7 @@ import data_access.MongoPlantDataAccessObject;
 import data_access.MongoUserDataAccessObject;
 import data_access.UserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.delete_user.DeleteUserController;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
@@ -21,6 +22,7 @@ import interface_adapter.upload.UploadPresenter;
 import interface_adapter.upload.confirm.UploadConfirmViewModel;
 import interface_adapter.upload.result.UploadResultViewModel;
 import interface_adapter.upload.select.UploadSelectViewModel;
+import use_case.delete_user.DeleteUserInteractor;
 import use_case.upload.UploadInputBoundary;
 import use_case.upload.UploadInteractor;
 import use_case.upload.UploadOutputBoundary;
@@ -41,12 +43,14 @@ public class    MainView extends JLayeredPane implements PropertyChangeListener 
     private final MainViewModel mainViewModel;
 
     private LogoutController logoutController;
+    private DeleteUserController deleteUserController;
 
     private String currentUser = "";
     private final JLabel userLabel = new JLabel();
 
     private final JButton logOut;
     private final JButton upload;
+    private final JButton deleteUser;
 
     public MainView(MainViewModel mainViewModel) {
         this.mainViewModel = mainViewModel;
@@ -68,7 +72,10 @@ public class    MainView extends JLayeredPane implements PropertyChangeListener 
         logOut = ViewComponentFactory.buildButton("Log Out");
         logOut.addActionListener( e -> logoutController.execute(mainViewModel.getState().getUsername()));
 
-        final JPanel buttons = ViewComponentFactory.buildVerticalPanel(List.of(upload, logOut));
+        deleteUser = ViewComponentFactory.buildButton("Delete User");
+        // ADD THE ACTION LISTENER FOR DELETE USER
+        deleteUser.addActionListener(e -> deleteUserController.execute(mainViewModel.getState().getUsername()));
+        final JPanel buttons = ViewComponentFactory.buildVerticalPanel(List.of(upload, logOut, deleteUser));
 
         final JPanel gallery = new JPanel();
         // Temporarily give the gallery panel a border so it's visible
@@ -83,11 +90,13 @@ public class    MainView extends JLayeredPane implements PropertyChangeListener 
     private void disableInteraction() {
         logOut.setEnabled(false);
         upload.setEnabled(false);
+        deleteUser.setEnabled(false);
     }
 
     private void enableInteraction() {
         logOut.setEnabled(true);
         upload.setEnabled(true);
+        deleteUser.setEnabled(true);
     }
 
     public void overlayUploadView() {
@@ -185,6 +194,10 @@ public class    MainView extends JLayeredPane implements PropertyChangeListener 
 
     public void setLogoutController(LogoutController logoutController) {
         this.logoutController = logoutController;
+    }
+
+    public void setDeleteUserController(DeleteUserController deleteUserController) {
+        this.deleteUserController = deleteUserController;
     }
 
     public String getViewName() {
