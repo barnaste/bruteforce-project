@@ -6,12 +6,13 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.gridfs.*;
 import com.mongodb.client.gridfs.model.*;
 import org.bson.types.ObjectId;
+import use_case.ImageDataAccessInterface;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
-public class MongoImageDataAccessObject implements ImageDataAccessObject {
+public class MongoImageDataAccessInterface implements ImageDataAccessInterface {
     static final String CONNECTIONSTRING = "mongodb+srv://brute_force:CSC207-F24@cluster0.upye6.mongodb.net/" +
             "?retryWrites=true&w=majority&appName=Cluster0";
     private final MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING);

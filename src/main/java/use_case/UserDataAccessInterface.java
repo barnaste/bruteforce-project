@@ -1,8 +1,8 @@
-package data_access;
+package use_case;
 
 import entity.User;
 
-public interface UserDataAccessObject {
+public interface UserDataAccessInterface {
     /**
      * Checks if the given username exists.
      * @param username the username to look for

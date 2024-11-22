@@ -1,4 +1,4 @@
-package data_access;
+package use_case;
 
 import entity.Plant;
 import org.bson.types.ObjectId;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * PlantDB is an interface that defines the methods that the PlantDB class must implement.
  */
-public interface PlantDataAccessObject {
+public interface PlantDataAccessInterface {
     /**
      * A method that returns plants for a given user in the database.
      * The plants are sorted by the last modified date in descending order.

@@ -15,6 +15,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
+import use_case.UserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
@@ -22,7 +23,7 @@ import use_case.signup.SignupUserDataAccessInterface;
 /**
  * UserDB class implemented using MongoDB.
  */
-public class MongoUserDataAccessObject implements UserDataAccessObject, LoginUserDataAccessInterface, SignupUserDataAccessInterface, LogoutUserDataAccessInterface {
+public class MongoUserDataAccessInterface implements UserDataAccessInterface, LoginUserDataAccessInterface, SignupUserDataAccessInterface, LogoutUserDataAccessInterface {
     final String CONNECTIONSTRING = "mongodb+srv://brute_force:CSC207-F24@cluster0.upye6.mongodb.net/" +
             "?retryWrites=true&w=majority&appName=Cluster0";
     CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();

@@ -1,8 +1,8 @@
 package use_case.load_public_gallery;
 
-import data_access.MongoImageDataAccessObject;
-import data_access.MongoPlantDataAccessObject;
-import data_access.PlantDataAccessObject;
+import data_access.MongoImageDataAccessInterface;
+import data_access.MongoPlantDataAccessInterface;
+import use_case.PlantDataAccessInterface;
 import entity.Plant;
 
 import java.awt.image.BufferedImage;
@@ -10,16 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
-    private final PlantDataAccessObject plantDataAccessObject;
+    private final PlantDataAccessInterface plantDataAccessInterface;
     private final PublicGalleryOutputBoundary galleryPresenter;
-    private final MongoImageDataAccessObject imageDataAccessObject;
+    private final MongoImageDataAccessInterface imageDataAccessObject;
     private static final int IMAGES_PER_PAGE = 15;
 
     private int currentPage;
 
-    public PublicGalleryInteractor(MongoPlantDataAccessObject galleryDataAccessObject,
-                                   PublicGalleryOutputBoundary galleryPresenter, MongoImageDataAccessObject imageDataAccessObject) {
-        this.plantDataAccessObject = galleryDataAccessObject;
+    public PublicGalleryInteractor(MongoPlantDataAccessInterface galleryDataAccessObject,
+                                   PublicGalleryOutputBoundary galleryPresenter, MongoImageDataAccessInterface imageDataAccessObject) {
+        this.plantDataAccessInterface = galleryDataAccessObject;
         this.galleryPresenter = galleryPresenter;
         this.imageDataAccessObject = imageDataAccessObject;
         this.currentPage = 0;
@@ -41,7 +41,7 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
     }
 
     public int getNumberOfPublicPlants(){
-        return (int) Math.ceil((double) plantDataAccessObject.getNumberOfPublicPlants() / IMAGES_PER_PAGE);
+        return (int) Math.ceil((double) plantDataAccessInterface.getNumberOfPublicPlants() / IMAGES_PER_PAGE);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
 
         try {
             // Retrieve the correct slice of Plant objects from database
-            List<Plant> plants = plantDataAccessObject.getPublicPlants(skip, IMAGES_PER_PAGE);
+            List<Plant> plants = plantDataAccessInterface.getPublicPlants(skip, IMAGES_PER_PAGE);
 
             if (plants == null || plants.isEmpty()) {
                 galleryPresenter.prepareFailView();
