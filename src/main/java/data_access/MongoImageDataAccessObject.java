@@ -19,6 +19,24 @@ public class MongoImageDataAccessObject implements ImageDataAccessInterface {
     private final MongoDatabase database = mongoClient.getDatabase("appDB"); // Replace with your actual database name
     private final GridFSBucket gridFSBucket = GridFSBuckets.create(database, "plantImages");
 
+    private static MongoImageDataAccessObject instance;
+
+    /**
+     * The private constructor -- if a new instance of this class is to be requested, it should be done
+     * by calling the getInstance() public method.
+     */
+    private MongoImageDataAccessObject() {}
+
+    /**
+     * The method used to retrieve an instance of this class. This way, the DAO is maintained as a singleton.
+     */
+    public static MongoImageDataAccessObject getInstance() {
+        if (instance == null) {
+            instance = new MongoImageDataAccessObject();
+        }
+        return instance;
+    }
+
     /**
      * A method that returns the image with the given id.
      * @param id is the unique id of the desired image

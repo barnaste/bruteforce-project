@@ -13,15 +13,14 @@ import javax.swing.*;
 
 public class PublicPlantPanelFactory {
     public static void createPublicPlantPanel(Plant plant, JPanel panel, Runnable escapeMap) {
-        ImageDataAccessInterface imageAccess = new MongoImageDataAccessObject();
-        PlantDataAccessInterface plantAccess = new MongoPlantDataAccessObject();
+        ImageDataAccessInterface imageAccess = MongoImageDataAccessObject.getInstance();
 
         PublicPlantView view = new PublicPlantView(plant, imageAccess.getImageFromID(plant.getImageID()));
-        panel.add(view, imageAccess);
+        panel.add(view);
 
         PublicPlantInteractor interactor = new PublicPlantInteractor(
                 imageAccess,
-                plantAccess
+                MongoPlantDataAccessObject.getInstance()
         );
         interactor.setPlant(plant);
         interactor.setEscapeMap(escapeMap);

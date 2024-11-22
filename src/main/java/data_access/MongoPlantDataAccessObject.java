@@ -29,6 +29,24 @@ public class MongoPlantDataAccessObject implements PlantDataAccessInterface {
     CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
     CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
 
+    private static MongoPlantDataAccessObject instance;
+
+    /**
+     * The private constructor -- if a new instance of this class is to be requested, it should be done
+     * by calling the getInstance() public method.
+     */
+    private MongoPlantDataAccessObject() {}
+
+    /**
+     * The method used to retrieve an instance of this class. This way, the DAO is maintained as a singleton.
+     */
+    public static MongoPlantDataAccessObject getInstance() {
+        if (instance == null) {
+            instance = new MongoPlantDataAccessObject();
+        }
+        return instance;
+    }
+
     @Override
     public List<Plant> getPlants(String username, int skip, int limit) {
         List<Plant> result = new ArrayList<>();
@@ -201,8 +219,6 @@ public class MongoPlantDataAccessObject implements PlantDataAccessInterface {
             return 0; // Return 0 in case of an error
         }
     }
-
-
 
     /**
      * Deletes all plants from the MongoDB collection.

@@ -2,6 +2,7 @@ package view.panel_factory;
 
 import data_access.MongoImageDataAccessObject;
 import data_access.MongoPlantDataAccessObject;
+import data_access.MongoUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.upload.UploadController;
 import interface_adapter.upload.UploadPresenter;
@@ -58,9 +59,9 @@ public class UploadPanelFactory {
         );
         UploadInputBoundary uploadInteractor = new UploadInteractor(
                 uploadOutputBoundary,
-                new MongoImageDataAccessObject(),
-                new MongoPlantDataAccessObject(),
-                "jeffery" // TODO: this will have to change once we make the user DAO a singleton
+                MongoImageDataAccessObject.getInstance(),
+                MongoPlantDataAccessObject.getInstance(),
+                MongoUserDataAccessObject.getInstance()
         );
         uploadInteractor.setEscapeMap(escapeMap);
         UploadController controller = new UploadController(uploadInteractor);

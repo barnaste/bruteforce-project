@@ -16,12 +16,13 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import use_case.UserDataAccessInterface;
 
 public class UploadInteractor implements UploadInputBoundary {
     private final UploadOutputBoundary presenter;
     private final ImageDataAccessInterface imageDataBase;
     private final PlantDataAccessInterface plantDataBase;
-    private final String currentUser;
+    private final UserDataAccessInterface userDataBase;
 
     private Runnable escapeMap;
 
@@ -30,11 +31,12 @@ public class UploadInteractor implements UploadInputBoundary {
     private static final String API_URL = "https://my-api.plantnet.org/v2/identify/" + PROJECT + "?api-key=";
     private static final String API_PRIVATE_KEY = "2b1015rSKP2VVP2UzoDaqbYI"; // secret
 
-    public UploadInteractor(UploadOutputBoundary uploadOutputBoundary, ImageDataAccessInterface imageDataBase, PlantDataAccessInterface plantDataBase, String currentUser) {
+    public UploadInteractor(UploadOutputBoundary uploadOutputBoundary, ImageDataAccessInterface imageDataBase,
+                            PlantDataAccessInterface plantDataBase, UserDataAccessInterface userDataBase) {
         this.presenter = uploadOutputBoundary;
         this.imageDataBase = imageDataBase;
         this.plantDataBase = plantDataBase;
-        this.currentUser = currentUser;
+        this.userDataBase = userDataBase;
     }
 
     @Override
@@ -115,7 +117,7 @@ public class UploadInteractor implements UploadInputBoundary {
                 inputData.getPlantName(),
                 inputData.getFamily(),
                 inputData.getPlantSpecies(),
-                this.currentUser,
+                userDataBase.getCurrentUsername(),
                 inputData.getUserNotes(),
                 inputData.isPublic()
         );

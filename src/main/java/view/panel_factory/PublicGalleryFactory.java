@@ -13,8 +13,8 @@ import view.gallery.PublicGalleryView;
 
 public class PublicGalleryFactory {
     public static PublicGalleryView createPublicGallery(PublicGalleryViewModel viewModel) {
-        MongoPlantDataAccessObject plantDataAccessObject = new MongoPlantDataAccessObject();
-        MongoImageDataAccessObject imageDataAccessObject = new MongoImageDataAccessObject();
+        MongoPlantDataAccessObject plantDataAccessObject = MongoPlantDataAccessObject.getInstance();
+        MongoImageDataAccessObject imageDataAccessObject = MongoImageDataAccessObject.getInstance();
         ViewManagerModel galleryManagerModel = new ViewManagerModel();
 
         // Set up the PublicGalleryPresenter and PublicGalleryInteractor

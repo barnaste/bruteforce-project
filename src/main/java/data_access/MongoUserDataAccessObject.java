@@ -30,6 +30,23 @@ public class MongoUserDataAccessObject implements UserDataAccessInterface, Login
     CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
     private String currentUsername;
 
+    private static MongoUserDataAccessObject instance;
+
+    /**
+     * The private constructor -- if a new instance of this class is to be requested, it should be done
+     * by calling the getInstance() public method.
+     */
+    private MongoUserDataAccessObject() {}
+
+    /**
+     * The method used to retrieve an instance of this class. This way, the DAO is maintained as a singleton.
+     */
+    public static MongoUserDataAccessObject getInstance() {
+        if (instance == null) {
+            instance = new MongoUserDataAccessObject();
+        }
+        return instance;
+    }
 
     @Override
     public User getUser(String username) {
