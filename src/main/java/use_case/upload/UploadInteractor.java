@@ -25,7 +25,7 @@ public class UploadInteractor implements UploadInputBoundary {
     private final UploadOutputBoundary presenter;
     private final ImageDataAccessObject imageDataBase;
     private final PlantDataAccessObject plantDataBase;
-    private final UserDataAccessObject userDataBase;
+    private final String currentUser;
 
     private Runnable escapeMap;
 
@@ -34,11 +34,11 @@ public class UploadInteractor implements UploadInputBoundary {
     private static final String API_URL = "https://my-api.plantnet.org/v2/identify/" + PROJECT + "?api-key=";
     private static final String API_PRIVATE_KEY = "2b1015rSKP2VVP2UzoDaqbYI"; // secret
 
-    public UploadInteractor(UploadOutputBoundary uploadOutputBoundary, ImageDataAccessObject imageDataBase, PlantDataAccessObject plantDataBase, UserDataAccessObject userDataBase) {
+    public UploadInteractor(UploadOutputBoundary uploadOutputBoundary, ImageDataAccessObject imageDataBase, PlantDataAccessObject plantDataBase, String currentUser) {
         this.presenter = uploadOutputBoundary;
         this.imageDataBase = imageDataBase;
         this.plantDataBase = plantDataBase;
-        this.userDataBase = userDataBase;
+        this.currentUser = currentUser;
     }
 
     @Override
@@ -119,7 +119,7 @@ public class UploadInteractor implements UploadInputBoundary {
                 inputData.getPlantName(),
                 inputData.getFamily(),
                 inputData.getPlantSpecies(),
-                userDataBase.getCurrentUsername(),
+                this.currentUser,
                 inputData.getUserNotes(),
                 inputData.isPublic()
         );

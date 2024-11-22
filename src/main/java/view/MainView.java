@@ -67,6 +67,8 @@
         private final JButton myPlantsButton;
         private final JButton discoverButton;
 
+        private boolean isDiscovering = false;
+
         public MainView(MainViewModel mainViewModel, PublicGalleryViewModel publicGalleryViewModel, ModeSwitchViewModel modeSwitchViewModel) {
             this.mainViewModel = mainViewModel;
             this.mainViewModel.addPropertyChangeListener(this);
@@ -135,13 +137,22 @@
         private void setUpModeSwitch() {}
 
         private void disableInteraction() {
+            isDiscovering = discoverButton.isEnabled();
+
             logOut.setEnabled(false);
             upload.setEnabled(false);
+            myPlantsButton.setEnabled(false);
+            discoverButton.setEnabled(false);
         }
 
         private void enableInteraction() {
             logOut.setEnabled(true);
             upload.setEnabled(true);
+            if (isDiscovering) {
+                discoverButton.setEnabled(true);
+            } else {
+                myPlantsButton.setEnabled(true);
+            }
         }
 
         private void setUpPublicGallery() {
@@ -208,7 +219,7 @@
                     uploadOutputBoundary,
                     new MongoImageDataAccessObject(),
                     new MongoPlantDataAccessObject(),
-                    userDataAccessObject
+                    this.currentUser
             );
             UploadController controller = new UploadController(uploadInteractor);
 

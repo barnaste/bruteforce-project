@@ -102,7 +102,7 @@ class MainViewDemo extends JFrame {
     private void overlayEditView() {
         ImageDataAccessObject imageAccess = new MongoImageDataAccessObject();
         PlantDataAccessObject plantAccess = new MongoPlantDataAccessObject();
-        Plant plant = plantAccess.fetchPlantByID(new ObjectId("673bceffb834313b084829f6"));
+        Plant plant = plantAccess.fetchPlantByID(new ObjectId("673156e374b5e1720fe3a297"));
 
         JPanel overlay = new JPanel();
         EditPlantView view = new EditPlantView(plant, imageAccess.getImageFromID(plant.getImageID()));
@@ -177,12 +177,11 @@ class MainViewDemo extends JFrame {
                 resultViewModel
         );
         UserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
-        userDataAccessObject.setCurrentUsername("admin");
         UploadInputBoundary uploadInteractor = new UploadInteractor(
                 uploadOutputBoundary,
                 new MongoImageDataAccessObject(),
                 new MongoPlantDataAccessObject(),
-                userDataAccessObject
+                "admin"
         );
         UploadController controller = new UploadController(uploadInteractor);
 

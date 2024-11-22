@@ -87,7 +87,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
 
                 JButton infoButton = new JButton("Info");
                 infoButton.setBackground(new Color(224, 242, 213));
-                                infoButton.addActionListener(e -> {
+                infoButton.addActionListener(e -> {
                     System.out.println("Info button clicked");
                 });
                 buttonPanel.add(infoButton);
