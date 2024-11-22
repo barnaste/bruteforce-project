@@ -11,6 +11,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
+import use_case.PlantDataAccessInterface;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,11 +23,29 @@ import static com.mongodb.client.model.Sorts.descending;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-public class MongoPlantDataAccessObject implements PlantDataAccessObject {
+public class MongoPlantDataAccessObject implements PlantDataAccessInterface {
     final String CONNECTIONSTRING = "mongodb+srv://brute_force:CSC207-F24@cluster0.upye6.mongodb.net/" +
             "?retryWrites=true&w=majority&appName=Cluster0";
     CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
     CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
+
+    private static MongoPlantDataAccessObject instance;
+
+    /**
+     * The private constructor -- if a new instance of this class is to be requested, it should be done
+     * by calling the getInstance() public method.
+     */
+    private MongoPlantDataAccessObject() {}
+
+    /**
+     * The method used to retrieve an instance of this class. This way, the DAO is maintained as a singleton.
+     */
+    public static MongoPlantDataAccessObject getInstance() {
+        if (instance == null) {
+            instance = new MongoPlantDataAccessObject();
+        }
+        return instance;
+    }
 
     @Override
     public List<Plant> getUserPlants(String username, int skip, int limit) {
@@ -220,8 +239,6 @@ public class MongoPlantDataAccessObject implements PlantDataAccessObject {
             return 0; // Return 0 in case of an error
         }
     }
-
-
 
     /**
      * Deletes all plants from the MongoDB collection.

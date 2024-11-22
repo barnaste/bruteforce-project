@@ -1,5 +1,6 @@
 package view.gallery;
 
+import entity.Plant;
 import interface_adapter.load_public_gallery.PublicGalleryController;
 import interface_adapter.load_public_gallery.PublicGalleryState;
 import interface_adapter.load_public_gallery.PublicGalleryViewModel;
@@ -10,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class PublicGalleryView extends JPanel implements PropertyChangeListener {
     private static final int NUM_OF_COLUMNS = 5;
@@ -23,12 +25,16 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     private final JButton previousPageButton;
     private final JLabel pageLabel;
 
-    public PublicGalleryView(PublicGalleryViewModel publicGalleryViewModel) {
+    // store a method to be called whenever displaying details about a plant is appropriate
+    private Consumer<Plant> displayPlant;
+
+    public PublicGalleryView(PublicGalleryViewModel publicGalleryViewModel, Consumer<Plant> displayPlant) {
         publicGalleryViewModel.addPropertyChangeListener(this);
+        this.displayPlant = displayPlant;
 
         setLayout(new BorderLayout());
         imagesGrid = new JPanel(new GridLayout(NUM_OF_ROWS, NUM_OF_COLUMNS, 5, 5));
-        add(new JScrollPane(imagesGrid), BorderLayout.CENTER);
+        add(imagesGrid, BorderLayout.CENTER);
 
         JPanel navigationPanel = new JPanel();
         previousPageButton = new JButton("Previous Page");
@@ -87,9 +93,8 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
 
                 JButton infoButton = new JButton("Info");
                 infoButton.setBackground(new Color(224, 242, 213));
-                                infoButton.addActionListener(e -> {
-                    System.out.println("Info button clicked");
-                });
+                // TODO: once you have the plant to be called, simply pass it into the accept() method below:
+                //   infoButton.addActionListener(e -> this.displayPlant.accept());
                 buttonPanel.add(infoButton);
 
                 GridBagConstraints gbc = new GridBagConstraints();
@@ -116,6 +121,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
         nextPageButton.setEnabled(currentPage < totalPages - 1);
         pageLabel.setText("Page: " + (currentPage + 1) + " / " + totalPages);
     }
+
 
     public String getViewName() {
         return viewName;

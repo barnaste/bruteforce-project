@@ -52,10 +52,10 @@ public class AppBuilder {
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     // Data access object for user data (MongoDB)
-    private final MongoUserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
+    private final MongoUserDataAccessObject userDataAccessObject = MongoUserDataAccessObject.getInstance();
 
-    private final MongoPlantDataAccessObject galleryDataAccessObject = new MongoPlantDataAccessObject();
-    private final MongoImageDataAccessObject imageDataAccessObject = new MongoImageDataAccessObject();
+    private final MongoPlantDataAccessObject galleryDataAccessObject = MongoPlantDataAccessObject.getInstance();
+    private final MongoImageDataAccessObject imageDataAccessObject = MongoImageDataAccessObject.getInstance();
 
     // ViewModels for different views
     private final SignupViewModel signupViewModel = new SignupViewModel();
