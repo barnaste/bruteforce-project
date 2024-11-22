@@ -131,8 +131,5 @@ public class UploadInteractor implements UploadInputBoundary {
     public void escape() {
         this.escapeMap.run();
     }
-
-    public void execute(UploadInputData uploadInputData) {
-    }
 }
 

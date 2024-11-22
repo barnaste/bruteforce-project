@@ -12,7 +12,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
-public class MongoImageDataAccessInterface implements ImageDataAccessInterface {
+public class MongoImageDataAccessObject implements ImageDataAccessInterface {
     static final String CONNECTIONSTRING = "mongodb+srv://brute_force:CSC207-F24@cluster0.upye6.mongodb.net/" +
             "?retryWrites=true&w=majority&appName=Cluster0";
     private final MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING);

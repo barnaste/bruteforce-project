@@ -1,8 +1,8 @@
 package app;
 
-import data_access.MongoImageDataAccessInterface;
-import data_access.MongoPlantDataAccessInterface;
-import data_access.MongoUserDataAccessInterface;
+import data_access.MongoImageDataAccessObject;
+import data_access.MongoPlantDataAccessObject;
+import data_access.MongoUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.load_public_gallery.PublicGalleryController;
 import interface_adapter.load_public_gallery.PublicGalleryPresenter;
@@ -52,10 +52,10 @@ public class AppBuilder {
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     // Data access object for user data (MongoDB)
-    private final MongoUserDataAccessInterface userDataAccessObject = new MongoUserDataAccessInterface();
+    private final MongoUserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
 
-    private final MongoPlantDataAccessInterface galleryDataAccessObject = new MongoPlantDataAccessInterface();
-    private final MongoImageDataAccessInterface imageDataAccessObject = new MongoImageDataAccessInterface();
+    private final MongoPlantDataAccessObject galleryDataAccessObject = new MongoPlantDataAccessObject();
+    private final MongoImageDataAccessObject imageDataAccessObject = new MongoImageDataAccessObject();
 
     // ViewModels for different views
     private final SignupViewModel signupViewModel = new SignupViewModel();

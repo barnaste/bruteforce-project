@@ -1,7 +1,7 @@
 package use_case.load_public_gallery;
 
-import data_access.MongoImageDataAccessInterface;
-import data_access.MongoPlantDataAccessInterface;
+import data_access.MongoImageDataAccessObject;
+import data_access.MongoPlantDataAccessObject;
 import use_case.PlantDataAccessInterface;
 import entity.Plant;
 
@@ -12,13 +12,13 @@ import java.util.List;
 public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
     private final PlantDataAccessInterface plantDataAccessInterface;
     private final PublicGalleryOutputBoundary galleryPresenter;
-    private final MongoImageDataAccessInterface imageDataAccessObject;
+    private final MongoImageDataAccessObject imageDataAccessObject;
     private static final int IMAGES_PER_PAGE = 15;
 
     private int currentPage;
 
-    public PublicGalleryInteractor(MongoPlantDataAccessInterface galleryDataAccessObject,
-                                   PublicGalleryOutputBoundary galleryPresenter, MongoImageDataAccessInterface imageDataAccessObject) {
+    public PublicGalleryInteractor(MongoPlantDataAccessObject galleryDataAccessObject,
+                                   PublicGalleryOutputBoundary galleryPresenter, MongoImageDataAccessObject imageDataAccessObject) {
         this.plantDataAccessInterface = galleryDataAccessObject;
         this.galleryPresenter = galleryPresenter;
         this.imageDataAccessObject = imageDataAccessObject;

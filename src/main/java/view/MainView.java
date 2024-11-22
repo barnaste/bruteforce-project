@@ -8,8 +8,8 @@
 
     import javax.swing.*;
 
-    import data_access.MongoImageDataAccessInterface;
-    import data_access.MongoPlantDataAccessInterface;
+    import data_access.MongoImageDataAccessObject;
+    import data_access.MongoPlantDataAccessObject;
     import interface_adapter.ViewManagerModel;
     import interface_adapter.load_public_gallery.PublicGalleryController;
     import interface_adapter.load_public_gallery.PublicGalleryPresenter;
@@ -171,8 +171,8 @@
         }
 
         private void setUpPublicGallery() {
-            MongoPlantDataAccessInterface plantDataAccessObject = new MongoPlantDataAccessInterface();
-            MongoImageDataAccessInterface imageDataAccessObject = new MongoImageDataAccessInterface();
+            MongoPlantDataAccessObject plantDataAccessObject = new MongoPlantDataAccessObject();
+            MongoImageDataAccessObject imageDataAccessObject = new MongoImageDataAccessObject();
             ViewManagerModel galleryManagerModel = new ViewManagerModel();
 
             // Set up the PublicGalleryPresenter and PublicGalleryInteractor
@@ -228,8 +228,8 @@
             );
             UploadInputBoundary uploadInteractor = new UploadInteractor(
                     uploadOutputBoundary,
-                    new MongoImageDataAccessInterface(),
-                    new MongoPlantDataAccessInterface(),
+                    new MongoImageDataAccessObject(),
+                    new MongoPlantDataAccessObject(),
                     this.currentUser
             );
             UploadController controller = new UploadController(uploadInteractor);

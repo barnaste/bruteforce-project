@@ -23,7 +23,7 @@ import static com.mongodb.client.model.Sorts.descending;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-public class MongoPlantDataAccessInterface implements PlantDataAccessInterface {
+public class MongoPlantDataAccessObject implements PlantDataAccessInterface {
     final String CONNECTIONSTRING = "mongodb+srv://brute_force:CSC207-F24@cluster0.upye6.mongodb.net/" +
             "?retryWrites=true&w=majority&appName=Cluster0";
     CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
