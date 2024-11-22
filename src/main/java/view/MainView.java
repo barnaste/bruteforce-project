@@ -55,7 +55,8 @@
         private final JButton myPlantsButton;
         private final JButton discoverButton;
 
-        public MainView(MainViewModel mainViewModel, PublicGalleryViewModel publicGalleryViewModel, ModeSwitchViewModel modeSwitchViewModel) {
+        public MainView(MainViewModel mainViewModel, PublicGalleryViewModel publicGalleryViewModel,
+                        ModeSwitchViewModel modeSwitchViewModel) {
             this.mainViewModel = mainViewModel;
             this.mainViewModel.addPropertyChangeListener(this);
 
@@ -63,7 +64,8 @@
             this.modeSwitchViewModel.addPropertyChangeListener(this);
 
             this.publicGalleryViewModel = publicGalleryViewModel;
-            this.publicGalleryView = PublicGalleryFactory.createPublicGallery(publicGalleryViewModel);
+            this.publicGalleryView = PublicGalleryFactory
+                    .createPublicGallery(publicGalleryViewModel, this::overlayPublicPlantView);
 
             this.setLayout(new OverlayLayout(this));
             this.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
@@ -109,7 +111,8 @@
             spacer2.setOpaque(false);
             spacer2.setPreferredSize(new Dimension(10, 20));
 
-            final JPanel actionPanel = ViewComponentFactory.buildVerticalPanel(List.of(title, header, spacer2, upload, myPlantsButton, discoverButton, spacer1, logOut));
+            final JPanel actionPanel = ViewComponentFactory.buildVerticalPanel(List.of(title, header, spacer2, upload,
+                    myPlantsButton, discoverButton, spacer1, logOut));
 
             currentGalleryPanel = new JPanel();
             setMyPlantsPanel();
