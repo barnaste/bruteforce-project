@@ -20,5 +20,5 @@
 5. I want to "like" plant images in the public gallery : **Areez**
 6. I want to switch between the gallery of my images and the gallery of public images : ***Xiangyu***
 7. I want to view details about plant images that I have uploaded : ***Ali***
-8. I want to delete my account and wipe all my information if I decide to stop using the app : ***Avi***
-9. I want to log out of my account and return to the start screen : ***Areez***
+8. I want to delete my acce all my information if I decide to stop using the app : ***Avi***
+9. I want to log out of my account and ount and wipreturn to the start screen : ***Areez***
