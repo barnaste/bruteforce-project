@@ -10,8 +10,6 @@
 
     import data_access.MongoImageDataAccessObject;
     import data_access.MongoPlantDataAccessObject;
-    import data_access.MongoUserDataAccessObject;
-    import data_access.UserDataAccessObject;
     import interface_adapter.ViewManagerModel;
     import interface_adapter.load_public_gallery.PublicGalleryController;
     import interface_adapter.load_public_gallery.PublicGalleryPresenter;
@@ -67,7 +65,7 @@
         private final JButton myPlantsButton;
         private final JButton discoverButton;
 
-        private boolean isDiscovering = false;
+        private JButton currentGallery;
 
         public MainView(MainViewModel mainViewModel, PublicGalleryViewModel publicGalleryViewModel, ModeSwitchViewModel modeSwitchViewModel) {
             this.mainViewModel = mainViewModel;
@@ -136,22 +134,39 @@
 
         private void setUpModeSwitch() {}
 
+        /**
+         * Disable all interactions within the main view. That is, all components and subcomponents are
+         * no longer active after this method is called.
+         */
         private void disableInteraction() {
-            isDiscovering = discoverButton.isEnabled();
-
-            logOut.setEnabled(false);
-            upload.setEnabled(false);
-            myPlantsButton.setEnabled(false);
-            discoverButton.setEnabled(false);
+            // if the discover button is currently enabled, the user is currently in the discovery gallery
+            currentGallery = !this.discoverButton.isEnabled() ? this.discoverButton : this.myPlantsButton;
+            setComponentsEnabled(this, false);
         }
 
+        /**
+         * Enables all interactions within the main view. That is, all components and subcomponents are
+         * restored after this method is called. The current gallery's corresponding button will be disabled
+         * to disallow the user to "activate" an already active gallery.
+         */
         private void enableInteraction() {
-            logOut.setEnabled(true);
-            upload.setEnabled(true);
-            if (isDiscovering) {
-                discoverButton.setEnabled(true);
-            } else {
-                myPlantsButton.setEnabled(true);
+            setComponentsEnabled(this, true);
+            currentGallery.setEnabled(false);
+        }
+
+        /**
+         * Enables or disables all buttons within the input panel. This includes buttons
+         * directly within the input panel and any buttons within components of the input
+         * panel, recursively.
+         * @param panel the panel to modify the enablement of buttons in
+         * @param isEnabled whether buttons should be enabled or disabled
+         */
+        private void setComponentsEnabled(Container panel, boolean isEnabled) {
+            for (Component cp : panel.getComponents()) {
+                if (cp instanceof JPanel) {
+                    setComponentsEnabled((JPanel) cp, isEnabled);
+                }
+                cp.setEnabled(isEnabled);
             }
         }
 
@@ -211,10 +226,6 @@
                     confirmViewModel,
                     resultViewModel
             );
-            // TODO: this is a makeshift setup -- the userDataAccessObject should already exist and
-            //  is expected to be injected into the main view, or accessible by the main view somehow
-            UserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
-            userDataAccessObject.setCurrentUsername(this.currentUser);
             UploadInputBoundary uploadInteractor = new UploadInteractor(
                     uploadOutputBoundary,
                     new MongoImageDataAccessObject(),

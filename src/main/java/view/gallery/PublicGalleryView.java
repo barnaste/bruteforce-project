@@ -28,7 +28,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
 
         setLayout(new BorderLayout());
         imagesGrid = new JPanel(new GridLayout(NUM_OF_ROWS, NUM_OF_COLUMNS, 5, 5));
-        add(new JScrollPane(imagesGrid), BorderLayout.CENTER);
+        add(imagesGrid, BorderLayout.CENTER);
 
         JPanel navigationPanel = new JPanel();
         previousPageButton = new JButton("Previous Page");
@@ -116,6 +116,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
         nextPageButton.setEnabled(currentPage < totalPages - 1);
         pageLabel.setText("Page: " + (currentPage + 1) + " / " + totalPages);
     }
+
 
     public String getViewName() {
         return viewName;
