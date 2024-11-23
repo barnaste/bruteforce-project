@@ -57,11 +57,6 @@ public class UserGalleryInteractor implements UserGalleryInputBoundary {
             // Retrieve the correct slice of Plant objects from database
             List<Plant> plants = plantDataAccessObject.getUserPlants(userDataAccessObject.getCurrentUsername(), skip, IMAGES_PER_PAGE);
 
-            if (plants == null || plants.isEmpty()) {
-                galleryPresenter.prepareFailView();
-                return;
-            }
-
             // Get images from Plant objects
             List<BufferedImage> images = new ArrayList<>();
             List<ObjectId> ids = new ArrayList<>();
@@ -76,7 +71,7 @@ public class UserGalleryInteractor implements UserGalleryInputBoundary {
             galleryPresenter.prepareSuccessView(outputData);
 
         } catch (Exception e) {
-            galleryPresenter.prepareFailView();
+            System.out.println(e.getMessage());
         }
     }
 }
