@@ -1,17 +1,17 @@
 package use_case.edit_plant;
 
-import data_access.ImageDataAccessObject;
-import data_access.PlantDataAccessObject;
+import use_case.ImageDataAccessInterface;
+import use_case.PlantDataAccessInterface;
 import entity.Plant;
 
 public class EditPlantInteractor implements EditPlantInputBoundary {
-    private final PlantDataAccessObject plantDatabase;
-    private final ImageDataAccessObject imageDatabase;
+    private final PlantDataAccessInterface plantDatabase;
+    private final ImageDataAccessInterface imageDatabase;
     private Plant currentPlant;
 
     private Runnable escapeMap;
 
-    public EditPlantInteractor(ImageDataAccessObject imageDatabase, PlantDataAccessObject plantDatabase) {
+    public EditPlantInteractor(ImageDataAccessInterface imageDatabase, PlantDataAccessInterface plantDatabase) {
         this.plantDatabase = plantDatabase;
         this.imageDatabase = imageDatabase;
     }

@@ -1,19 +1,19 @@
 package use_case.publicplant;
 
-import data_access.ImageDataAccessObject;
-import data_access.PlantDataAccessObject;
+import use_case.ImageDataAccessInterface;
+import use_case.PlantDataAccessInterface;
 import entity.Plant;
 import org.bson.types.ObjectId;
 
 public class PublicPlantInteractor implements PublicPlantInputBoundary{
 
-    private final PlantDataAccessObject plantDatabase;
-    private final ImageDataAccessObject imageDatabase;
+    private final PlantDataAccessInterface plantDatabase;
+    private final ImageDataAccessInterface imageDatabase;
     private Plant currentPlant;
 
     private Runnable escapeMap;
 
-    public PublicPlantInteractor(ImageDataAccessObject imageDatabase, PlantDataAccessObject plantDatabase) {
+    public PublicPlantInteractor(ImageDataAccessInterface imageDatabase, PlantDataAccessInterface plantDatabase) {
         this.plantDatabase = plantDatabase;
         this.imageDatabase = imageDatabase;
     }

@@ -2,7 +2,7 @@ package use_case.load_public_gallery;
 
 import data_access.MongoImageDataAccessObject;
 import data_access.MongoPlantDataAccessObject;
-import data_access.PlantDataAccessObject;
+import use_case.PlantDataAccessInterface;
 import entity.Plant;
 import org.bson.types.ObjectId;
 
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
-    private final PlantDataAccessObject plantDataAccessObject;
+    private final PlantDataAccessInterface plantDataAccessInterface;
     private final PublicGalleryOutputBoundary galleryPresenter;
     private final MongoImageDataAccessObject imageDataAccessObject;
     private static final int IMAGES_PER_PAGE = 15;
@@ -20,7 +20,7 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
 
     public PublicGalleryInteractor(MongoPlantDataAccessObject galleryDataAccessObject,
                                    PublicGalleryOutputBoundary galleryPresenter, MongoImageDataAccessObject imageDataAccessObject) {
-        this.plantDataAccessObject = galleryDataAccessObject;
+        this.plantDataAccessInterface = galleryDataAccessObject;
         this.galleryPresenter = galleryPresenter;
         this.imageDataAccessObject = imageDataAccessObject;
         this.currentPage = 0;
@@ -42,7 +42,7 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
     }
 
     public int getNumberOfPublicPlants(){
-        return (int) Math.ceil((double) plantDataAccessObject.getNumberOfPublicPlants() / IMAGES_PER_PAGE);
+        return (int) Math.ceil((double) plantDataAccessInterface.getNumberOfPublicPlants() / IMAGES_PER_PAGE);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
 
         try {
             // Retrieve the correct slice of Plant objects from database
-            List<Plant> plants = plantDataAccessObject.getPublicPlants(skip, IMAGES_PER_PAGE);
+            List<Plant> plants = plantDataAccessInterface.getPublicPlants(skip, IMAGES_PER_PAGE);
 
             // Get images from Plant objects
             List<BufferedImage> images = new ArrayList<>();

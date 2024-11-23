@@ -15,6 +15,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
+import use_case.UserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
@@ -22,13 +23,30 @@ import use_case.signup.SignupUserDataAccessInterface;
 /**
  * UserDB class implemented using MongoDB.
  */
-public class MongoUserDataAccessObject implements UserDataAccessObject, LoginUserDataAccessInterface, SignupUserDataAccessInterface, LogoutUserDataAccessInterface {
+public class MongoUserDataAccessObject implements UserDataAccessInterface, LoginUserDataAccessInterface, SignupUserDataAccessInterface, LogoutUserDataAccessInterface {
     final String CONNECTIONSTRING = "mongodb+srv://brute_force:CSC207-F24@cluster0.upye6.mongodb.net/" +
             "?retryWrites=true&w=majority&appName=Cluster0";
     CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
     CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
     private String currentUsername;
 
+    private static MongoUserDataAccessObject instance;
+
+    /**
+     * The private constructor -- if a new instance of this class is to be requested, it should be done
+     * by calling the getInstance() public method.
+     */
+    private MongoUserDataAccessObject() {}
+
+    /**
+     * The method used to retrieve an instance of this class. This way, the DAO is maintained as a singleton.
+     */
+    public static MongoUserDataAccessObject getInstance() {
+        if (instance == null) {
+            instance = new MongoUserDataAccessObject();
+        }
+        return instance;
+    }
 
     @Override
     public User getUser(String username) {

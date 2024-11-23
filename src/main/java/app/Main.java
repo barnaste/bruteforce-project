@@ -20,8 +20,6 @@ public class Main {
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addLogoutUseCase()
-                .addPublicGalleryUseCase()
-                .addUserGalleryUseCase()
                 .build();
 
         application.pack();
