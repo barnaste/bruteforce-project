@@ -29,10 +29,4 @@ public class PublicGalleryPresenter implements PublicGalleryOutputBoundary {
         viewManagerModel.setState(publicGalleryViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
-
-    @Override
-    public void prepareFailView() {
-        publicGalleryViewModel.firePropertyChanged();
-    }
-
 }

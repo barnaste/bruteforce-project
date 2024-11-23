@@ -321,6 +321,7 @@
                 setUpPublicGallery();
                 setUpUserGallery();
                 setMyPlantsPanel();
+                updateModeUI(ModeSwitchState.Mode.MY_PLANTS);
             } if (evt.getPropertyName().equals("mode_switch")) {
                 final ModeSwitchState modeSwitchState = (ModeSwitchState) evt.getNewValue();
                 updateModeUI(modeSwitchState.getCurrentMode());

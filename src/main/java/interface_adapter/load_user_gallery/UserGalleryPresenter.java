@@ -31,9 +31,4 @@ public class UserGalleryPresenter implements UserGalleryOutputBoundary {
         viewManagerModel.setState(userGalleryViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
-
-    @Override
-    public void prepareFailView() {
-        userGalleryViewModel.firePropertyChanged();
-    }
 }
