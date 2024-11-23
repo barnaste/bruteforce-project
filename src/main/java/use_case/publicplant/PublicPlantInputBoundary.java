@@ -17,4 +17,9 @@ public interface PublicPlantInputBoundary {
      * Exits the upload use case.
      */
     void escape();
+
+    /**
+     * Executes the like plant use case
+     */
+    void like();
 }

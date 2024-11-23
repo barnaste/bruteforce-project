@@ -31,5 +31,8 @@ public class PublicPlantInteractor implements PublicPlantInputBoundary{
         this.escapeMap.run();
     }
 
-
+    @Override
+    public void like() {
+        plantDatabase.likePlant(currentPlant.getFileID());
+    }
 }
