@@ -21,6 +21,7 @@ public class PublicGalleryPresenter implements PublicGalleryOutputBoundary {
         galleryState.setPlantImages(outputData.getImages());
         galleryState.setCurrentPage(outputData.getPage());
         galleryState.setTotalPages(outputData.getTotalPages());
+        galleryState.setPlantID(outputData.getIds());
 
         publicGalleryViewModel.setState(galleryState);
         publicGalleryViewModel.firePropertyChanged();

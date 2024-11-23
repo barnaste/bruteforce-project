@@ -23,6 +23,7 @@ public class UserGalleryPresenter implements UserGalleryOutputBoundary {
         galleryState.setPlantImages(outputData.getImages());
         galleryState.setCurrentPage(outputData.getPage());
         galleryState.setTotalPages(outputData.getTotalPages());
+        galleryState.setPlantID(outputData.getIds());
 
         userGalleryViewModel.setState(galleryState);
         userGalleryViewModel.firePropertyChanged();

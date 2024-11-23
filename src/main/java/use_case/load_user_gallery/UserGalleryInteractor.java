@@ -2,6 +2,7 @@ package use_case.load_user_gallery;
 
 import data_access.*;
 import entity.Plant;
+import org.bson.types.ObjectId;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -63,16 +64,15 @@ public class UserGalleryInteractor implements UserGalleryInputBoundary {
 
             // Get images from Plant objects
             List<BufferedImage> images = new ArrayList<>();
+            List<ObjectId> ids = new ArrayList<>();
             for (Plant plant : plants) {
-                BufferedImage image = imageDataAccessObject.getImageFromID(plant.getImageID());
-                if (image != null) {
-                    images.add(image);
-                }
+                images.add(imageDataAccessObject.getImageFromID(plant.getImageID()));
+                ids.add(plant.getFileID());
             }
 
             // Prepare output data and send to presenter
             int totalPages = getNumberOfUserPlants();
-            UserGalleryOutputData outputData = new UserGalleryOutputData(images, currentPage, totalPages);
+            UserGalleryOutputData outputData = new UserGalleryOutputData(images, ids, currentPage, totalPages);
             galleryPresenter.prepareSuccessView(outputData);
 
         } catch (Exception e) {

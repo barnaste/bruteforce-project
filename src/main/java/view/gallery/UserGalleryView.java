@@ -3,6 +3,7 @@ package view.gallery;
 import interface_adapter.load_user_gallery.UserGalleryController;
 import interface_adapter.load_user_gallery.UserGalleryState;
 import interface_adapter.load_user_gallery.UserGalleryViewModel;
+import org.bson.types.ObjectId;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +60,7 @@ public class UserGalleryView extends JPanel implements PropertyChangeListener {
         this.controller = controller;
     }
 
-    public void displayImages(List<BufferedImage> images) {
+    public void displayImages(List<BufferedImage> images, List<ObjectId> ids) {
         // System.out.println("Displaying " + images.size() + " images for page " + currentPage);
         imagesGrid.removeAll();
 
@@ -84,7 +85,7 @@ public class UserGalleryView extends JPanel implements PropertyChangeListener {
 
                 JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
                 buttonPanel.setBackground(new Color(236, 245, 233));
-
+                // TODO: Inject the ObjectIds into the buttons here.
                 JButton infoButton = new JButton("Info");
                 infoButton.setBackground(new Color(224, 242, 213));
                 infoButton.addActionListener(e -> {
@@ -124,7 +125,7 @@ public class UserGalleryView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         UserGalleryState state = (UserGalleryState) evt.getNewValue();
-        displayImages(state.getPlantImages());
+        displayImages(state.getPlantImages(), state.getPlantID());
         updateNavigation(state.getCurrentPage(), state.getTotalPages());
     }
 }

@@ -4,6 +4,7 @@ import data_access.MongoImageDataAccessObject;
 import data_access.MongoPlantDataAccessObject;
 import data_access.PlantDataAccessObject;
 import entity.Plant;
+import org.bson.types.ObjectId;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -61,16 +62,15 @@ public class PublicGalleryInteractor implements PublicGalleryInputBoundary {
 
             // Get images from Plant objects
             List<BufferedImage> images = new ArrayList<>();
+            List<ObjectId> ids = new ArrayList<>();
             for (Plant plant : plants) {
-                BufferedImage image = imageDataAccessObject.getImageFromID(plant.getImageID());
-                if (image != null) {
-                    images.add(image);
-                }
+                ids.add(plant.getFileID());
+                images.add(imageDataAccessObject.getImageFromID(plant.getImageID()));
             }
 
             // Prepare output data and send to presenter
             int totalPages = getNumberOfPublicPlants();
-            PublicGalleryOutputData outputData = new PublicGalleryOutputData(images, currentPage, totalPages);
+            PublicGalleryOutputData outputData = new PublicGalleryOutputData(images, ids, currentPage, totalPages);
             galleryPresenter.prepareSuccessView(outputData);
 
         } catch (Exception e) {

@@ -3,6 +3,7 @@ package view.gallery;
 import interface_adapter.load_public_gallery.PublicGalleryController;
 import interface_adapter.load_public_gallery.PublicGalleryState;
 import interface_adapter.load_public_gallery.PublicGalleryViewModel;
+import org.bson.types.ObjectId;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +60,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
         this.controller = controller;
     }
 
-    public void displayImages(List<BufferedImage> images) {
+    public void displayImages(List<BufferedImage> images, List<ObjectId> ids) {
         // System.out.println("Displaying " + images.size() + " images for page " + currentPage);
         imagesGrid.removeAll();
 
@@ -69,7 +70,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
             imagesGrid.repaint();
             return; // Exit if there are no images to display
         }
-
+        // TODO: when making the buttons, inject the id's. Note that images and ids work as a parallel array.
         // Add each image with buttons below it to the grid
         for (int i = 0; i < NUM_OF_ROWS * NUM_OF_COLUMNS; i++) {
             JPanel imagePanel = new JPanel();
@@ -131,7 +132,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         PublicGalleryState state = (PublicGalleryState) evt.getNewValue();
-        displayImages(state.getPlantImages());
+        displayImages(state.getPlantImages(), state.getPlantID());
         updateNavigation(state.getCurrentPage(), state.getTotalPages());
     }
 }
