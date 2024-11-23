@@ -1,4 +1,4 @@
-package data_access;
+package use_case;
 
 import entity.Plant;
 import org.bson.types.ObjectId;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * PlantDB is an interface that defines the methods that the PlantDB class must implement.
  */
-public interface PlantDataAccessObject {
+public interface PlantDataAccessInterface {
     /**
      * A method that returns plants for a given user in the database.
      * The plants are sorted by the last modified date in descending order.
@@ -18,7 +18,16 @@ public interface PlantDataAccessObject {
      * @return a list of Plant objects that belong to the specified user,
      *         sorted by the last modified date. Returns null if an exception occurs.
      */
-    List<Plant> getPlants(String username, int skip, int limit);
+    List<Plant> getUserPlants(String username, int skip, int limit);
+
+    /**
+     * A method that returns ALL plants for a given user in the database.
+     * The plants are sorted by the last modified date in descending order.
+     * @param username is the username of the user
+     * @return a list of Plant objects that belong to the specified user,
+     *         sorted by the last modified date. Returns null if an exception occurs.
+     */
+    List<Plant> getUserPlants(String username);
 
     /**
      * A method that returns all the plants owned by a user in the database.

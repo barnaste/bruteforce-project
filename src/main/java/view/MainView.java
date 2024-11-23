@@ -8,13 +8,8 @@
 
     import javax.swing.*;
 
-    import data_access.MongoImageDataAccessObject;
     import data_access.MongoPlantDataAccessObject;
-    import data_access.MongoUserDataAccessObject;
-    import data_access.UserDataAccessObject;
-    import interface_adapter.ViewManagerModel;
-    import interface_adapter.load_public_gallery.PublicGalleryController;
-    import interface_adapter.load_public_gallery.PublicGalleryPresenter;
+    import entity.Plant;
     import interface_adapter.load_public_gallery.PublicGalleryViewModel;
     import interface_adapter.logout.LogoutController;
     import interface_adapter.main.MainState;
@@ -22,21 +17,13 @@
     import interface_adapter.mode_switch.ModeSwitchController;
     import interface_adapter.mode_switch.ModeSwitchState;
     import interface_adapter.mode_switch.ModeSwitchViewModel;
-    import interface_adapter.upload.UploadController;
-    import interface_adapter.upload.UploadPresenter;
-    import interface_adapter.upload.confirm.UploadConfirmViewModel;
-    import interface_adapter.upload.result.UploadResultViewModel;
-    import interface_adapter.upload.select.UploadSelectViewModel;
-    import use_case.load_public_gallery.PublicGalleryInputBoundary;
-    import use_case.load_public_gallery.PublicGalleryInteractor;
-    import use_case.load_public_gallery.PublicGalleryOutputBoundary;
-    import use_case.upload.UploadInputBoundary;
-    import use_case.upload.UploadInteractor;
-    import use_case.upload.UploadOutputBoundary;
+    import org.bson.types.ObjectId;
+    import use_case.PlantDataAccessInterface;
     import view.gallery.PublicGalleryView;
-    import view.upload.UploadConfirmView;
-    import view.upload.UploadResultView;
-    import view.upload.UploadSelectView;
+    import view.panel_factory.EditPlantPanelFactory;
+    import view.panel_factory.PublicGalleryFactory;
+    import view.panel_factory.PublicPlantPanelFactory;
+    import view.panel_factory.UploadPanelFactory;
 
     /**
      * The Main View, for when the user is logged into the program.
@@ -58,6 +45,7 @@
 
         private String currentUser = "";
         private String currentGalleryMode = "";
+        private JButton currentGalleryBtn;
         private final JPanel currentGalleryPanel;
         private final JLabel userLabel = new JLabel();
         private final JLabel title = new JLabel();
@@ -67,7 +55,8 @@
         private final JButton myPlantsButton;
         private final JButton discoverButton;
 
-        public MainView(MainViewModel mainViewModel, PublicGalleryViewModel publicGalleryViewModel, ModeSwitchViewModel modeSwitchViewModel) {
+        public MainView(MainViewModel mainViewModel, PublicGalleryViewModel publicGalleryViewModel,
+                        ModeSwitchViewModel modeSwitchViewModel) {
             this.mainViewModel = mainViewModel;
             this.mainViewModel.addPropertyChangeListener(this);
 
@@ -75,8 +64,8 @@
             this.modeSwitchViewModel.addPropertyChangeListener(this);
 
             this.publicGalleryViewModel = publicGalleryViewModel;
-
-            setUpPublicGallery();
+            this.publicGalleryView = PublicGalleryFactory
+                    .createPublicGallery(publicGalleryViewModel, this::overlayPublicPlantView);
 
             this.setLayout(new OverlayLayout(this));
             this.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
@@ -122,7 +111,8 @@
             spacer2.setOpaque(false);
             spacer2.setPreferredSize(new Dimension(10, 20));
 
-            final JPanel actionPanel = ViewComponentFactory.buildVerticalPanel(List.of(title, header, spacer2, upload, myPlantsButton, discoverButton, spacer1, logOut));
+            final JPanel actionPanel = ViewComponentFactory.buildVerticalPanel(List.of(title, header, spacer2, upload,
+                    myPlantsButton, discoverButton, spacer1, logOut));
 
             currentGalleryPanel = new JPanel();
             setMyPlantsPanel();
@@ -132,98 +122,79 @@
             this.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
         }
 
-        private void setUpModeSwitch() {}
-
+        /**
+         * Disable all interactions within the main view. That is, all components and subcomponents are
+         * no longer active after this method is called.
+         */
         private void disableInteraction() {
-            logOut.setEnabled(false);
-            upload.setEnabled(false);
+            // if the discover button is currently enabled, the user is currently in the discovery gallery
+            currentGalleryBtn = !this.discoverButton.isEnabled() ? this.discoverButton : this.myPlantsButton;
+            setComponentsEnabled(this, false);
         }
 
+        /**
+         * Enables all interactions within the main view. That is, all components and subcomponents are
+         * restored after this method is called. The current gallery's corresponding button will be disabled
+         * to disallow the user to "activate" an already active gallery.
+         */
         private void enableInteraction() {
-            logOut.setEnabled(true);
-            upload.setEnabled(true);
+            setComponentsEnabled(this, true);
+            currentGalleryBtn.setEnabled(false);
         }
 
-        private void setUpPublicGallery() {
-            MongoPlantDataAccessObject plantDataAccessObject = new MongoPlantDataAccessObject();
-            MongoImageDataAccessObject imageDataAccessObject = new MongoImageDataAccessObject();
-            ViewManagerModel galleryManagerModel = new ViewManagerModel();
-
-            // Set up the PublicGalleryPresenter and PublicGalleryInteractor
-            PublicGalleryOutputBoundary galleryPresenter = new PublicGalleryPresenter(publicGalleryViewModel, galleryManagerModel);
-            PublicGalleryInputBoundary publicGalleryInteractor = new PublicGalleryInteractor(plantDataAccessObject, galleryPresenter, imageDataAccessObject);
-
-            // Initialize the PublicGalleryController and View
-            PublicGalleryController publicGalleryController = new PublicGalleryController(publicGalleryInteractor);
-            publicGalleryViewModel.firePropertyChanged();
-            this.publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
-            publicGalleryView.setPublicGalleryController(publicGalleryController);
-
-            // Load the first page by default
-            publicGalleryController.loadPage(0);
-        }
-
-        public void overlayUploadView() {
-            JPanel cardPanel = new JPanel();
-            // NOTE: we extend CardLayout so that whenever the top card is swapped, the
-            // ENTIRE view is redrawn, and not just the region the card occupied.
-            // This is because cards may be of variant dimensions. We would otherwise
-            // have artefacts from previous cards if they were of larger dimensions.
-            CardLayout cardLayout = new CardLayout() {
-                @Override
-                public void show(Container parent, String name) {
-                    super.show(parent, name);
-                    revalidate();
-                    repaint();
+        /**
+         * Enables or disables all buttons within the input panel. This includes buttons
+         * directly within the input panel and any buttons within components of the input
+         * panel, recursively.
+         * @param panel the panel to modify the enablement of buttons in
+         * @param isEnabled whether buttons should be enabled or disabled
+         */
+        private void setComponentsEnabled(Container panel, boolean isEnabled) {
+            for (Component cp : panel.getComponents()) {
+                if (cp instanceof JPanel) {
+                    setComponentsEnabled((JPanel) cp, isEnabled);
                 }
-            };
-            cardPanel.setLayout(cardLayout);
-
-            UploadSelectViewModel selectorViewModel = new UploadSelectViewModel();
-            UploadSelectView selectorView = new UploadSelectView(selectorViewModel);
-            cardPanel.add(selectorView, selectorView.getViewName());
-
-            UploadConfirmViewModel confirmViewModel = new UploadConfirmViewModel();
-            UploadConfirmView confirmView = new UploadConfirmView(confirmViewModel);
-            cardPanel.add(confirmView, confirmView.getViewName());
-
-            UploadResultViewModel resultViewModel = new UploadResultViewModel();
-            UploadResultView resultView = new UploadResultView(resultViewModel);
-            cardPanel.add(resultView, resultView.getViewName());
-
-            ViewManagerModel uploadManagerModel = new ViewManagerModel();
-            new ViewManager(cardPanel, cardLayout, uploadManagerModel);
-
-            UploadOutputBoundary uploadOutputBoundary = new UploadPresenter(
-                    uploadManagerModel,
-                    selectorViewModel,
-                    confirmViewModel,
-                    resultViewModel
-            );
-            // TODO: this is a makeshift setup -- the userDataAccessObject should already exist and
-            //  is expected to be injected into the main view, or accessible by the main view somehow
-            UserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
-            userDataAccessObject.setCurrentUsername(this.currentUser);
-            UploadInputBoundary uploadInteractor = new UploadInteractor(
-                    uploadOutputBoundary,
-                    new MongoImageDataAccessObject(),
-                    new MongoPlantDataAccessObject(),
-                    userDataAccessObject
-            );
-            UploadController controller = new UploadController(uploadInteractor);
-
-            selectorView.setController(controller);
-            confirmView.setController(controller);
-            resultView.setController(controller);
-
-            uploadManagerModel.setState(selectorView.getViewName());
-            uploadManagerModel.firePropertyChanged();
-
-            // create an overlay with the created cardPanel as the popup
-            overlay(cardPanel, uploadInteractor::setEscapeMap);
+                cp.setEnabled(isEnabled);
+            }
         }
 
-        public void overlay(JPanel overlayPanel, Consumer<Runnable> setOverlayEscape) {
+        /**
+         * Create an overlay on the main view that displays the upload use case dialog.
+         */
+        public void overlayUploadView() {
+            // create an overlay with the created cardPanel as the popup
+            JPanel overlayPanel = new JPanel();
+            UploadPanelFactory.createUploadPanel(this, overlayPanel, overlay(overlayPanel));
+        }
+
+        /**
+         * Create an overlay on the main view that displays the edit plant use case dialog.
+         * @param plant the plant object to be displayed in the panel
+         */
+        public void overlayEditPlantView(Plant plant) {
+            // create an overlay with the created cardPanel as the popup
+            JPanel overlayPanel = new JPanel();
+            EditPlantPanelFactory.createEditPlantPanel(plant, overlayPanel, overlay(overlayPanel));
+        }
+
+        /**
+         * Create an overlay on the main view that displays the view plant use case dialog.
+         * @param plant the plant object to be displayed in the panel
+         */
+        public void overlayPublicPlantView(Plant plant) {
+            // create an overlay with the created cardPanel as the popup
+            JPanel overlayPanel = new JPanel();
+            PublicPlantPanelFactory.createPublicPlantPanel(plant, overlayPanel, overlay(overlayPanel));
+        }
+
+        /**
+         * Create an overlay environment that displays the input panel. This involves invalidating all entities
+         * currently on the main screen, and creating a semi-transparent layer between the main area and the newly
+         * overlain panel.
+         * @param overlayPanel the panel to create an overlay for
+         * @return a runnable escape map -- a method to be called when the overlay is to be closed
+         */
+        public Runnable overlay(JPanel overlayPanel) {
             // disable any interaction outside the overlay
             this.disableInteraction();
 
@@ -242,18 +213,18 @@
             backgroundPanel.setLayout(new GridBagLayout());
 
             backgroundPanel.add(overlayPanel);
-            setOverlayEscape.accept(() -> {
+            this.add(backgroundPanel, JLayeredPane.PALETTE_LAYER);
+            this.revalidate();
+            this.repaint();
+
+            return () -> {
                 // enable interaction outside the overlay once the overlay is removed
                 this.enableInteraction();
 
                 this.remove(backgroundPanel);
                 this.revalidate();
                 this.repaint();
-            });
-
-            this.add(backgroundPanel, JLayeredPane.PALETTE_LAYER);
-            this.revalidate();
-            this.repaint();
+            };
         }
 
         public void setLogoutController(LogoutController logoutController) {
