@@ -33,18 +33,7 @@ public class InMemoryPlantDataAccessObject implements PlantDataAccessInterface {
     @Override
     public List<Plant> getUserPlants(String username, int skip, int limit) {
 
-        List<Plant> sortedplants = new ArrayList<>();
-        for (Plant plant : plants.values()) {
-            if (plant.getOwner().equals(username)) {
-                sortedplants.add(plant);
-            }
-        }
-
-        // Sorts the plants based on when last changed
-        sortedplants.sort((p1, p2) -> p2.getLastChanged().compareTo(p1.getLastChanged()));
-
-        // Deals with skip and Limit.
-        // A bit suboptimal as dealing with it at the end, but should be fine for testing purposes.
+        List<Plant> sortedplants = getUserPlants(username); // Reused the single-parameter version
 
         int start = Math.min(skip, sortedplants.size());
         int end = Math.min(start + limit, sortedplants.size());
@@ -81,7 +70,6 @@ public class InMemoryPlantDataAccessObject implements PlantDataAccessInterface {
     @Override
     public void addPlant(Plant plant) {
         plant.setLastChanged(new Date());
-        plant.setNumOfLikes(0);
         plants.put(plant.getFileID(), plant);
 
     }

@@ -16,7 +16,7 @@ import java.util.UUID;
 public class InMemoryImageDataAccessObject implements ImageDataAccessInterface {
 
 
-    private final Map<String, byte[]> imageStorage = new HashMap<>();
+    private final Map<String, BufferedImage> imageStorage = new HashMap<>();
     private static InMemoryImageDataAccessObject instance;
 
     /**
@@ -37,40 +37,14 @@ public class InMemoryImageDataAccessObject implements ImageDataAccessInterface {
 
 
     @Override
-    public BufferedImage getImageFromID(String id) {
-        try {
-            byte[] imageData = imageStorage.get(id);
-            if (imageData == null) {
-                return null;
-            }
-            InputStream inputStream = new ByteArrayInputStream(imageData);
-            return ImageIO.read(inputStream);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
-
-    }
+    public BufferedImage getImageFromID(String id) {return imageStorage.get(id); }
 
 
     @Override
     public String addImage(BufferedImage image) {
-        try {
-            // Convert the BufferedImage to a byte array
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            ImageIO.write(image, "jpg", outputStream);
-            byte[] imageData = outputStream.toByteArray();
-
-            // Generate a unique ID for the image
-            String id = UUID.randomUUID().toString();
-
-            // Store the image byte array in the map using the generated ID
-            imageStorage.put(id, imageData);
-            return id;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
+        String id = UUID.randomUUID().toString();
+        imageStorage.put(id, image);
+        return id;
     }
 
     @Override
