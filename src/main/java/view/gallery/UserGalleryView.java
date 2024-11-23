@@ -1,8 +1,8 @@
 package view.gallery;
 
-import interface_adapter.load_public_gallery.PublicGalleryController;
-import interface_adapter.load_public_gallery.PublicGalleryState;
-import interface_adapter.load_public_gallery.PublicGalleryViewModel;
+import interface_adapter.load_user_gallery.UserGalleryController;
+import interface_adapter.load_user_gallery.UserGalleryState;
+import interface_adapter.load_user_gallery.UserGalleryViewModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,20 +11,20 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
-public class PublicGalleryView extends JPanel implements PropertyChangeListener {
+public class UserGalleryView extends JPanel implements PropertyChangeListener {
     private static final int NUM_OF_COLUMNS = 5;
     private static final int NUM_OF_ROWS = 3;
-    private final String viewName = "public gallery";
+    private final String viewName = "user gallery";
 
-    private PublicGalleryController controller;
+    private UserGalleryController controller;
 
     private final JPanel imagesGrid;
     private final JButton nextPageButton;
     private final JButton previousPageButton;
     private final JLabel pageLabel;
 
-    public PublicGalleryView(PublicGalleryViewModel publicGalleryViewModel) {
-        publicGalleryViewModel.addPropertyChangeListener(this);
+    public UserGalleryView(UserGalleryViewModel userGalleryViewModel) {
+        userGalleryViewModel.addPropertyChangeListener(this);
 
         setLayout(new BorderLayout());
         imagesGrid = new JPanel(new GridLayout(NUM_OF_ROWS, NUM_OF_COLUMNS, 5, 5));
@@ -55,7 +55,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
         updateNavigation(0, 1);
     }
 
-    public void setPublicGalleryController(PublicGalleryController controller) {
+    public void setUserGalleryController(UserGalleryController controller) {
         this.controller = controller;
     }
 
@@ -87,17 +87,10 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
 
                 JButton infoButton = new JButton("Info");
                 infoButton.setBackground(new Color(224, 242, 213));
-                                infoButton.addActionListener(e -> {
+                infoButton.addActionListener(e -> {
                     System.out.println("Info button clicked");
                 });
                 buttonPanel.add(infoButton);
-
-                JButton likeButton = new JButton("Like");
-                likeButton.setBackground(new Color(224, 242, 213));
-                likeButton.addActionListener(e -> {
-                    System.out.println("Like button clicked");
-                });
-                buttonPanel.add(likeButton);
 
                 GridBagConstraints gbc = new GridBagConstraints();
                 gbc.gridx = 0;
@@ -130,7 +123,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        PublicGalleryState state = (PublicGalleryState) evt.getNewValue();
+        UserGalleryState state = (UserGalleryState) evt.getNewValue();
         displayImages(state.getPlantImages());
         updateNavigation(state.getCurrentPage(), state.getTotalPages());
     }

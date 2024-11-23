@@ -21,6 +21,7 @@ public class Main {
                 .addLoginUseCase()
                 .addLogoutUseCase()
                 .addPublicGalleryUseCase()
+                .addUserGalleryUseCase()
                 .build();
 
         application.pack();

@@ -16,6 +16,9 @@
     import interface_adapter.load_public_gallery.PublicGalleryController;
     import interface_adapter.load_public_gallery.PublicGalleryPresenter;
     import interface_adapter.load_public_gallery.PublicGalleryViewModel;
+    import interface_adapter.load_user_gallery.UserGalleryController;
+    import interface_adapter.load_user_gallery.UserGalleryPresenter;
+    import interface_adapter.load_user_gallery.UserGalleryViewModel;
     import interface_adapter.logout.LogoutController;
     import interface_adapter.main.MainState;
     import interface_adapter.main.MainViewModel;
@@ -30,10 +33,14 @@
     import use_case.load_public_gallery.PublicGalleryInputBoundary;
     import use_case.load_public_gallery.PublicGalleryInteractor;
     import use_case.load_public_gallery.PublicGalleryOutputBoundary;
+    import use_case.load_user_gallery.UserGalleryInputBoundary;
+    import use_case.load_user_gallery.UserGalleryInteractor;
+    import use_case.load_user_gallery.UserGalleryOutputBoundary;
     import use_case.upload.UploadInputBoundary;
     import use_case.upload.UploadInteractor;
     import use_case.upload.UploadOutputBoundary;
     import view.gallery.PublicGalleryView;
+    import view.gallery.UserGalleryView;
     import view.upload.UploadConfirmView;
     import view.upload.UploadResultView;
     import view.upload.UploadSelectView;
@@ -50,8 +57,10 @@
         private final String viewName = "main view";
         private final MainViewModel mainViewModel;
         private final PublicGalleryViewModel publicGalleryViewModel;
+        private final UserGalleryViewModel userGalleryViewModel;
         private final ModeSwitchViewModel modeSwitchViewModel;
         private PublicGalleryView publicGalleryView;
+        private UserGalleryView userGalleryView;
 
         private LogoutController logoutController;
         private ModeSwitchController modeSwitchController;
@@ -67,7 +76,7 @@
         private final JButton myPlantsButton;
         private final JButton discoverButton;
 
-        public MainView(MainViewModel mainViewModel, PublicGalleryViewModel publicGalleryViewModel, ModeSwitchViewModel modeSwitchViewModel) {
+        public MainView(MainViewModel mainViewModel, PublicGalleryViewModel publicGalleryViewModel, UserGalleryViewModel userGalleryViewModel, ModeSwitchViewModel modeSwitchViewModel) {
             this.mainViewModel = mainViewModel;
             this.mainViewModel.addPropertyChangeListener(this);
 
@@ -75,8 +84,7 @@
             this.modeSwitchViewModel.addPropertyChangeListener(this);
 
             this.publicGalleryViewModel = publicGalleryViewModel;
-
-            setUpPublicGallery();
+            this.userGalleryViewModel = userGalleryViewModel;
 
             this.setLayout(new OverlayLayout(this));
             this.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
@@ -125,14 +133,11 @@
             final JPanel actionPanel = ViewComponentFactory.buildVerticalPanel(List.of(title, header, spacer2, upload, myPlantsButton, discoverButton, spacer1, logOut));
 
             currentGalleryPanel = new JPanel();
-            setMyPlantsPanel();
 
             mainPanel.add(ViewComponentFactory.buildHorizontalPanel(List.of(actionPanel, currentGalleryPanel)));
 
             this.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
         }
-
-        private void setUpModeSwitch() {}
 
         private void disableInteraction() {
             logOut.setEnabled(false);
@@ -161,6 +166,25 @@
 
             // Load the first page by default
             publicGalleryController.loadPage(0);
+        }
+
+        // Create "My Plants" panel
+        private void setUpUserGallery() {
+            MongoPlantDataAccessObject plantDataAccessObject = new MongoPlantDataAccessObject();
+            MongoImageDataAccessObject imageDataAccessObject = new MongoImageDataAccessObject();
+            UserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
+            userDataAccessObject.setCurrentUsername(this.currentUser);
+            ViewManagerModel galleryManagerModel = new ViewManagerModel();
+
+            UserGalleryOutputBoundary galleryPresenter = new UserGalleryPresenter(userGalleryViewModel, galleryManagerModel);
+            UserGalleryInputBoundary userGalleryInteractor = new UserGalleryInteractor(plantDataAccessObject, galleryPresenter, imageDataAccessObject, userDataAccessObject);
+
+            UserGalleryController userGalleryController = new UserGalleryController(userGalleryInteractor);
+            userGalleryViewModel.firePropertyChanged();
+            this.userGalleryView = new UserGalleryView(userGalleryViewModel);
+            userGalleryView.setUserGalleryController(userGalleryController);
+
+            userGalleryController.loadPage(0);
         }
 
         public void overlayUploadView() {
@@ -294,22 +318,13 @@
                 final MainState state = (MainState) evt.getNewValue();
                 currentUser = state.getUsername();
                 userLabel.setText("Hello " + this.currentUser + "!");
+                setUpPublicGallery();
+                setUpUserGallery();
+                setMyPlantsPanel();
             } if (evt.getPropertyName().equals("mode_switch")) {
                 final ModeSwitchState modeSwitchState = (ModeSwitchState) evt.getNewValue();
                 updateModeUI(modeSwitchState.getCurrentMode());
             }
-        }
-
-        // Create "My Plants" panel
-        private void setMyPlantsPanel() {
-            currentGalleryPanel.removeAll();
-
-            currentGalleryPanel.setPreferredSize(new Dimension(840, 700));
-
-            // currentGalleryPanel.add(userGalleryView, userGalleryView.getViewName());
-
-            currentGalleryPanel.revalidate();
-            currentGalleryPanel.repaint();
         }
 
         // Create "Discover" panel
@@ -319,6 +334,18 @@
             currentGalleryPanel.setPreferredSize(new Dimension(840, 700));
 
             currentGalleryPanel.add(publicGalleryView, publicGalleryView.getViewName());
+
+            currentGalleryPanel.revalidate();
+            currentGalleryPanel.repaint();
+        }
+
+        // Create "Discover" panel
+        private void setMyPlantsPanel() {
+            currentGalleryPanel.removeAll();
+
+            currentGalleryPanel.setPreferredSize(new Dimension(840, 700));
+
+            currentGalleryPanel.add(userGalleryView, userGalleryView.getViewName());
 
             currentGalleryPanel.revalidate();
             currentGalleryPanel.repaint();
