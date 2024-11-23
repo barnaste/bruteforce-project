@@ -5,6 +5,7 @@ import org.bson.types.ObjectId;
 import use_case.PlantDataAccessInterface;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class InMemoryPlantDataAccessObject implements PlantDataAccessInterface {
@@ -31,7 +32,25 @@ public class InMemoryPlantDataAccessObject implements PlantDataAccessInterface {
 
     @Override
     public List<Plant> getUserPlants(String username, int skip, int limit) {
-        return List.of();
+
+        List<Plant> sortedplants = new ArrayList<>();
+        for (Plant plant : plants.values()) {
+            if (plant.getOwner().equals(username)) {
+                sortedplants.add(plant);
+            }
+        }
+
+        // Sorts the plants based on when last changed
+        sortedplants.sort((p1, p2) -> p2.getLastChanged().compareTo(p1.getLastChanged()));
+
+        // Deals with skip and Limit.
+        // A bit suboptimal as dealing with it at the end, but should be fine for testing purposes.
+
+        int start = Math.min(skip, sortedplants.size());
+        int end = Math.min(start + limit, sortedplants.size());
+
+        return sortedplants.subList(start, end);
+
     }
 
     @Override
@@ -50,7 +69,13 @@ public class InMemoryPlantDataAccessObject implements PlantDataAccessInterface {
 
     @Override
     public List<Plant> getPublicPlants(int skip, int limit) {
-        return List.of();
+
+        return plants.values().stream()
+                .filter(Plant::getIsPublic)
+                .sorted(Comparator.comparing(Plant::getNumOfLikes).reversed())
+                .skip(skip)
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -113,6 +138,10 @@ public class InMemoryPlantDataAccessObject implements PlantDataAccessInterface {
             return true;
         }
         return false;
+    }
+
+    public void deleteAll(){
+        plants.clear();
     }
 
 }
