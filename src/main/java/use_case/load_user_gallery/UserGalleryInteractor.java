@@ -3,24 +3,27 @@ package use_case.load_user_gallery;
 import data_access.*;
 import entity.Plant;
 import org.bson.types.ObjectId;
+import use_case.ImageDataAccessInterface;
+import use_case.PlantDataAccessInterface;
+import use_case.UserDataAccessInterface;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserGalleryInteractor implements UserGalleryInputBoundary {
-    private final PlantDataAccessObject plantDataAccessObject;
+    private final PlantDataAccessInterface plantDataAccessObject;
     private final UserGalleryOutputBoundary galleryPresenter;
-    private final ImageDataAccessObject imageDataAccessObject;
-    private final UserDataAccessObject userDataAccessObject;
+    private final ImageDataAccessInterface imageDataAccessObject;
+    private final UserDataAccessInterface userDataAccessObject;
     private static final int IMAGES_PER_PAGE = 15;
 
     private int currentPage;
 
-    public UserGalleryInteractor(PlantDataAccessObject galleryDataAccessObject,
+    public UserGalleryInteractor(PlantDataAccessInterface galleryDataAccessObject,
                                  UserGalleryOutputBoundary galleryPresenter,
-                                 ImageDataAccessObject imageDataAccessObject,
-                                 UserDataAccessObject userDataAccessObject) {
+                                 ImageDataAccessInterface imageDataAccessObject,
+                                 UserDataAccessInterface userDataAccessObject) {
         this.plantDataAccessObject = galleryDataAccessObject;
         this.galleryPresenter = galleryPresenter;
         this.imageDataAccessObject = imageDataAccessObject;

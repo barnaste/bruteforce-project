@@ -22,7 +22,6 @@ public class PublicPlantPanelFactory {
                 imageAccess,
                 MongoPlantDataAccessObject.getInstance()
         );
-        interactor.setPlant(plant);
         interactor.setEscapeMap(escapeMap);
 
         PublicPlantViewController controller = new PublicPlantViewController(interactor);

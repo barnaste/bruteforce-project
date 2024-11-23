@@ -17,10 +17,10 @@ import java.util.function.Consumer;
 public class PublicGalleryFactory {
     /**
      * Create and return a public gallery view.
-     * @param displayPlant the method to be called when the public gallery wishes to display a plant
+     * @param displayPlantMap the method to be called when the public gallery wishes to display a plant
      * @return the public gallery view
      */
-    public static PublicGalleryView createPublicGallery(Consumer<Plant> displayPlant) {
+    public static PublicGalleryView createPublicGallery(Consumer<Plant> displayPlantMap) {
         MongoPlantDataAccessObject plantDataAccessObject = MongoPlantDataAccessObject.getInstance();
         MongoImageDataAccessObject imageDataAccessObject = MongoImageDataAccessObject.getInstance();
         PublicGalleryViewModel viewModel = new PublicGalleryViewModel();
@@ -33,7 +33,7 @@ public class PublicGalleryFactory {
         // Initialize the PublicGalleryController and View
         PublicGalleryController publicGalleryController = new PublicGalleryController(publicGalleryInteractor);
         viewModel.firePropertyChanged();
-        PublicGalleryView publicGalleryView = new PublicGalleryView(viewModel, displayPlant);
+        PublicGalleryView publicGalleryView = new PublicGalleryView(viewModel, displayPlantMap);
         publicGalleryView.setPublicGalleryController(publicGalleryController);
 
         // Load the first page by default

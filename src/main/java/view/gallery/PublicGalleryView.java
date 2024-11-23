@@ -30,11 +30,11 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     private final JLabel pageLabel;
 
     // store a method to be called whenever displaying details about a plant is appropriate
-    private Consumer<Plant> displayPlant;
+    private Consumer<Plant> displayPlantMap;
 
-    public PublicGalleryView(PublicGalleryViewModel publicGalleryViewModel, Consumer<Plant> displayPlant) {
+    public PublicGalleryView(PublicGalleryViewModel publicGalleryViewModel, Consumer<Plant> displayPlantMap) {
         publicGalleryViewModel.addPropertyChangeListener(this);
-        this.displayPlant = displayPlant;
+        this.displayPlantMap = displayPlantMap;
 
         setLayout(new BorderLayout());
         imagesGrid = new JPanel(new GridLayout(NUM_OF_ROWS, NUM_OF_COLUMNS, 5, 5));
@@ -83,7 +83,6 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
             imagesGrid.repaint();
             return; // Exit if there are no images to display
         }
-        // TODO: when making the buttons, inject the id's. Note that images and ids work as a parallel array.
         // Add each image with buttons below it to the grid
         for (int i = 0; i < NUM_OF_ROWS * NUM_OF_COLUMNS; i++) {
             JPanel imagePanel = new JPanel();
@@ -102,8 +101,9 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
 
                 JButton infoButton = new JButton("Info");
                 infoButton.setBackground(new Color(224, 242, 213));
-                // TODO: once you have the plant to be called, simply pass it into the accept() method below:
-                //   infoButton.addActionListener(e -> this.displayPlant.accept());
+
+                MongoPlantDataAccessObject plantAccess = MongoPlantDataAccessObject.getInstance();
+                infoButton.addActionListener(e -> this.displayPlantMap.accept(plantAccess.fetchPlantByID(id)));
                 buttonPanel.add(infoButton);
 
                 JButton likeButton = new JButton("Like");
@@ -112,8 +112,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
                     this.plantViewController.setPlant(id);
                     this.plantViewController.like();
                     // This is only for testing:
-                    MongoPlantDataAccessObject plantDataAccessObject = new MongoPlantDataAccessObject();
-                    System.out.println("Likes: " + plantDataAccessObject.fetchPlantByID(id).getNumOfLikes());
+                    System.out.println("Likes: " + plantAccess.fetchPlantByID(id).getNumOfLikes());
                 });
                 buttonPanel.add(likeButton);
 

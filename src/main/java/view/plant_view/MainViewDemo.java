@@ -11,6 +11,9 @@ import interface_adapter.upload.confirm.UploadConfirmViewModel;
 import interface_adapter.upload.result.UploadResultViewModel;
 import interface_adapter.upload.select.UploadSelectViewModel;
 import org.bson.types.ObjectId;
+import use_case.ImageDataAccessInterface;
+import use_case.PlantDataAccessInterface;
+import use_case.UserDataAccessInterface;
 import use_case.edit_plant.EditPlantInteractor;
 import use_case.publicplant.PublicPlantInteractor;
 import use_case.upload.UploadInputBoundary;
@@ -100,8 +103,8 @@ class MainViewDemo extends JFrame {
     }
 
     private void overlayEditView() {
-        ImageDataAccessObject imageAccess = new MongoImageDataAccessObject();
-        PlantDataAccessObject plantAccess = new MongoPlantDataAccessObject();
+        ImageDataAccessInterface imageAccess = MongoImageDataAccessObject.getInstance();
+        PlantDataAccessInterface plantAccess = MongoPlantDataAccessObject.getInstance();
         Plant plant = plantAccess.fetchPlantByID(new ObjectId("673bceffb834313b084829f6"));
 
         JPanel overlay = new JPanel();
@@ -120,8 +123,8 @@ class MainViewDemo extends JFrame {
     }
 
     private void overlayPublicPlantView() {
-        ImageDataAccessObject imageAccess = new MongoImageDataAccessObject();
-        PlantDataAccessObject plantAccess = new MongoPlantDataAccessObject();
+        ImageDataAccessInterface imageAccess = MongoImageDataAccessObject.getInstance();
+        PlantDataAccessInterface plantAccess = MongoPlantDataAccessObject.getInstance();
         Plant plant = plantAccess.fetchPlantByID(new ObjectId("673bceffb834313b084829f6"));
 
         JPanel overlay = new JPanel();
@@ -176,12 +179,12 @@ class MainViewDemo extends JFrame {
                 confirmViewModel,
                 resultViewModel
         );
-        UserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
+        UserDataAccessInterface userDataAccessObject = MongoUserDataAccessObject.getInstance();
         userDataAccessObject.setCurrentUsername("admin");
         UploadInputBoundary uploadInteractor = new UploadInteractor(
                 uploadOutputBoundary,
-                new MongoImageDataAccessObject(),
-                new MongoPlantDataAccessObject(),
+                MongoImageDataAccessObject.getInstance(),
+                MongoPlantDataAccessObject.getInstance(),
                 userDataAccessObject
         );
         UploadController controller = new UploadController(uploadInteractor);
