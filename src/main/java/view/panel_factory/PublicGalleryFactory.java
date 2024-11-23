@@ -17,14 +17,13 @@ import java.util.function.Consumer;
 public class PublicGalleryFactory {
     /**
      * Create and return a public gallery view.
-     * @param viewModel the public gallery view model to be used
      * @param displayPlant the method to be called when the public gallery wishes to display a plant
      * @return the public gallery view
      */
-    public static PublicGalleryView createPublicGallery(PublicGalleryViewModel viewModel,
-                                                        Consumer<Plant> displayPlant) {
+    public static PublicGalleryView createPublicGallery(Consumer<Plant> displayPlant) {
         MongoPlantDataAccessObject plantDataAccessObject = MongoPlantDataAccessObject.getInstance();
         MongoImageDataAccessObject imageDataAccessObject = MongoImageDataAccessObject.getInstance();
+        PublicGalleryViewModel viewModel = new PublicGalleryViewModel();
         ViewManagerModel galleryManagerModel = new ViewManagerModel();
 
         // Set up the PublicGalleryPresenter and PublicGalleryInteractor

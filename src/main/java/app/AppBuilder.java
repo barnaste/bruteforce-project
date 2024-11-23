@@ -54,21 +54,16 @@ public class AppBuilder {
     // Data access object for user data (MongoDB)
     private final MongoUserDataAccessObject userDataAccessObject = MongoUserDataAccessObject.getInstance();
 
-    private final MongoPlantDataAccessObject galleryDataAccessObject = MongoPlantDataAccessObject.getInstance();
-    private final MongoImageDataAccessObject imageDataAccessObject = MongoImageDataAccessObject.getInstance();
-
     // ViewModels for different views
     private final SignupViewModel signupViewModel = new SignupViewModel();
     private final LoginViewModel loginViewModel = new LoginViewModel();
     private final MainViewModel mainViewModel = new MainViewModel();
-    private final PublicGalleryViewModel publicGalleryViewModel = new PublicGalleryViewModel();
     private final ModeSwitchViewModel modeSwitchViewModel = new ModeSwitchViewModel();
 
     // Views for different app states
     private final SignupView signupView = new SignupView(signupViewModel);
-    private final MainView mainView = new MainView(mainViewModel, publicGalleryViewModel, modeSwitchViewModel);
+    private final MainView mainView = new MainView(mainViewModel, modeSwitchViewModel);
     private final LoginView loginView = new LoginView(loginViewModel);
-    private final PublicGalleryView publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
     private final StartView startView = new StartView(signupViewModel, loginViewModel, viewManagerModel);
 
     // Initializes CardLayout for the card panel
@@ -123,8 +118,6 @@ public class AppBuilder {
      */
     public AppBuilder addLoggedInView() {
         cardPanel.add(mainView, mainView.getViewName());
-        // TODO: replace with user view once implemented
-        cardPanel.add(publicGalleryView, publicGalleryView.getViewName());
         return this;
     }
 
@@ -170,23 +163,6 @@ public class AppBuilder {
 
         final LogoutController logoutController = new LogoutController(logoutInteractor);
         mainView.setLogoutController(logoutController);
-        return this;
-    }
-
-    /**
-     * Adds the Public Gallery Use Case to the application.
-     * @return this builder
-     */
-    public AppBuilder addPublicGalleryUseCase() {
-        // Set up the output boundary (presenter)
-        final PublicGalleryPresenter publicGalleryPresenter = new PublicGalleryPresenter(publicGalleryViewModel, viewManagerModel);
-
-        // Set up the use case interactor
-        final PublicGalleryInputBoundary publicGalleryInteractor = new PublicGalleryInteractor(galleryDataAccessObject, publicGalleryPresenter, imageDataAccessObject);
-
-        // Now wire it with the view
-        publicGalleryView.setPublicGalleryController(new PublicGalleryController(publicGalleryInteractor));
-
         return this;
     }
 
