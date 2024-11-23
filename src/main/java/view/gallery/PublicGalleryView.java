@@ -1,8 +1,10 @@
 package view.gallery;
 
+import data_access.MongoPlantDataAccessObject;
 import interface_adapter.load_public_gallery.PublicGalleryController;
 import interface_adapter.load_public_gallery.PublicGalleryState;
 import interface_adapter.load_public_gallery.PublicGalleryViewModel;
+import interface_adapter.public_plant_view.PublicPlantViewController;
 import org.bson.types.ObjectId;
 
 import javax.swing.*;
@@ -18,6 +20,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     private final String viewName = "public gallery";
 
     private PublicGalleryController controller;
+    private PublicPlantViewController plantViewController;
 
     private final JPanel imagesGrid;
     private final JButton nextPageButton;
@@ -60,6 +63,10 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
         this.controller = controller;
     }
 
+    public void setPublicPlantViewController(PublicPlantViewController controller) {
+        this.plantViewController = controller;
+    }
+
     public void displayImages(List<BufferedImage> images, List<ObjectId> ids) {
         // System.out.println("Displaying " + images.size() + " images for page " + currentPage);
         imagesGrid.removeAll();
@@ -80,6 +87,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
             JLabel imageLabel = new JLabel();
             if (i < images.size()) {
                 BufferedImage image = images.get(i);
+                ObjectId id = ids.get(i);
                 Image scaledImage = image.getScaledInstance(160, 160, Image.SCALE_SMOOTH);
                 imageLabel.setIcon(new ImageIcon(scaledImage));
 
@@ -96,7 +104,11 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
                 JButton likeButton = new JButton("Like");
                 likeButton.setBackground(new Color(224, 242, 213));
                 likeButton.addActionListener(e -> {
-                    System.out.println("Like button clicked");
+                    this.plantViewController.setPlant(id);
+                    this.plantViewController.like();
+                    // This is only for testing:
+                    MongoPlantDataAccessObject plantDataAccessObject = new MongoPlantDataAccessObject();
+                    System.out.println("Likes: " + plantDataAccessObject.fetchPlantByID(id).getNumOfLikes());
                 });
                 buttonPanel.add(likeButton);
 

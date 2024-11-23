@@ -25,6 +25,7 @@
     import interface_adapter.mode_switch.ModeSwitchController;
     import interface_adapter.mode_switch.ModeSwitchState;
     import interface_adapter.mode_switch.ModeSwitchViewModel;
+    import interface_adapter.public_plant_view.PublicPlantViewController;
     import interface_adapter.upload.UploadController;
     import interface_adapter.upload.UploadPresenter;
     import interface_adapter.upload.confirm.UploadConfirmViewModel;
@@ -36,6 +37,8 @@
     import use_case.load_user_gallery.UserGalleryInputBoundary;
     import use_case.load_user_gallery.UserGalleryInteractor;
     import use_case.load_user_gallery.UserGalleryOutputBoundary;
+    import use_case.publicplant.PublicPlantInputBoundary;
+    import use_case.publicplant.PublicPlantInteractor;
     import use_case.upload.UploadInputBoundary;
     import use_case.upload.UploadInteractor;
     import use_case.upload.UploadOutputBoundary;
@@ -157,12 +160,15 @@
             // Set up the PublicGalleryPresenter and PublicGalleryInteractor
             PublicGalleryOutputBoundary galleryPresenter = new PublicGalleryPresenter(publicGalleryViewModel, galleryManagerModel);
             PublicGalleryInputBoundary publicGalleryInteractor = new PublicGalleryInteractor(plantDataAccessObject, galleryPresenter, imageDataAccessObject);
+            PublicPlantInputBoundary publicPlantInteractor = new PublicPlantInteractor(imageDataAccessObject, plantDataAccessObject);
 
             // Initialize the PublicGalleryController and View
             PublicGalleryController publicGalleryController = new PublicGalleryController(publicGalleryInteractor);
+            PublicPlantViewController publicPlantViewController = new PublicPlantViewController(publicPlantInteractor);
             publicGalleryViewModel.firePropertyChanged();
             this.publicGalleryView = new PublicGalleryView(publicGalleryViewModel);
             publicGalleryView.setPublicGalleryController(publicGalleryController);
+            publicGalleryView.setPublicPlantViewController(publicPlantViewController);
 
             // Load the first page by default
             publicGalleryController.loadPage(0);
