@@ -1,5 +1,8 @@
 package use_case.publicplant;
 
+import entity.Plant;
+import org.bson.types.ObjectId;
+
 /**
  * Input Boundary for actions which are related to viewing an image.
  */
@@ -12,6 +15,11 @@ public interface PublicPlantInputBoundary {
      * @param escapeMap the method called to close the upload use case
      */
     void setEscapeMap(Runnable escapeMap);
+
+    /**
+     * Sets the plant for the use case.
+     */
+    void setPlant(ObjectId plantID);
 
     /**
      * Exits the upload use case.

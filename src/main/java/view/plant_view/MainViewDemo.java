@@ -132,7 +132,7 @@ class MainViewDemo extends JFrame {
                 imageAccess,
                 plantAccess
         );
-        interactor.setPlant(plant);
+        // interactor.setPlant(plant);
         PublicPlantViewController controller = new PublicPlantViewController(interactor);
         view.setController(controller);
 

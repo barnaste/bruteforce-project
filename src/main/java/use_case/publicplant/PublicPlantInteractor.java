@@ -3,6 +3,7 @@ package use_case.publicplant;
 import data_access.ImageDataAccessObject;
 import data_access.PlantDataAccessObject;
 import entity.Plant;
+import org.bson.types.ObjectId;
 
 public class PublicPlantInteractor implements PublicPlantInputBoundary{
 
@@ -17,8 +18,9 @@ public class PublicPlantInteractor implements PublicPlantInputBoundary{
         this.imageDatabase = imageDatabase;
     }
 
-    public void setPlant(Plant currentPlant) {
-        this.currentPlant = currentPlant;
+    @Override
+    public void setPlant(ObjectId plantID) {
+        this.currentPlant = plantDatabase.fetchPlantByID(plantID);
     }
 
     @Override
