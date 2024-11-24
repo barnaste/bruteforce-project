@@ -91,6 +91,7 @@
             ViewComponentFactory.setButtonSize(logOut, buttonSize);
             ViewComponentFactory.setButtonSize(upload, buttonSize);
             ViewComponentFactory.setButtonSize(discoverButton, buttonSize);
+            ViewComponentFactory.setButtonSize(deleteUserButton, buttonSize);
 
             deleteUserButton.setForeground(new Color(150, 0, 0));
             logOut.setForeground(new Color(150, 32, 32));
@@ -98,7 +99,7 @@
             // Make the panel on the left of the screen (Upload, mode toggle, and Log Out)
             JPanel spacer1 = new JPanel();
             spacer1.setOpaque(false);
-            spacer1.setPreferredSize(new Dimension(10, 160));
+            spacer1.setPreferredSize(new Dimension(10, 130));
 
             JPanel spacer2 = new JPanel();
             spacer2.setOpaque(false);
