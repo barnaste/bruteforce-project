@@ -77,7 +77,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     public void setLikePlantController(LikePlantController likePlantController) {
         this.likePlantController = likePlantController;
     }
-    public void displayImages(List<BufferedImage> images) {
+    public void displayImages(List<BufferedImage> images, List<ObjectId> ids) {
         // System.out.println("Displaying " + images.size() + " images for page " + currentPage);
         imagesGrid.removeAll();
 
