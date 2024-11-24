@@ -8,6 +8,7 @@
     import javax.swing.*;
 
     import entity.Plant;
+    import interface_adapter.delete_user.DeleteUserController;
     import interface_adapter.logout.LogoutController;
     import interface_adapter.main.MainState;
     import interface_adapter.main.MainViewModel;
@@ -33,6 +34,7 @@
 
         private LogoutController logoutController;
         private ModeSwitchController modeSwitchController;
+        private DeleteUserController deleteUserController;
 
         private String currentUser = "";
         private String currentGalleryMode = "";
@@ -45,6 +47,7 @@
         private final JButton upload;
         private final JButton myPlantsButton;
         private final JButton discoverButton;
+        private final JButton deleteUserButton;
 
         public MainView(MainViewModel mainViewModel, ModeSwitchViewModel modeSwitchViewModel) {
             mainViewModel.addPropertyChangeListener(this);
@@ -74,9 +77,11 @@
             logOut = ViewComponentFactory.buildButton("Log Out");
             myPlantsButton = ViewComponentFactory.buildButton("My Plants");
             discoverButton = ViewComponentFactory.buildButton("Discover");
+            deleteUserButton = ViewComponentFactory.buildButton("Delete My Account");
 
             upload.addActionListener(evt -> overlayUploadView(mainViewModel));
             logOut.addActionListener(e -> logoutController.execute(mainViewModel.getState().getUsername()));
+            deleteUserButton.addActionListener(e -> deleteUserPopup());
 
             myPlantsButton.addActionListener(e -> modeSwitchController.switchMode());
             myPlantsButton.setEnabled(false);
@@ -86,21 +91,22 @@
             ViewComponentFactory.setButtonSize(logOut, buttonSize);
             ViewComponentFactory.setButtonSize(upload, buttonSize);
             ViewComponentFactory.setButtonSize(discoverButton, buttonSize);
+            ViewComponentFactory.setButtonSize(deleteUserButton, buttonSize);
 
-            // Make the logout button red
+            deleteUserButton.setForeground(new Color(150, 0, 0));
             logOut.setForeground(new Color(150, 32, 32));
 
             // Make the panel on the left of the screen (Upload, mode toggle, and Log Out)
             JPanel spacer1 = new JPanel();
             spacer1.setOpaque(false);
-            spacer1.setPreferredSize(new Dimension(10, 160));
+            spacer1.setPreferredSize(new Dimension(10, 130));
 
             JPanel spacer2 = new JPanel();
             spacer2.setOpaque(false);
             spacer2.setPreferredSize(new Dimension(10, 20));
 
             final JPanel actionPanel = ViewComponentFactory.buildVerticalPanel(List.of(title, header, spacer2, upload,
-                    myPlantsButton, discoverButton, spacer1, logOut));
+                    myPlantsButton, discoverButton, spacer1, logOut, deleteUserButton));
 
             currentGalleryPanel = new JPanel();
 
@@ -222,6 +228,10 @@
             this.modeSwitchController = modeSwitchController;
         }
 
+        public void setDeleteUserController(DeleteUserController deleteUserController) {
+            this.deleteUserController = deleteUserController;
+        }
+
         public String getViewName() {
             return viewName;
         }
@@ -288,5 +298,40 @@
 
             currentGalleryPanel.revalidate();
             currentGalleryPanel.repaint();
+        }
+
+        private void deleteUserPopup() {
+            // Create a panel to hold the input fields
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+            // Create and add labels and text fields for username and password
+            JTextField usernameField = new JTextField(15);
+            JPasswordField passwordField = new JPasswordField(15);
+
+            panel.add(new JLabel("Enter Username:"));
+            panel.add(usernameField);
+            panel.add(Box.createVerticalStrut(10)); // Add space between components
+            panel.add(new JLabel("Enter Password:"));
+            panel.add(passwordField);
+
+            // Show the confirmation dialog
+            int result = JOptionPane.showConfirmDialog(
+                    null,
+                    panel,
+                    "Confirm Deletion",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE
+            );
+
+            // Check the user's choice
+            if (result == JOptionPane.OK_OPTION) {
+                String tempusername = usernameField.getText();
+                String temppassword = new String(passwordField.getPassword());
+                deleteUserController.execute(tempusername,temppassword);
+            }else {
+                //CAN REPLACE THIS
+                System.out.println("Deletion canceled by user.");
+            }
         }
     }

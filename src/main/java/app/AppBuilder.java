@@ -2,6 +2,8 @@ package app;
 
 import data_access.MongoUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.delete_user.DeleteUserController;
+import interface_adapter.delete_user.DeleteUserPresenter;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.main.MainViewModel;
@@ -14,6 +16,9 @@ import interface_adapter.mode_switch.ModeSwitchViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
+import use_case.delete_user.DeleteUserInputBoundry;
+import use_case.delete_user.DeleteUserInteractor;
+import use_case.delete_user.DeleteUserOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -155,6 +160,20 @@ public class AppBuilder {
 
         final LogoutController logoutController = new LogoutController(logoutInteractor);
         mainView.setLogoutController(logoutController);
+        return this;
+    }
+
+    /**
+     * Adds the Delete User Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addDeleteUserUseCase() {
+        final DeleteUserOutputBoundary deleteUserOutputBoundary = new DeleteUserPresenter(viewManagerModel,
+                mainViewModel, loginViewModel);
+        final DeleteUserInputBoundry deleteUserInteractor = new DeleteUserInteractor(deleteUserOutputBoundary);
+
+        final DeleteUserController deleteUserController = new DeleteUserController(deleteUserInteractor);
+        mainView.setDeleteUserController(deleteUserController);
         return this;
     }
 
