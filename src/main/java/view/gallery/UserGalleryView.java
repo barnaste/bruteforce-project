@@ -1,5 +1,7 @@
 package view.gallery;
 
+import data_access.MongoPlantDataAccessObject;
+import entity.Plant;
 import interface_adapter.load_user_gallery.UserGalleryController;
 import interface_adapter.load_user_gallery.UserGalleryState;
 import interface_adapter.load_user_gallery.UserGalleryViewModel;
@@ -11,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class UserGalleryView extends JPanel implements PropertyChangeListener {
     private static final int NUM_OF_COLUMNS = 5;
@@ -24,8 +27,11 @@ public class UserGalleryView extends JPanel implements PropertyChangeListener {
     private final JButton previousPageButton;
     private final JLabel pageLabel;
 
-    public UserGalleryView(UserGalleryViewModel userGalleryViewModel) {
+    private Consumer<Plant> displayPlantMap;
+
+    public UserGalleryView(UserGalleryViewModel userGalleryViewModel, Consumer<Plant> displayPlantMap) {
         userGalleryViewModel.addPropertyChangeListener(this);
+        this.displayPlantMap = displayPlantMap;
 
         setLayout(new BorderLayout());
         imagesGrid = new JPanel(new GridLayout(NUM_OF_ROWS, NUM_OF_COLUMNS, 5, 5));
@@ -80,18 +86,19 @@ public class UserGalleryView extends JPanel implements PropertyChangeListener {
             JLabel imageLabel = new JLabel();
             if (i < images.size()) {
                 BufferedImage image = images.get(i);
+                ObjectId id = ids.get(i);
                 Image scaledImage = image.getScaledInstance(160, 160, Image.SCALE_SMOOTH);
                 imageLabel.setIcon(new ImageIcon(scaledImage));
 
                 JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
                 buttonPanel.setBackground(new Color(236, 245, 233));
-                // TODO: Inject the ObjectIds into the buttons here.
-                JButton infoButton = new JButton("Info");
-                infoButton.setBackground(new Color(224, 242, 213));
-                infoButton.addActionListener(e -> {
-                    System.out.println("Info button clicked");
-                });
-                buttonPanel.add(infoButton);
+
+                JButton editButton = new JButton("Edit");
+                editButton.setBackground(new Color(224, 242, 213));
+
+                MongoPlantDataAccessObject plantAccess = MongoPlantDataAccessObject.getInstance();
+                editButton.addActionListener(e -> this.displayPlantMap.accept(plantAccess.fetchPlantByID(id)));
+                buttonPanel.add(editButton);
 
                 GridBagConstraints gbc = new GridBagConstraints();
                 gbc.gridx = 0;

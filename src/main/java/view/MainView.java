@@ -8,22 +8,16 @@
 
     import javax.swing.*;
 
-    import data_access.MongoPlantDataAccessObject;
     import entity.Plant;
-    import interface_adapter.load_public_gallery.PublicGalleryViewModel;
     import interface_adapter.logout.LogoutController;
     import interface_adapter.main.MainState;
     import interface_adapter.main.MainViewModel;
     import interface_adapter.mode_switch.ModeSwitchController;
     import interface_adapter.mode_switch.ModeSwitchState;
     import interface_adapter.mode_switch.ModeSwitchViewModel;
-    import org.bson.types.ObjectId;
-    import use_case.PlantDataAccessInterface;
     import view.gallery.PublicGalleryView;
-    import view.panel_factory.EditPlantPanelFactory;
-    import view.panel_factory.PublicGalleryFactory;
-    import view.panel_factory.PublicPlantPanelFactory;
-    import view.panel_factory.UploadPanelFactory;
+    import view.gallery.UserGalleryView;
+    import view.panel_factory.*;
 
     /**
      * The Main View, for when the user is logged into the program.
@@ -35,7 +29,8 @@
         final Dimension buttonSize = new Dimension(200, 50);
 
         private final String viewName = "main view";
-        private final PublicGalleryView publicGalleryView;
+        private PublicGalleryView publicGalleryView;
+        private UserGalleryView userGalleryView;
 
         private LogoutController logoutController;
         private ModeSwitchController modeSwitchController;
@@ -56,9 +51,6 @@
             mainViewModel.addPropertyChangeListener(this);
 
             modeSwitchViewModel.addPropertyChangeListener(this);
-
-            this.publicGalleryView = PublicGalleryFactory
-                    .createPublicGallery(this::overlayPublicPlantView);
 
             this.setLayout(new OverlayLayout(this));
             this.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
@@ -108,7 +100,6 @@
                     myPlantsButton, discoverButton, spacer1, logOut));
 
             currentGalleryPanel = new JPanel();
-            setMyPlantsPanel();
 
             mainPanel.add(ViewComponentFactory.buildHorizontalPanel(List.of(actionPanel, currentGalleryPanel)));
 
@@ -258,9 +249,16 @@
                 final MainState state = (MainState) evt.getNewValue();
                 currentUser = state.getUsername();
                 userLabel.setText("Hello " + this.currentUser + "!");
+
+                this.publicGalleryView = PublicGalleryFactory
+                        .createPublicGallery(this::overlayPublicPlantView);
+                this.userGalleryView = UserGalleryFactory.createUserGallery(this::overlayEditPlantView);
+                updateModeUI(ModeSwitchState.Mode.MY_PLANTS);
             } if (evt.getPropertyName().equals("mode_switch")) {
                 final ModeSwitchState modeSwitchState = (ModeSwitchState) evt.getNewValue();
                 updateModeUI(modeSwitchState.getCurrentMode());
+            } if (evt.getPropertyName().equals("update")) {
+
             }
         }
 
@@ -270,7 +268,7 @@
 
             currentGalleryPanel.setPreferredSize(new Dimension(840, 700));
 
-            // currentGalleryPanel.add(userGalleryView, userGalleryView.getViewName());
+            currentGalleryPanel.add(userGalleryView, userGalleryView.getViewName());
 
             currentGalleryPanel.revalidate();
             currentGalleryPanel.repaint();
