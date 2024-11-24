@@ -2,6 +2,7 @@ package view.gallery;
 
 import data_access.MongoPlantDataAccessObject;
 import entity.Plant;
+import interface_adapter.like_plant.LikePlantController;
 import interface_adapter.load_public_gallery.PublicGalleryController;
 import interface_adapter.load_public_gallery.PublicGalleryState;
 import interface_adapter.load_public_gallery.PublicGalleryViewModel;
@@ -29,8 +30,8 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     private final JButton previousPageButton;
     private final JLabel pageLabel;
 
-    // store a method to be called whenever displaying details about a plant is appropriate
     private Consumer<Plant> displayPlantMap;
+    private LikePlantController likePlantController;
 
     public PublicGalleryView(PublicGalleryViewModel publicGalleryViewModel, Consumer<Plant> displayPlantMap) {
         publicGalleryViewModel.addPropertyChangeListener(this);
@@ -68,12 +69,15 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     public void setPublicGalleryController(PublicGalleryController controller) {
         this.controller = controller;
     }
-
+  
     public void setPublicPlantViewController(PublicPlantViewController controller) {
         this.plantViewController = controller;
     }
-
-    public void displayImages(List<BufferedImage> images, List<ObjectId> ids) {
+  
+    public void setLikePlantController(LikePlantController likePlantController) {
+        this.likePlantController = likePlantController;
+    }
+    public void displayImages(List<BufferedImage> images) {
         // System.out.println("Displaying " + images.size() + " images for page " + currentPage);
         imagesGrid.removeAll();
 
@@ -114,6 +118,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
                     // This is only for testing:
                     System.out.println("Likes: " + plantAccess.fetchPlantByID(id).getNumOfLikes());
                 });
+
                 buttonPanel.add(likeButton);
 
                 GridBagConstraints gbc = new GridBagConstraints();
