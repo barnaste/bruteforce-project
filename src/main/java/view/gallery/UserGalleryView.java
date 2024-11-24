@@ -93,7 +93,7 @@ public class UserGalleryView extends JPanel implements PropertyChangeListener {
                 JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
                 buttonPanel.setBackground(new Color(236, 245, 233));
 
-                JButton editButton = new JButton("Edit");
+                JButton editButton = new JButton("More Info & Edit");
                 editButton.setBackground(new Color(224, 242, 213));
 
                 MongoPlantDataAccessObject plantAccess = MongoPlantDataAccessObject.getInstance();
@@ -134,5 +134,9 @@ public class UserGalleryView extends JPanel implements PropertyChangeListener {
         UserGalleryState state = (UserGalleryState) evt.getNewValue();
         displayImages(state.getPlantImages(), state.getPlantID());
         updateNavigation(state.getCurrentPage(), state.getTotalPages());
+    }
+
+    public void refresh() {
+        controller.loadPage(0);
     }
 }

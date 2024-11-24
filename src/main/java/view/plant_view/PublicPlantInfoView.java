@@ -1,8 +1,8 @@
 package view.plant_view;
 
 import entity.Plant;
-import interface_adapter.public_plant_view.PublicPlantViewController;
-import interface_adapter.public_plant_view.PublicPlantViewModel;
+import interface_adapter.public_plant_info.PublicPlantInfoController;
+import interface_adapter.public_plant_info.PublicPlantInfoViewModel;
 import view.ViewComponentFactory;
 
 
@@ -12,10 +12,10 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class PublicPlantView extends PlantView implements PropertyChangeListener {
-    private PublicPlantViewController controller;
+public class PublicPlantInfoView extends PlantView implements PropertyChangeListener {
+    private PublicPlantInfoController controller;
 
-    public PublicPlantView(Plant plant, BufferedImage image) {
+    public PublicPlantInfoView(Plant plant, BufferedImage image) {
         this.setImage(image);
         this.getScientificNameLabel().setText(plant.getScientificName());
         this.getNotesField().setText(plant.getComments());
@@ -31,7 +31,7 @@ public class PublicPlantView extends PlantView implements PropertyChangeListener
 
     protected JPanel createTopPanel() {
         JPanel topPanel = super.createTopPanel();
-        JButton returnBtn = ViewComponentFactory.buildButton(PublicPlantViewModel.RETURN_BUTTON_LABEL);
+        JButton returnBtn = ViewComponentFactory.buildButton(PublicPlantInfoViewModel.RETURN_BUTTON_LABEL);
         returnBtn.setBorderPainted(false);
 
         returnBtn.addActionListener((e) -> controller.escape());
@@ -45,7 +45,7 @@ public class PublicPlantView extends PlantView implements PropertyChangeListener
         return contentPanel;
     }
 
-    public void setController(PublicPlantViewController controller) {
+    public void setController(PublicPlantInfoController controller) {
         this.controller = controller;
     }
 

@@ -4,6 +4,7 @@ import data_access.MongoImageDataAccessObject;
 import data_access.MongoPlantDataAccessObject;
 import data_access.MongoUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.main.MainViewModel;
 import interface_adapter.upload.UploadController;
 import interface_adapter.upload.UploadPresenter;
 import interface_adapter.upload.confirm.UploadConfirmViewModel;
@@ -21,7 +22,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class UploadPanelFactory {
-    public static void createUploadPanel(Container parentPanel, JPanel cardPanel, Runnable escapeMap) {
+    public static void createUploadPanel(Container parentPanel, JPanel cardPanel, Runnable escapeMap, MainViewModel mainViewModel) {
         // NOTE: we extend CardLayout so that whenever the top card is swapped, the
         // ENTIRE view is redrawn, and not just the region the card occupied.
         // This is because cards may be of variant dimensions. We would otherwise
@@ -55,7 +56,8 @@ public class UploadPanelFactory {
                 uploadManagerModel,
                 selectorViewModel,
                 confirmViewModel,
-                resultViewModel
+                resultViewModel,
+                mainViewModel
         );
         UploadInputBoundary uploadInteractor = new UploadInteractor(
                 uploadOutputBoundary,

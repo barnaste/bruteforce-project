@@ -1,12 +1,12 @@
-package use_case.edit_plant;
+package use_case.user_plant_info_edit;
 
-public interface EditPlantInputBoundary {
+public interface UserPlantInfoEditInputBoundary {
 
     /**
      * Saves the plant using the provided input data.
      * @param inputData the data for the plant to be saved
      */
-    void savePlant(EditPlantInputData inputData);
+    void savePlant(UserPlantInfoEditInputData inputData);
 
     /**
      * Deletes the plant.

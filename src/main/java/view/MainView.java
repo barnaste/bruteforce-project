@@ -51,8 +51,12 @@
 
         public MainView(MainViewModel mainViewModel, ModeSwitchViewModel modeSwitchViewModel) {
             mainViewModel.addPropertyChangeListener(this);
-
             modeSwitchViewModel.addPropertyChangeListener(this);
+
+            this.publicGalleryView = PublicGalleryFactory.createPublicGallery(this::overlayPublicPlantView, mainViewModel);
+            this.userGalleryView = UserGalleryFactory.createUserGallery(plant -> {
+                overlayEditPlantView(plant, mainViewModel);
+            });
 
             this.setLayout(new OverlayLayout(this));
             this.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
@@ -75,7 +79,7 @@
             discoverButton = ViewComponentFactory.buildButton("Discover");
             deleteUserButton = ViewComponentFactory.buildButton("Delete My Account");
 
-            upload.addActionListener(evt -> overlayUploadView());
+            upload.addActionListener(evt -> overlayUploadView(mainViewModel));
             logOut.addActionListener(e -> logoutController.execute(mainViewModel.getState().getUsername()));
             deleteUserButton.addActionListener(e -> deleteUserController.execute(mainViewModel.getState().getUsername()));
 
@@ -149,20 +153,20 @@
         /**
          * Create an overlay on the main view that displays the upload use case dialog.
          */
-        public void overlayUploadView() {
+        public void overlayUploadView(MainViewModel mainViewModel) {
             // create an overlay with the created cardPanel as the popup
             JPanel overlayPanel = new JPanel();
-            UploadPanelFactory.createUploadPanel(this, overlayPanel, overlay(overlayPanel));
+            UploadPanelFactory.createUploadPanel(this, overlayPanel, overlay(overlayPanel), mainViewModel);
         }
 
         /**
          * Create an overlay on the main view that displays the edit plant use case dialog.
          * @param plant the plant object to be displayed in the panel
          */
-        public void overlayEditPlantView(Plant plant) {
+        public void overlayEditPlantView(Plant plant, MainViewModel mainViewModel) {
             // create an overlay with the created cardPanel as the popup
             JPanel overlayPanel = new JPanel();
-            EditPlantPanelFactory.createEditPlantPanel(plant, overlayPanel, overlay(overlayPanel));
+            UserPlantInfoEditPanelFactory.createEditPlantPanel(plant, overlayPanel, overlay(overlayPanel), mainViewModel);
         }
 
         /**
@@ -172,7 +176,7 @@
         public void overlayPublicPlantView(Plant plant) {
             // create an overlay with the created cardPanel as the popup
             JPanel overlayPanel = new JPanel();
-            PublicPlantPanelFactory.createPublicPlantPanel(plant, overlayPanel, overlay(overlayPanel));
+            PublicPlantInfoPanelFactory.createPublicPlantPanel(plant, overlayPanel, overlay(overlayPanel));
         }
 
         /**
@@ -258,15 +262,16 @@
                 currentUser = state.getUsername();
                 userLabel.setText("Hello " + this.currentUser + "!");
 
-                this.publicGalleryView = PublicGalleryFactory
-                        .createPublicGallery(this::overlayPublicPlantView);
-                this.userGalleryView = UserGalleryFactory.createUserGallery(this::overlayEditPlantView);
+                userGalleryView.refresh();
+                publicGalleryView.refresh();
+
                 updateModeUI(ModeSwitchState.Mode.MY_PLANTS);
-            } if (evt.getPropertyName().equals("mode_switch")) {
+            } else if (evt.getPropertyName().equals("mode_switch")) {
                 final ModeSwitchState modeSwitchState = (ModeSwitchState) evt.getNewValue();
                 updateModeUI(modeSwitchState.getCurrentMode());
-            } if (evt.getPropertyName().equals("update")) {
-
+            } else if (evt.getPropertyName().equals("refresh")) {
+                userGalleryView.refresh();
+                publicGalleryView.refresh();
             }
         }
 
