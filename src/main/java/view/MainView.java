@@ -4,7 +4,6 @@
     import java.beans.PropertyChangeEvent;
     import java.beans.PropertyChangeListener;
     import java.util.List;
-    import java.util.function.Consumer;
 
     import javax.swing.*;
 

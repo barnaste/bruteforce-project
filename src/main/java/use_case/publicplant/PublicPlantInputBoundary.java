@@ -1,6 +1,5 @@
 package use_case.publicplant;
 
-import entity.Plant;
 import org.bson.types.ObjectId;
 
 /**

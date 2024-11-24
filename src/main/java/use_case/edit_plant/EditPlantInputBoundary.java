@@ -2,14 +2,20 @@ package use_case.edit_plant;
 
 public interface EditPlantInputBoundary {
 
+    /**
+     * Saves the plant using the provided input data.
+     * @param inputData the data for the plant to be saved
+     */
     void savePlant(EditPlantInputData inputData);
 
+    /**
+     * Deletes the plant.
+     */
     void deletePlant();
 
     /**
-     * Set the method by which the upload use case is closed -- the UI for this
-     * component is owned by another component, and thus must be closed externally
-     * @param escapeMap the method called to close the upload use case
+     * Sets the method for closing the upload use case. The UI for this component is owned externally.
+     * @param escapeMap the method to close the upload use case
      */
     void setEscapeMap(Runnable escapeMap);
 

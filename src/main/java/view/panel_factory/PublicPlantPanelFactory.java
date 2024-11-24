@@ -5,7 +5,6 @@ import data_access.MongoPlantDataAccessObject;
 import entity.Plant;
 import interface_adapter.public_plant_view.PublicPlantViewController;
 import use_case.ImageDataAccessInterface;
-import use_case.PlantDataAccessInterface;
 import use_case.publicplant.PublicPlantInteractor;
 import view.plant_view.PublicPlantView;
 

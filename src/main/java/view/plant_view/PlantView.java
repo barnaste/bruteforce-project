@@ -1,7 +1,5 @@
 package view.plant_view;
 
-import interface_adapter.upload.result.UploadResultViewModel;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;

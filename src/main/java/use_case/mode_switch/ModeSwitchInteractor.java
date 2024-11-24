@@ -1,7 +1,5 @@
 package use_case.mode_switch;
 
-import interface_adapter.mode_switch.ModeSwitchViewModel;
-
 public class ModeSwitchInteractor implements ModeSwitchInputBoundary {
     private final ModeSwitchOutputBoundary outputPresenter;
 
