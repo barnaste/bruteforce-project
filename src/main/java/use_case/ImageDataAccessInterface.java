@@ -1,11 +1,11 @@
-package data_access;
+package use_case;
 
 import java.awt.image.BufferedImage;
 
 /**
  * ImageDB is an interface that defines the methods that the ImageDB class must implement.
  */
-public interface ImageDataAccessObject {
+public interface ImageDataAccessInterface {
     /**
      * A method that returns the image with the given id.
      * @param id is the unique id of the desired image

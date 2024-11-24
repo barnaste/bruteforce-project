@@ -1,12 +1,10 @@
 package use_case.upload;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import data_access.ImageDataAccessObject;
-import data_access.PlantDataAccessObject;
-import data_access.UserDataAccessObject;
+import use_case.ImageDataAccessInterface;
+import use_case.PlantDataAccessInterface;
 import entity.Plant;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -18,14 +16,13 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import javax.imageio.ImageIO;
+import use_case.UserDataAccessInterface;
 
 public class UploadInteractor implements UploadInputBoundary {
     private final UploadOutputBoundary presenter;
-    private final ImageDataAccessObject imageDataBase;
-    private final PlantDataAccessObject plantDataBase;
-    private final UserDataAccessObject userDataBase;
+    private final ImageDataAccessInterface imageDataBase;
+    private final PlantDataAccessInterface plantDataBase;
+    private final UserDataAccessInterface userDataBase;
 
     private Runnable escapeMap;
 
@@ -34,7 +31,8 @@ public class UploadInteractor implements UploadInputBoundary {
     private static final String API_URL = "https://my-api.plantnet.org/v2/identify/" + PROJECT + "?api-key=";
     private static final String API_PRIVATE_KEY = "2b1015rSKP2VVP2UzoDaqbYI"; // secret
 
-    public UploadInteractor(UploadOutputBoundary uploadOutputBoundary, ImageDataAccessObject imageDataBase, PlantDataAccessObject plantDataBase, UserDataAccessObject userDataBase) {
+    public UploadInteractor(UploadOutputBoundary uploadOutputBoundary, ImageDataAccessInterface imageDataBase,
+                            PlantDataAccessInterface plantDataBase, UserDataAccessInterface userDataBase) {
         this.presenter = uploadOutputBoundary;
         this.imageDataBase = imageDataBase;
         this.plantDataBase = plantDataBase;
@@ -116,6 +114,8 @@ public class UploadInteractor implements UploadInputBoundary {
         String imageID = imageDataBase.addImage(inputData.getImage());
         Plant plant = new Plant(
                 imageID,
+                inputData.getPlantName(),
+                inputData.getFamily(),
                 inputData.getPlantSpecies(),
                 userDataBase.getCurrentUsername(),
                 inputData.getUserNotes(),
@@ -132,9 +132,6 @@ public class UploadInteractor implements UploadInputBoundary {
 
     public void escape() {
         this.escapeMap.run();
-    }
-
-    public void execute(UploadInputData uploadInputData) {
     }
 }
 

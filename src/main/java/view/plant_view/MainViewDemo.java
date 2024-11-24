@@ -1,25 +1,35 @@
-package view.upload;
+package view.plant_view;
 
-import data_access.MongoImageDataAccessObject;
-import data_access.MongoPlantDataAccessObject;
-import data_access.MongoUserDataAccessObject;
-import data_access.UserDataAccessObject;
+import data_access.*;
+import entity.Plant;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.edit_plant.EditPlantController;
+import interface_adapter.public_plant_view.PublicPlantViewController;
 import interface_adapter.upload.UploadController;
 import interface_adapter.upload.UploadPresenter;
 import interface_adapter.upload.confirm.UploadConfirmViewModel;
 import interface_adapter.upload.result.UploadResultViewModel;
 import interface_adapter.upload.select.UploadSelectViewModel;
+import org.bson.types.ObjectId;
+import use_case.ImageDataAccessInterface;
+import use_case.PlantDataAccessInterface;
+import use_case.UserDataAccessInterface;
+import use_case.edit_plant.EditPlantInteractor;
+import use_case.publicplant.PublicPlantInteractor;
 import use_case.upload.UploadInputBoundary;
 import use_case.upload.UploadInteractor;
 import use_case.upload.UploadOutputBoundary;
+import view.ViewComponentFactory;
 import view.ViewManager;
+import view.upload.UploadConfirmView;
+import view.upload.UploadResultView;
+import view.upload.UploadSelectView;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Consumer;
 
-class MainViewDemo {
+class MainViewDemo extends JFrame {
     private final int OVERLAY_COLOR = 0x40829181;
     private final int BACKGROUND_COLOR = 0xfffffbef;
 
@@ -29,32 +39,58 @@ class MainViewDemo {
     // class attributes
     private final String viewName = "Main View Demo";
     private final JLayeredPane mainView;
+
+    private final JButton view;
+    private final JButton edit;
     private final JButton upload;
 
     public MainViewDemo() {
         mainView = new JLayeredPane();
         mainView.setLayout(new OverlayLayout(mainView));
 
-        // set up main view -- a simple canvas with an "Upload" button
-        upload = new JButton("Upload");
-        upload.setBorderPainted(true);
-        upload.setContentAreaFilled(false);
-        upload.setFocusPainted(false);
-
+        // set up main view -- a simple canvas with a "View" button
         JPanel mainPanel = new JPanel();
-        mainPanel.add(upload);
         mainPanel.setBackground(new Color(BACKGROUND_COLOR, true));
         mainView.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
 
+        view = ViewComponentFactory.buildButton("View");
+        // attach use case to the button
+        view.addActionListener(e -> {
+            // NOTICE: this is where the use case is called.
+            //  Once the main display and CA classes are implemented, the call path will be along the lines of
+            //  MainController -> MainInteractor -> MainPresenter.overlayPublicPlantView(), which signals a property
+            //  change to a class of the developer's choice.
+            //  Here, we cut straight to the overlayUploadView method.
+//            overlayPublicPlantview();
+            overlayPublicPlantView();
+        });
+        mainPanel.add(view);
+
+        edit = ViewComponentFactory.buildButton("Edit");
+        // attach use case to the button
+        edit.addActionListener(e -> {
+            // NOTICE: this is where the use case is called.
+            //  Once the main display and CA classes are implemented, the call path will be along the lines of
+            //  MainController -> MainInteractor -> MainPresenter.overlayPublicPlantView(), which signals a property
+            //  change to a class of the developer's choice.
+            //  Here, we cut straight to the overlayUploadView method.
+//            overlayPublicPlantview();
+            overlayEditView();
+        });
+        mainPanel.add(edit);
+
+        upload = ViewComponentFactory.buildButton("Upload");
         // attach use case to the button
         upload.addActionListener(e -> {
             // NOTICE: this is where the use case is called.
             //  Once the main display and CA classes are implemented, the call path will be along the lines of
-            //  MainController -> MainInteractor -> MainPresenter.overlayUploadView(), which signals a property
+            //  MainController -> MainInteractor -> MainPresenter.overlayPublicPlantView(), which signals a property
             //  change to a class of the developer's choice.
             //  Here, we cut straight to the overlayUploadView method.
+//            overlayPublicPlantview();
             overlayUploadView();
         });
+        mainPanel.add(upload);
 
         // create display frame
         JFrame frame = new JFrame(viewName);
@@ -66,12 +102,44 @@ class MainViewDemo {
         frame.setVisible(true);
     }
 
-    private void disableInteraction() {
-        upload.setEnabled(false);
+    private void overlayEditView() {
+        ImageDataAccessInterface imageAccess = MongoImageDataAccessObject.getInstance();
+        PlantDataAccessInterface plantAccess = MongoPlantDataAccessObject.getInstance();
+        Plant plant = plantAccess.fetchPlantByID(new ObjectId("673bceffb834313b084829f6"));
+
+        JPanel overlay = new JPanel();
+        EditPlantView view = new EditPlantView(plant, imageAccess.getImageFromID(plant.getImageID()));
+        overlay.add(view, imageAccess);
+
+        EditPlantInteractor interactor = new EditPlantInteractor(
+                imageAccess,
+                plantAccess
+        );
+        interactor.setPlant(plant);
+        EditPlantController controller = new EditPlantController(interactor);
+        view.setController(controller);
+
+        this.overlay(view, interactor::setEscapeMap);
     }
 
-    private void enableInteraction() {
-        upload.setEnabled(true);
+    private void overlayPublicPlantView() {
+        ImageDataAccessInterface imageAccess = MongoImageDataAccessObject.getInstance();
+        PlantDataAccessInterface plantAccess = MongoPlantDataAccessObject.getInstance();
+        Plant plant = plantAccess.fetchPlantByID(new ObjectId("673bceffb834313b084829f6"));
+
+        JPanel overlay = new JPanel();
+        PublicPlantView view = new PublicPlantView(plant, imageAccess.getImageFromID(plant.getImageID()));
+        overlay.add(view, imageAccess);
+
+        PublicPlantInteractor interactor = new PublicPlantInteractor(
+                imageAccess,
+                plantAccess
+        );
+        // interactor.setPlant(plant);
+        PublicPlantViewController controller = new PublicPlantViewController(interactor);
+        view.setController(controller);
+
+        this.overlay(view, interactor::setEscapeMap);
     }
 
     public void overlayUploadView() {
@@ -84,8 +152,8 @@ class MainViewDemo {
             @Override
             public void show(Container parent, String name) {
                 super.show(parent, name);
-                mainView.revalidate();
-                mainView.repaint();
+                revalidate();
+                repaint();
             }
         };
         cardPanel.setLayout(cardLayout);
@@ -111,12 +179,12 @@ class MainViewDemo {
                 confirmViewModel,
                 resultViewModel
         );
-        UserDataAccessObject userDataAccessObject = new MongoUserDataAccessObject();
-        userDataAccessObject.setCurrentUsername("Charles Kyle Andrews Henderson the III");
+        UserDataAccessInterface userDataAccessObject = MongoUserDataAccessObject.getInstance();
+        userDataAccessObject.setCurrentUsername("admin");
         UploadInputBoundary uploadInteractor = new UploadInteractor(
                 uploadOutputBoundary,
-                new MongoImageDataAccessObject(),
-                new MongoPlantDataAccessObject(),
+                MongoImageDataAccessObject.getInstance(),
+                MongoPlantDataAccessObject.getInstance(),
                 userDataAccessObject
         );
         UploadController controller = new UploadController(uploadInteractor);
@@ -130,6 +198,14 @@ class MainViewDemo {
 
         // create an overlay with the created cardPanel as the popup
         overlay(cardPanel, uploadInteractor::setEscapeMap);
+    }
+
+    private void disableInteraction() {
+        view.setEnabled(false);
+    }
+
+    private void enableInteraction() {
+        view.setEnabled(true);
     }
 
     public void overlay(JPanel overlayPanel, Consumer<Runnable> setOverlayEscape) {

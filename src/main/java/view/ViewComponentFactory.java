@@ -79,4 +79,18 @@ public final class ViewComponentFactory {
         }
         return image;
     }
+
+    public static void setButtonSize(AbstractButton button, Dimension buttonSize) {
+        button.setPreferredSize(buttonSize);
+        button.setMinimumSize(buttonSize);
+        button.setMaximumSize(buttonSize);
+    }
+
+    public static JToggleButton buildToggleButton(String text) {
+        JToggleButton toggleButton = new JToggleButton(text);
+        toggleButton.setBorderPainted(true);
+        toggleButton.setContentAreaFilled(false);
+        toggleButton.setFocusPainted(false);
+        return toggleButton;
+    }
 }
