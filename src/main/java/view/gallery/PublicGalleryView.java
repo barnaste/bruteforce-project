@@ -1,6 +1,7 @@
 package view.gallery;
 
 import entity.Plant;
+import interface_adapter.like_plant.LikePlantController;
 import interface_adapter.load_public_gallery.PublicGalleryController;
 import interface_adapter.load_public_gallery.PublicGalleryState;
 import interface_adapter.load_public_gallery.PublicGalleryViewModel;
@@ -27,6 +28,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
 
     // store a method to be called whenever displaying details about a plant is appropriate
     private Consumer<Plant> displayPlant;
+    private LikePlantController likePlantController;
 
     public PublicGalleryView(PublicGalleryViewModel publicGalleryViewModel, Consumer<Plant> displayPlant) {
         publicGalleryViewModel.addPropertyChangeListener(this);
@@ -65,6 +67,10 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
         this.controller = controller;
     }
 
+    public void setLikePlantController(LikePlantController likePlantController) {
+        this.likePlantController = likePlantController;
+    }
+
     public void displayImages(List<BufferedImage> images) {
         // System.out.println("Displaying " + images.size() + " images for page " + currentPage);
         imagesGrid.removeAll();
@@ -96,6 +102,12 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
                 // TODO: once you have the plant to be called, simply pass it into the accept() method below:
                 //   infoButton.addActionListener(e -> this.displayPlant.accept());
                 buttonPanel.add(infoButton);
+
+                JButton likeButton = new JButton("Like");
+                likeButton.setBackground(new Color(224, 242, 213));
+                // TODO: once you have the ID of the plant to be called, simply pass it into the execute() method below:
+                //   likeButton.addActionListener(e -> this.likePlantController.execute());
+                buttonPanel.add(likeButton);
 
                 GridBagConstraints gbc = new GridBagConstraints();
                 gbc.gridx = 0;

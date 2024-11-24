@@ -35,10 +35,7 @@
         final Dimension buttonSize = new Dimension(200, 50);
 
         private final String viewName = "main view";
-        private final MainViewModel mainViewModel;
-        private final PublicGalleryViewModel publicGalleryViewModel;
-        private final ModeSwitchViewModel modeSwitchViewModel;
-        private PublicGalleryView publicGalleryView;
+        private final PublicGalleryView publicGalleryView;
 
         private LogoutController logoutController;
         private ModeSwitchController modeSwitchController;
@@ -55,17 +52,13 @@
         private final JButton myPlantsButton;
         private final JButton discoverButton;
 
-        public MainView(MainViewModel mainViewModel, PublicGalleryViewModel publicGalleryViewModel,
-                        ModeSwitchViewModel modeSwitchViewModel) {
-            this.mainViewModel = mainViewModel;
-            this.mainViewModel.addPropertyChangeListener(this);
+        public MainView(MainViewModel mainViewModel, ModeSwitchViewModel modeSwitchViewModel) {
+            mainViewModel.addPropertyChangeListener(this);
 
-            this.modeSwitchViewModel = modeSwitchViewModel;
-            this.modeSwitchViewModel.addPropertyChangeListener(this);
+            modeSwitchViewModel.addPropertyChangeListener(this);
 
-            this.publicGalleryViewModel = publicGalleryViewModel;
             this.publicGalleryView = PublicGalleryFactory
-                    .createPublicGallery(publicGalleryViewModel, this::overlayPublicPlantView);
+                    .createPublicGallery(this::overlayPublicPlantView);
 
             this.setLayout(new OverlayLayout(this));
             this.setPreferredSize(new Dimension(DISPLAY_WIDTH, DISPLAY_HEIGHT));
