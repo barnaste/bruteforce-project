@@ -8,6 +8,7 @@
     import javax.swing.*;
 
     import entity.Plant;
+    import interface_adapter.delete_user.DeleteUserController;
     import interface_adapter.logout.LogoutController;
     import interface_adapter.main.MainState;
     import interface_adapter.main.MainViewModel;
@@ -33,6 +34,7 @@
 
         private LogoutController logoutController;
         private ModeSwitchController modeSwitchController;
+        private DeleteUserController deleteUserController;
 
         private String currentUser = "";
         private String currentGalleryMode = "";
@@ -45,6 +47,7 @@
         private final JButton upload;
         private final JButton myPlantsButton;
         private final JButton discoverButton;
+        private final JButton deleteUserButton;
 
         public MainView(MainViewModel mainViewModel, ModeSwitchViewModel modeSwitchViewModel) {
             mainViewModel.addPropertyChangeListener(this);
@@ -70,9 +73,11 @@
             logOut = ViewComponentFactory.buildButton("Log Out");
             myPlantsButton = ViewComponentFactory.buildButton("My Plants");
             discoverButton = ViewComponentFactory.buildButton("Discover");
+            deleteUserButton = ViewComponentFactory.buildButton("Delete My Account");
 
             upload.addActionListener(evt -> overlayUploadView());
             logOut.addActionListener(e -> logoutController.execute(mainViewModel.getState().getUsername()));
+            deleteUserButton.addActionListener(e -> deleteUserController.execute(mainViewModel.getState().getUsername()));
 
             myPlantsButton.addActionListener(e -> modeSwitchController.switchMode());
             myPlantsButton.setEnabled(false);
@@ -83,7 +88,7 @@
             ViewComponentFactory.setButtonSize(upload, buttonSize);
             ViewComponentFactory.setButtonSize(discoverButton, buttonSize);
 
-            // Make the logout button red
+            deleteUserButton.setForeground(new Color(150, 0, 0));
             logOut.setForeground(new Color(150, 32, 32));
 
             // Make the panel on the left of the screen (Upload, mode toggle, and Log Out)
@@ -96,7 +101,7 @@
             spacer2.setPreferredSize(new Dimension(10, 20));
 
             final JPanel actionPanel = ViewComponentFactory.buildVerticalPanel(List.of(title, header, spacer2, upload,
-                    myPlantsButton, discoverButton, spacer1, logOut));
+                    myPlantsButton, discoverButton, spacer1, logOut, deleteUserButton));
 
             currentGalleryPanel = new JPanel();
 
@@ -216,6 +221,10 @@
 
         public void setModeSwitchController(ModeSwitchController modeSwitchController) {
             this.modeSwitchController = modeSwitchController;
+        }
+
+        public void setDeleteUserController(DeleteUserController deleteUserController) {
+            this.deleteUserController = deleteUserController;
         }
 
         public String getViewName() {
