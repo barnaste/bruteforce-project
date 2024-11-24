@@ -1,5 +1,7 @@
 package use_case.publicplant;
 
+import org.bson.types.ObjectId;
+
 /**
  * Input Boundary for actions which are related to viewing an image.
  */
@@ -14,7 +16,17 @@ public interface PublicPlantInputBoundary {
     void setEscapeMap(Runnable escapeMap);
 
     /**
+     * Sets the plant for the use case.
+     */
+    void setPlant(ObjectId plantID);
+
+    /**
      * Exits the upload use case.
      */
     void escape();
+
+    /**
+     * Executes the like plant use case
+     */
+    void like();
 }

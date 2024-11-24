@@ -1,13 +1,13 @@
-package interface_adapter.load_public_gallery;
+package interface_adapter.load_user_gallery;
 
 import org.bson.types.ObjectId;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-public class PublicGalleryState {
+public class UserGalleryState {
 
-    private List<BufferedImage> plantImages;  // List of plant images for the gallery
+    private List<BufferedImage> plantImages;
     private List<ObjectId> plantID;
     private int currentPage;                  // Current page number
     private int totalPages;                   // Total number of pages
@@ -16,7 +16,9 @@ public class PublicGalleryState {
         return plantImages;
     }
 
-    public List<ObjectId> getPlantID() { return plantID; }
+    public List<ObjectId> getPlantID() {
+        return plantID;
+    }
 
     public void setPlantImages(List<BufferedImage> plantImages) {
         this.plantImages = plantImages;

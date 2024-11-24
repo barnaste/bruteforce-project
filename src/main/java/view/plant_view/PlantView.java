@@ -1,7 +1,5 @@
 package view.plant_view;
 
-import interface_adapter.upload.result.UploadResultViewModel;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -13,6 +11,8 @@ public class PlantView extends JPanel {
     private final JLabel familyLabel = new JLabel();
     private final JLabel certaintyLabel = new JLabel();
     private final JLabel ownerLabel = new JLabel();
+
+    private final JLabel likesLabel = new JLabel();
     private final JTextArea notesField = new JTextArea();
     private final JToggleButton togglePublic = new JToggleButton();
 
@@ -94,13 +94,6 @@ public class PlantView extends JPanel {
         layout.putConstraint(SpringLayout.NORTH, certaintyLabel, 15, SpringLayout.SOUTH, familyLabel);
         contentPanel.add(certaintyLabel);
 
-        ownerLabel.setFont(font.deriveFont(Font.PLAIN).deriveFont(14f));
-        layout.putConstraint(SpringLayout.WEST, ownerLabel, 20, SpringLayout.WEST, contentPanel);
-        layout.putConstraint(SpringLayout.NORTH, ownerLabel, 8, SpringLayout.SOUTH, certaintyLabel);
-        ownerLabel.setVisible(false);
-        contentPanel.add(ownerLabel);
-
-
         notesField.setRows(10);
         notesField.setFont(font.deriveFont(Font.PLAIN).deriveFont(12f));
         notesField.setLineWrap(true);
@@ -111,8 +104,20 @@ public class PlantView extends JPanel {
 
         layout.putConstraint(SpringLayout.WEST, notesScrollPane, 20, SpringLayout.WEST, contentPanel);
         layout.putConstraint(SpringLayout.EAST, notesScrollPane, -20, SpringLayout.EAST, contentPanel);
-        layout.putConstraint(SpringLayout.NORTH, notesScrollPane, 35, SpringLayout.SOUTH, certaintyLabel);
+        layout.putConstraint(SpringLayout.NORTH, notesScrollPane, 35, SpringLayout.SOUTH, familyLabel);
         contentPanel.add(notesScrollPane);
+
+        ownerLabel.setFont(font.deriveFont(Font.PLAIN).deriveFont(12f));
+        layout.putConstraint(SpringLayout.WEST, ownerLabel, 20, SpringLayout.WEST, contentPanel);
+        layout.putConstraint(SpringLayout.NORTH, ownerLabel, 15, SpringLayout.SOUTH, notesScrollPane);
+        ownerLabel.setVisible(false);
+        contentPanel.add(ownerLabel);
+
+        likesLabel.setFont(font.deriveFont(Font.PLAIN).deriveFont(13f));
+        layout.putConstraint(SpringLayout.EAST, likesLabel, -22, SpringLayout.EAST, contentPanel);
+        layout.putConstraint(SpringLayout.NORTH, likesLabel, 15, SpringLayout.SOUTH, notesScrollPane);
+        likesLabel.setVisible(false);
+        contentPanel.add(likesLabel);
 
         // default privacy to public
         togglePublic.setFont(font.deriveFont(16f));
@@ -189,6 +194,10 @@ public class PlantView extends JPanel {
     }
 
     public JLabel getOwnerLabel() { return ownerLabel; }
+
+    public JLabel getLikesLabel() {
+        return likesLabel;
+    }
 
     public JTextArea getNotesField() {
         return notesField;
