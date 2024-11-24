@@ -330,6 +330,7 @@
                 String temppassword = new String(passwordField.getPassword());
                 deleteUserController.execute(tempusername,temppassword);
             }else {
+                //CAN REPLACE THIS
                 System.out.println("Deletion canceled by user.");
             }
         }
