@@ -75,6 +75,7 @@ public class UserGalleryInteractor implements UserGalleryInputBoundary {
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            System.out.println("issue here");
         }
     }
 }

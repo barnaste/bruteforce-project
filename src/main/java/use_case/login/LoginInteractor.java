@@ -1,16 +1,17 @@
 package use_case.login;
 
 import entity.User;
+import use_case.UserDataAccessInterface;
 
 
 /**
  * The Login Interactor.
  */
 public class LoginInteractor implements LoginInputBoundary {
-    private final LoginUserDataAccessInterface userDataAccessObject;
+    private final UserDataAccessInterface userDataAccessObject;
     private final LoginOutputBoundary loginPresenter;
 
-    public LoginInteractor(LoginUserDataAccessInterface userDataAccessInterface,
+    public LoginInteractor(UserDataAccessInterface userDataAccessInterface,
                            LoginOutputBoundary loginOutputBoundary) {
         this.userDataAccessObject = userDataAccessInterface;
         this.loginPresenter = loginOutputBoundary;

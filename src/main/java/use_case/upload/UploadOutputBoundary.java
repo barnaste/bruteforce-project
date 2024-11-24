@@ -7,4 +7,6 @@ public interface UploadOutputBoundary {
     void switchToSelectView(UploadSelectOutputData outputData);
 
     void switchToResultView(UploadResultOutputData outputData);
+
+    void prepareSuccessView();
 }

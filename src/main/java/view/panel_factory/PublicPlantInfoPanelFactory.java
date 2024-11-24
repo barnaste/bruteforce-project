@@ -3,27 +3,27 @@ package view.panel_factory;
 import data_access.MongoImageDataAccessObject;
 import data_access.MongoPlantDataAccessObject;
 import entity.Plant;
-import interface_adapter.public_plant_view.PublicPlantViewController;
+import interface_adapter.public_plant_info.PublicPlantInfoController;
 import use_case.ImageDataAccessInterface;
-import use_case.publicplant.PublicPlantInteractor;
-import view.plant_view.PublicPlantView;
+import use_case.public_plant_info.PublicPlantInfoInteractor;
+import view.plant_view.PublicPlantInfoView;
 
 import javax.swing.*;
 
-public class PublicPlantPanelFactory {
+public class PublicPlantInfoPanelFactory {
     public static void createPublicPlantPanel(Plant plant, JPanel panel, Runnable escapeMap) {
         ImageDataAccessInterface imageAccess = MongoImageDataAccessObject.getInstance();
 
-        PublicPlantView view = new PublicPlantView(plant, imageAccess.getImageFromID(plant.getImageID()));
+        PublicPlantInfoView view = new PublicPlantInfoView(plant, imageAccess.getImageFromID(plant.getImageID()));
         panel.add(view);
 
-        PublicPlantInteractor interactor = new PublicPlantInteractor(
+        PublicPlantInfoInteractor interactor = new PublicPlantInfoInteractor(
                 imageAccess,
                 MongoPlantDataAccessObject.getInstance()
         );
         interactor.setEscapeMap(escapeMap);
 
-        PublicPlantViewController controller = new PublicPlantViewController(interactor);
+        PublicPlantInfoController controller = new PublicPlantInfoController(interactor);
         view.setController(controller);
     }
 }

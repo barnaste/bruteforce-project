@@ -124,6 +124,7 @@ public class UploadInteractor implements UploadInputBoundary {
         plantDataBase.addPlant(plant);
 
         this.escapeMap.run();
+        presenter.prepareSuccessView();
     }
 
     public void setEscapeMap(Runnable escapeMap) {
