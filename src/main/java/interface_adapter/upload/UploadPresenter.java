@@ -1,6 +1,7 @@
 package interface_adapter.upload;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.main.MainViewModel;
 import interface_adapter.upload.confirm.UploadConfirmState;
 import interface_adapter.upload.confirm.UploadConfirmViewModel;
 import interface_adapter.upload.result.UploadResultState;
@@ -18,15 +19,18 @@ public class UploadPresenter implements UploadOutputBoundary {
     private final UploadConfirmViewModel confirmViewModel;
     private final UploadResultViewModel resultViewModel;
     private final ViewManagerModel viewManagerModel;
+    private final MainViewModel mainViewModel;
 
     public UploadPresenter(ViewManagerModel viewManagerModel,
                            UploadSelectViewModel selectViewModel,
                            UploadConfirmViewModel confirmViewModel,
-                           UploadResultViewModel resultViewModel) {
+                           UploadResultViewModel resultViewModel,
+                           MainViewModel mainViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.selectViewModel = selectViewModel;
         this.confirmViewModel = confirmViewModel;
         this.resultViewModel = resultViewModel;
+        this.mainViewModel = mainViewModel;
     }
 
     @Override
@@ -53,6 +57,11 @@ public class UploadPresenter implements UploadOutputBoundary {
 
         viewManagerModel.setState(resultViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
+    }
+
+    @Override
+    public void prepareSuccessView() {
+        mainViewModel.firePropertyChanged("refresh");
     }
 
     @Override

@@ -5,19 +5,19 @@ import data_access.MongoPlantDataAccessObject;
 import entity.Plant;
 import interface_adapter.public_plant_view.PublicPlantViewController;
 import use_case.ImageDataAccessInterface;
-import use_case.publicplant.PublicPlantInteractor;
+import use_case.public_plant_view.PublicPlantViewInteractor;
 import view.plant_view.PublicPlantView;
 
 import javax.swing.*;
 
-public class PublicPlantPanelFactory {
+public class PublicPlantViewPanelFactory {
     public static void createPublicPlantPanel(Plant plant, JPanel panel, Runnable escapeMap) {
         ImageDataAccessInterface imageAccess = MongoImageDataAccessObject.getInstance();
 
         PublicPlantView view = new PublicPlantView(plant, imageAccess.getImageFromID(plant.getImageID()));
         panel.add(view);
 
-        PublicPlantInteractor interactor = new PublicPlantInteractor(
+        PublicPlantViewInteractor interactor = new PublicPlantViewInteractor(
                 imageAccess,
                 MongoPlantDataAccessObject.getInstance()
         );

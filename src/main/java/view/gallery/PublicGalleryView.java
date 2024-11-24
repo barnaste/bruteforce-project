@@ -69,7 +69,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     public void setPublicGalleryController(PublicGalleryController controller) {
         this.controller = controller;
     }
-  
+
     public void setPublicPlantViewController(PublicPlantViewController controller) {
         this.plantViewController = controller;
     }
@@ -113,10 +113,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
                 JButton likeButton = new JButton("Like");
                 likeButton.setBackground(new Color(224, 242, 213));
                 likeButton.addActionListener(e -> {
-                    this.plantViewController.setPlant(id);
-                    this.plantViewController.like();
-                    // This is only for testing:
-                    System.out.println("Likes: " + plantAccess.fetchPlantByID(id).getNumOfLikes());
+                    this.likePlantController.execute(id);
                 });
 
                 buttonPanel.add(likeButton);
@@ -155,5 +152,9 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
         PublicGalleryState state = (PublicGalleryState) evt.getNewValue();
         displayImages(state.getPlantImages(), state.getPlantID());
         updateNavigation(state.getCurrentPage(), state.getTotalPages());
+    }
+
+    public void refresh() {
+        controller.loadPage(0);
     }
 }

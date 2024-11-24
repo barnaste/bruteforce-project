@@ -1,19 +1,22 @@
-package use_case.edit_plant;
+package use_case.user_plant_view_edit;
 
+import interface_adapter.edit_plant.UserPlantViewEditPresenter;
 import use_case.ImageDataAccessInterface;
 import use_case.PlantDataAccessInterface;
 import entity.Plant;
 
-public class EditPlantInteractor implements EditPlantInputBoundary {
+public class UserPlantViewEditInteractor implements UserPlantViewEditInputBoundary {
     private final PlantDataAccessInterface plantDatabase;
     private final ImageDataAccessInterface imageDatabase;
+    private final UserPlantViewEditPresenter presenter;
     private Plant currentPlant;
 
     private Runnable escapeMap;
 
-    public EditPlantInteractor(ImageDataAccessInterface imageDatabase, PlantDataAccessInterface plantDatabase) {
+    public UserPlantViewEditInteractor(ImageDataAccessInterface imageDatabase, PlantDataAccessInterface plantDatabase, UserPlantViewEditPresenter presenter) {
         this.plantDatabase = plantDatabase;
         this.imageDatabase = imageDatabase;
+        this.presenter = presenter;
     }
 
     public void setPlant(Plant currentPlant) {
@@ -21,13 +24,14 @@ public class EditPlantInteractor implements EditPlantInputBoundary {
     }
 
     @Override
-    public void savePlant(EditPlantInputData inputData) {
+    public void savePlant(UserPlantViewEditInputData inputData) {
         plantDatabase.editPlant(
                 currentPlant.getFileID(),
                 inputData.isPublic(),
                 inputData.getUserNotes()
         );
 
+        presenter.prepareSuccessView();
         this.escapeMap.run();
     }
 
@@ -36,6 +40,7 @@ public class EditPlantInteractor implements EditPlantInputBoundary {
         imageDatabase.deleteImage(currentPlant.getImageID());
         plantDatabase.deletePlant(currentPlant.getFileID());
 
+        presenter.prepareSuccessView();
         this.escapeMap.run();
     }
 

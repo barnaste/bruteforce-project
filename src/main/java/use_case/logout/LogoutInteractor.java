@@ -1,13 +1,15 @@
 package use_case.logout;
 
+import use_case.UserDataAccessInterface;
+
 /**
  * The Logout Interactor.
  */
 public class LogoutInteractor implements LogoutInputBoundary {
-    private final LogoutUserDataAccessInterface userDataAccessObject;
+    private final UserDataAccessInterface userDataAccessObject;
     private final LogoutOutputBoundary logoutPresenter;
 
-    public LogoutInteractor(LogoutUserDataAccessInterface userDataAccessInterface,
+    public LogoutInteractor(UserDataAccessInterface userDataAccessInterface,
                             LogoutOutputBoundary logoutOutputBoundary) {
         this.userDataAccessObject = userDataAccessInterface;
         this.logoutPresenter = logoutOutputBoundary;
