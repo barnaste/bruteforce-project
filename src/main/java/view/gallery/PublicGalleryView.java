@@ -6,7 +6,7 @@ import interface_adapter.like_plant.LikePlantController;
 import interface_adapter.load_public_gallery.PublicGalleryController;
 import interface_adapter.load_public_gallery.PublicGalleryState;
 import interface_adapter.load_public_gallery.PublicGalleryViewModel;
-import interface_adapter.public_plant_view.PublicPlantViewController;
+import interface_adapter.public_plant_info.PublicPlantInfoController;
 import org.bson.types.ObjectId;
 
 import javax.swing.*;
@@ -23,7 +23,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     private final String viewName = "public gallery";
 
     private PublicGalleryController controller;
-    private PublicPlantViewController plantViewController;
+    private PublicPlantInfoController plantViewController;
 
     private final JPanel imagesGrid;
     private final JButton nextPageButton;
@@ -70,7 +70,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
         this.controller = controller;
     }
 
-    public void setPublicPlantViewController(PublicPlantViewController controller) {
+    public void setPublicPlantViewController(PublicPlantInfoController controller) {
         this.plantViewController = controller;
     }
   

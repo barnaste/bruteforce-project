@@ -1,10 +1,10 @@
-package use_case.public_plant_view;
+package use_case.public_plant_info;
 
 import use_case.ImageDataAccessInterface;
 import use_case.PlantDataAccessInterface;
 import entity.Plant;
 
-public class PublicPlantViewInteractor implements PublicPlantViewInputBoundary {
+public class PublicPlantInfoInteractor implements PublicPlantInfoInputBoundary {
 
     private final PlantDataAccessInterface plantDatabase;
     private final ImageDataAccessInterface imageDatabase;
@@ -14,7 +14,7 @@ public class PublicPlantViewInteractor implements PublicPlantViewInputBoundary {
     private Plant currentPlant;
     private Runnable escapeMap;
 
-    public PublicPlantViewInteractor(ImageDataAccessInterface imageDatabase, PlantDataAccessInterface plantDatabase) {
+    public PublicPlantInfoInteractor(ImageDataAccessInterface imageDatabase, PlantDataAccessInterface plantDatabase) {
         this.plantDatabase = plantDatabase;
         this.imageDatabase = imageDatabase;
     }

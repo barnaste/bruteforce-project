@@ -1,10 +1,10 @@
-package use_case.public_plant_view;
+package use_case.public_plant_info;
 
 /**
  * Input Boundary for actions which are related to viewing an image.
  */
 
-public interface PublicPlantViewInputBoundary {
+public interface PublicPlantInfoInputBoundary {
 
     /**
      * Set the method by which the upload use case is closed -- the UI for this

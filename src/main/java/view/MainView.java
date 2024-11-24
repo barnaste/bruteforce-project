@@ -161,7 +161,7 @@
         public void overlayEditPlantView(Plant plant, MainViewModel mainViewModel) {
             // create an overlay with the created cardPanel as the popup
             JPanel overlayPanel = new JPanel();
-            UserPlantViewEditPanelFactory.createEditPlantPanel(plant, overlayPanel, overlay(overlayPanel), mainViewModel);
+            UserPlantInfoEditPanelFactory.createEditPlantPanel(plant, overlayPanel, overlay(overlayPanel), mainViewModel);
         }
 
         /**
@@ -171,7 +171,7 @@
         public void overlayPublicPlantView(Plant plant) {
             // create an overlay with the created cardPanel as the popup
             JPanel overlayPanel = new JPanel();
-            PublicPlantViewPanelFactory.createPublicPlantPanel(plant, overlayPanel, overlay(overlayPanel));
+            PublicPlantInfoPanelFactory.createPublicPlantPanel(plant, overlayPanel, overlay(overlayPanel));
         }
 
         /**

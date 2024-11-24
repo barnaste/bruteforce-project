@@ -3,25 +3,25 @@ package view.panel_factory;
 import data_access.MongoImageDataAccessObject;
 import data_access.MongoPlantDataAccessObject;
 import entity.Plant;
-import interface_adapter.edit_plant.UserPlantViewEditController;
-import interface_adapter.edit_plant.UserPlantViewEditPresenter;
+import interface_adapter.user_plant_info_edit.UserPlantInfoEditController;
+import interface_adapter.user_plant_info_edit.UserPlantInfoEditPresenter;
 import interface_adapter.main.MainViewModel;
 import use_case.ImageDataAccessInterface;
-import use_case.user_plant_view_edit.UserPlantViewEditInteractor;
-import view.plant_view.EditPlantView;
+import use_case.user_plant_info_edit.UserPlantInfoEditInteractor;
+import view.plant_view.PlantInfoEditView;
 
 import javax.swing.*;
 
-public class UserPlantViewEditPanelFactory {
+public class UserPlantInfoEditPanelFactory {
     public static void createEditPlantPanel(Plant plant, JPanel panel, Runnable escapeMap, MainViewModel mainViewModel) {
         ImageDataAccessInterface imageAccess = MongoImageDataAccessObject.getInstance();
 
-        EditPlantView view = new EditPlantView(plant, imageAccess.getImageFromID(plant.getImageID()));
+        PlantInfoEditView view = new PlantInfoEditView(plant, imageAccess.getImageFromID(plant.getImageID()));
         panel.add(view);
 
-        UserPlantViewEditPresenter editPlantPresenter = new UserPlantViewEditPresenter(mainViewModel);
+        UserPlantInfoEditPresenter editPlantPresenter = new UserPlantInfoEditPresenter(mainViewModel);
 
-        UserPlantViewEditInteractor interactor = new UserPlantViewEditInteractor(
+        UserPlantInfoEditInteractor interactor = new UserPlantInfoEditInteractor(
                 imageAccess,
                 MongoPlantDataAccessObject.getInstance(),
                 editPlantPresenter
@@ -29,7 +29,7 @@ public class UserPlantViewEditPanelFactory {
         interactor.setPlant(plant);
         interactor.setEscapeMap(escapeMap);
 
-        UserPlantViewEditController controller = new UserPlantViewEditController(interactor);
+        UserPlantInfoEditController controller = new UserPlantInfoEditController(interactor);
         view.setController(controller);
     }
 }
