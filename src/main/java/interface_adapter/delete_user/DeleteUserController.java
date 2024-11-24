@@ -2,8 +2,6 @@ package interface_adapter.delete_user;
 
 import use_case.delete_user.DeleteUserInputBoundry;
 import use_case.delete_user.DeleteUserInputData;
-import use_case.delete_user.DeleteUserInteractor;
-import use_case.logout.LogoutInputData;
 
 public class DeleteUserController {
     private DeleteUserInputBoundry deleteUserUseCaseInteractor;

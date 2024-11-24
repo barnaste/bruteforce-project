@@ -8,7 +8,6 @@ import use_case.ImageDataAccessInterface;
 import use_case.PlantDataAccessInterface;
 import use_case.UserDataAccessInterface;
 
-import javax.swing.*;
 import java.util.List;
 
 
@@ -16,7 +15,6 @@ import java.util.List;
  * The Delete User Interactor.
  */
 public class DeleteUserInteractor implements DeleteUserInputBoundry {
-    //private final DeleteUserUserDataAccessInterface userDataAccessObject;
     private final PlantDataAccessInterface plantDataAccessObject;
     private final ImageDataAccessInterface imageDataAccessObject;
     private final UserDataAccessInterface userDataAccessObject;
@@ -39,7 +37,7 @@ public class DeleteUserInteractor implements DeleteUserInputBoundry {
             // Validate the input (you can add your logic here)
         if (username.equals(tempusername) && password.equals(temppassword)) {
                 // Proceed with deletion or other logic
-            /*
+
             //GRAB THE PLANTS
             List<Plant> plants = plantDataAccessObject.getUserPlants(username);
             for (Plant plant : plants) {
@@ -55,8 +53,7 @@ public class DeleteUserInteractor implements DeleteUserInputBoundry {
             final DeleteUserOutputData deleteUserOutputData = new DeleteUserOutputData(username, false);
             //GO TO WELCOME VIEW
             deleteUserPresenter.prepareSuccessView(deleteUserOutputData);
-            */
-                System.out.println("Username and password confirmed. Proceeding with deletion...");
+
         } else {
                 // Show an error message if validation fails
                 //call prepare failview
