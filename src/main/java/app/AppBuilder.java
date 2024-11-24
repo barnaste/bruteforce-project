@@ -170,8 +170,7 @@ public class AppBuilder {
     public AppBuilder addDeleteUserUseCase() {
         final DeleteUserOutputBoundary deleteUserOutputBoundary = new DeleteUserPresenter(viewManagerModel,
                 mainViewModel, loginViewModel);
-        final DeleteUserInputBoundry deleteUserInteractor = new DeleteUserInteractor(
-                userDataAccessObject, deleteUserOutputBoundary);
+        final DeleteUserInputBoundry deleteUserInteractor = new DeleteUserInteractor(deleteUserOutputBoundary);
 
         final DeleteUserController deleteUserController = new DeleteUserController(deleteUserInteractor);
         mainView.setDeleteUserController(deleteUserController);

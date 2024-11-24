@@ -1,10 +1,12 @@
 package use_case.delete_user;
 
+import data_access.MongoImageDataAccessObject;
+import data_access.MongoPlantDataAccessObject;
+import data_access.MongoUserDataAccessObject;
 import entity.Plant;
-import entity.User;
-import interface_adapter.delete_user.DeleteUserPresenter;
-import use_case.login.*;
-import use_case.logout.LogoutOutputData;
+import use_case.ImageDataAccessInterface;
+import use_case.PlantDataAccessInterface;
+import use_case.UserDataAccessInterface;
 
 import java.util.List;
 
@@ -13,12 +15,16 @@ import java.util.List;
  * The Delete User Interactor.
  */
 public class DeleteUserInteractor implements DeleteUserInputBoundry {
-    private final DeleteUserUserDataAccessInterface userDataAccessObject;
+    //private final DeleteUserUserDataAccessInterface userDataAccessObject;
+    private final PlantDataAccessInterface plantDataAccessObject;
+    private final ImageDataAccessInterface imageDataAccessObject;
+    private final UserDataAccessInterface userDataAccessObject;
     private final DeleteUserOutputBoundary deleteUserPresenter;
 
-    public DeleteUserInteractor(DeleteUserUserDataAccessInterface userDataAccessInterface,
-                                DeleteUserOutputBoundary deleteUserOutputBoundary) {
-        this.userDataAccessObject = userDataAccessInterface;
+    public DeleteUserInteractor(DeleteUserOutputBoundary deleteUserOutputBoundary) {
+        this.plantDataAccessObject = MongoPlantDataAccessObject.getInstance();
+        this.imageDataAccessObject = MongoImageDataAccessObject.getInstance();
+        this.userDataAccessObject = MongoUserDataAccessObject.getInstance();
         this.deleteUserPresenter = deleteUserOutputBoundary;
     }
 
@@ -27,12 +33,12 @@ public class DeleteUserInteractor implements DeleteUserInputBoundry {
         final String username = deleteUserInputData.getUsername();
 
         //GRAB THE PLANTS
-        List<Plant> plants = userDataAccessObject.getUserPlants(username);
+        List<Plant> plants = plantDataAccessObject.getUserPlants(username);
         for (Plant plant : plants) {
             //DELETE IMAGES
-            userDataAccessObject.deleteImage(plant.getImageID());
+            imageDataAccessObject.deleteImage(plant.getImageID());
             //THEN PLANTS
-            userDataAccessObject.deletePlant(plant.getFileID());
+            plantDataAccessObject.deletePlant(plant.getFileID());
         }
         //THEN USER
         userDataAccessObject.deleteUser(username);
