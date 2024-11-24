@@ -1,9 +1,9 @@
-package use_case.edit_plant;
+package use_case.user_plant_info_edit;
 
 /**
  * Represents the input data for editing a plant, including user notes and visibility status.
  */
-public class EditPlantInputData {
+public class UserPlantInfoEditInputData {
 
     private final String userNotes;
     private final boolean isPublic;
@@ -13,7 +13,7 @@ public class EditPlantInputData {
      * @param userNotes the notes provided by the user for the plant
      * @param isPublic the visibility status of the plant (public or private)
      */
-    public EditPlantInputData(String userNotes, boolean isPublic) {
+    public UserPlantInfoEditInputData(String userNotes, boolean isPublic) {
         this.userNotes = userNotes;
         this.isPublic = isPublic;
     }

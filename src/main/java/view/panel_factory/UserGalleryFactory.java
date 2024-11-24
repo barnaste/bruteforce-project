@@ -8,6 +8,7 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.load_user_gallery.UserGalleryController;
 import interface_adapter.load_user_gallery.UserGalleryPresenter;
 import interface_adapter.load_user_gallery.UserGalleryViewModel;
+import interface_adapter.main.MainViewModel;
 import use_case.load_user_gallery.UserGalleryInputBoundary;
 import use_case.load_user_gallery.UserGalleryInteractor;
 import use_case.load_user_gallery.UserGalleryOutputBoundary;
@@ -35,9 +36,6 @@ public class UserGalleryFactory {
         viewModel.firePropertyChanged();
         UserGalleryView userGalleryView = new UserGalleryView(viewModel, displayPlantMap);
         userGalleryView.setUserGalleryController(userGalleryController);
-
-        // Load the first page by default
-        userGalleryController.loadPage(0);
 
         return userGalleryView;
     }
