@@ -5,13 +5,17 @@ package use_case.delete_user;
  */
 public class DeleteUserInputData {
     private final String username;
-
-    public DeleteUserInputData(String username) {
+    private final String password;
+    public DeleteUserInputData(String username, String password) {
 
         this.username = username;
+        this.password = password;
     }
 
     public String getUsername() {
         return username;
+    }
+    public String getPassword() {
+        return password;
     }
 }

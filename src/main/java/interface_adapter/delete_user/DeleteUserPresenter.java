@@ -8,6 +8,8 @@ import interface_adapter.main.MainViewModel;
 import use_case.delete_user.DeleteUserOutputBoundary;
 import use_case.delete_user.DeleteUserOutputData;
 
+import javax.swing.*;
+
 /**
  * The Presenter for the DeleteUser Use Case.
  */
@@ -48,6 +50,6 @@ public class DeleteUserPresenter implements DeleteUserOutputBoundary {
 
     @Override
     public void prepareFailView(String error) {
-        // We assume that Delete User can't fail
+        JOptionPane.showMessageDialog(null, error);
     }
 }

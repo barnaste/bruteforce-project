@@ -81,7 +81,7 @@
 
             upload.addActionListener(evt -> overlayUploadView(mainViewModel));
             logOut.addActionListener(e -> logoutController.execute(mainViewModel.getState().getUsername()));
-            deleteUserButton.addActionListener(e -> deleteUserController.execute(mainViewModel.getState().getUsername()));
+            deleteUserButton.addActionListener(e -> deleteUserPopup());
 
             myPlantsButton.addActionListener(e -> modeSwitchController.switchMode());
             myPlantsButton.setEnabled(false);
@@ -298,5 +298,39 @@
 
             currentGalleryPanel.revalidate();
             currentGalleryPanel.repaint();
+        }
+
+        private void deleteUserPopup() {
+            // Create a panel to hold the input fields
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+            // Create and add labels and text fields for username and password
+            JTextField usernameField = new JTextField(15);
+            JPasswordField passwordField = new JPasswordField(15);
+
+            panel.add(new JLabel("Enter Username:"));
+            panel.add(usernameField);
+            panel.add(Box.createVerticalStrut(10)); // Add space between components
+            panel.add(new JLabel("Enter Password:"));
+            panel.add(passwordField);
+
+            // Show the confirmation dialog
+            int result = JOptionPane.showConfirmDialog(
+                    null,
+                    panel,
+                    "Confirm Deletion",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE
+            );
+
+            // Check the user's choice
+            if (result == JOptionPane.OK_OPTION) {
+                String tempusername = usernameField.getText();
+                String temppassword = new String(passwordField.getPassword());
+                deleteUserController.execute(tempusername,temppassword);
+            }else {
+                System.out.println("Deletion canceled by user.");
+            }
         }
     }

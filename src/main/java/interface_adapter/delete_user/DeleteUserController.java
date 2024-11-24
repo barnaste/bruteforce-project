@@ -16,8 +16,8 @@ public class DeleteUserController {
      * Executes the Logout Use Case.
      * @param username the username of the user who is logged in
      */
-    public void execute(String username) {
-        final DeleteUserInputData deleteUserInputData = new DeleteUserInputData(username);
+    public void execute(String username, String password) {
+        final DeleteUserInputData deleteUserInputData = new DeleteUserInputData(username, password);
         deleteUserUseCaseInteractor.execute(deleteUserInputData);
     }
 }
