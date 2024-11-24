@@ -15,7 +15,6 @@ import java.beans.PropertyChangeListener;
 public class PublicPlantView extends PlantView implements PropertyChangeListener {
     private PublicPlantViewController controller;
 
-
     public PublicPlantView(Plant plant, BufferedImage image) {
         this.setImage(image);
         this.getScientificNameLabel().setText(plant.getScientificName());
@@ -23,7 +22,11 @@ public class PublicPlantView extends PlantView implements PropertyChangeListener
         this.getNotesField().setEditable(false);
         this.getFamilyLabel().setText(plant.getFamily());
         this.getNameLabel().setText(plant.getSpecies());
+
+        getOwnerLabel().setVisible(true);
+        getLikesLabel().setVisible(true);
         this.getOwnerLabel().setText("Posted by " + plant.getOwner());
+        this.getLikesLabel().setText("\uD83D\uDC4D " + plant.getNumOfLikes());
     }
 
     protected JPanel createTopPanel() {
@@ -37,15 +40,10 @@ public class PublicPlantView extends PlantView implements PropertyChangeListener
     }
 
     protected JPanel createContentPanel() {
-
         JPanel contentPanel = super.createContentPanel();
         contentPanel.remove(this.getTogglePublic());
-        getOwnerLabel().setVisible(true);
         return contentPanel;
     }
-
-
-
 
     public void setController(PublicPlantViewController controller) {
         this.controller = controller;

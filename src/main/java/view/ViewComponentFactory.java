@@ -3,7 +3,6 @@ package view;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.awt.image.BufferedImage;
 import java.io.File;

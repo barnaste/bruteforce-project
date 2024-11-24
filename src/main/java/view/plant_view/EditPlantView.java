@@ -20,7 +20,9 @@ public class EditPlantView extends PlantView implements PropertyChangeListener {
         this.getNotesField().setText(plant.getComments());
         this.getTogglePublic().setSelected(plant.getIsPublic());
         this.getFamilyLabel().setText(plant.getFamily());
+
         this.getNameLabel().setText(plant.getSpecies());
+        this.getLikesLabel().setText("\uD83D\uDC4D " + plant.getNumOfLikes());
     }
 
     protected JPanel createTopPanel() {

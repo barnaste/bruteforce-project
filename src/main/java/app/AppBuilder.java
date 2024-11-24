@@ -1,12 +1,7 @@
 package app;
 
-import data_access.MongoImageDataAccessObject;
-import data_access.MongoPlantDataAccessObject;
 import data_access.MongoUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.load_public_gallery.PublicGalleryController;
-import interface_adapter.load_public_gallery.PublicGalleryPresenter;
-import interface_adapter.load_public_gallery.PublicGalleryViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.main.MainViewModel;
@@ -19,8 +14,6 @@ import interface_adapter.mode_switch.ModeSwitchViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import use_case.load_public_gallery.PublicGalleryInputBoundary;
-import use_case.load_public_gallery.PublicGalleryInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -32,7 +25,6 @@ import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
 import view.*;
-import view.gallery.PublicGalleryView;
 
 import javax.swing.*;
 import java.awt.*;
