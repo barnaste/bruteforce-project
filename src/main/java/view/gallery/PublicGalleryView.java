@@ -69,10 +69,6 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     public void setPublicGalleryController(PublicGalleryController controller) {
         this.controller = controller;
     }
-
-    public void setPublicPlantViewController(PublicPlantInfoController controller) {
-        this.plantViewController = controller;
-    }
   
     public void setLikePlantController(LikePlantController likePlantController) {
         this.likePlantController = likePlantController;
