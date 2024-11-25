@@ -24,8 +24,6 @@ public class DeleteUserInteractorTest {
         userDAO.setCurrentUsername(user.getUsername());
         userDAO.addUser(user);
 
-        //log in the user
-
         //make a new plant
         Plant plant = new Plant();
         ObjectId plantID = new ObjectId();
