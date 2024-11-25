@@ -1,16 +1,17 @@
 package use_case.like_plant;
 
+import entity.Plant;
 import org.bson.types.ObjectId;
 
 public class LikePlantInputData {
 
-    private final ObjectId plantID;
+    private final Plant plant;
 
-    public LikePlantInputData(ObjectId plantID) {
-        this.plantID = plantID;
+    public LikePlantInputData(Plant plant) {
+        this.plant = plant;
     }
 
-    public ObjectId getPlantID() {
-        return plantID;
+    public Plant getPlant() {
+        return plant;
     }
 }
