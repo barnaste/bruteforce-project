@@ -35,9 +35,7 @@ public class DeleteUserInteractorTest {
         PlantDataAccessInterface plantRepository = InMemoryPlantDataAccessObject.getInstance();
         plantRepository.addPlant(plant);
 
-        //plantRepository.getUserPlants(user.getUsername());
         //delete plants
-
         DeleteUserOutputBoundary successPresenter = new DeleteUserOutputBoundary() {
             @Override
             public void prepareSuccessView(DeleteUserOutputData outputData) {

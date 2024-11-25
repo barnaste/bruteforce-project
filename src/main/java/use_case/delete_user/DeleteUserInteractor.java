@@ -40,7 +40,6 @@ public class DeleteUserInteractor implements DeleteUserInputBoundry {
             // Validate the input
         if (username.equals(tempusername) && password.equals(temppassword)) {
             // Proceed with deletion
-
             //GRAB THE PLANTS
             List<Plant> plants = plantDataAccessObject.getUserPlants(username);
             for (Plant plant : plants) {
