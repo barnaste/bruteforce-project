@@ -1,5 +1,6 @@
 package interface_adapter.like_plant;
 
+import entity.Plant;
 import org.bson.types.ObjectId;
 import use_case.like_plant.LikePlantInputBoundary;
 import use_case.like_plant.LikePlantInputData;
@@ -11,8 +12,8 @@ public class LikePlantController {
         this.likePlantInteractor = likePlantInteractor;
     }
 
-    public void execute(ObjectId plantID) {
-        LikePlantInputData likePlantInputData = new LikePlantInputData(plantID);
+    public void execute(Plant plant) {
+        LikePlantInputData likePlantInputData = new LikePlantInputData(plant);
         likePlantInteractor.execute(likePlantInputData);
     }
 }
