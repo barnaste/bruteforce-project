@@ -92,19 +92,20 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
                 JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
                 buttonPanel.setBackground(new Color(236, 245, 233));
 
+                MongoPlantDataAccessObject plantAccess = MongoPlantDataAccessObject.getInstance();
+
                 JButton infoButton = new JButton("Info");
                 infoButton.setBackground(new Color(224, 242, 213));
-
-                MongoPlantDataAccessObject plantAccess = MongoPlantDataAccessObject.getInstance();
-                infoButton.addActionListener(e -> this.displayPlantMap.accept(plantAccess.fetchPlantByID(id)));
+                infoButton.addActionListener(e ->
+                        this.displayPlantMap.accept(plantAccess.fetchPlantByID(id))
+                );
                 buttonPanel.add(infoButton);
 
                 JButton likeButton = new JButton("Like");
                 likeButton.setBackground(new Color(224, 242, 213));
-                likeButton.addActionListener(e -> {
-                    this.likePlantController.execute(id);
-                });
-
+                likeButton.addActionListener(e ->
+                    this.likePlantController.execute(plantAccess.fetchPlantByID(id))
+                );
                 buttonPanel.add(likeButton);
 
                 GridBagConstraints gbc = new GridBagConstraints();
