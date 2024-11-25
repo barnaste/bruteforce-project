@@ -5,7 +5,6 @@ package interface_adapter.login;
  */
 public class LoginState {
     private String username = "";
-    private String loginError;
     private String password = "";
 
     public String getUsername() {
@@ -13,7 +12,7 @@ public class LoginState {
     }
 
     public String getLoginError() {
-        return loginError;
+        return "Username and password do not match. Try again!";
     }
 
     public String getPassword() {
@@ -22,10 +21,6 @@ public class LoginState {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public void setLoginError(String usernameError) {
-        this.loginError = usernameError;
     }
 
     public void setPassword(String password) {
