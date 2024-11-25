@@ -12,11 +12,9 @@ public class LoginInteractorTest {
         LoginInputData inputData = new LoginInputData("arz", "123");
         UserDataAccessInterface userRepository = InMemoryUserDataAccessObject.getInstance();
 
-        // For the success test, we need to add Paul to the data access repository before we log in.
         User user = new User("arz", "123");
         userRepository.addUser(user);
 
-        // This creates a successPresenter that tests whether the test case is as we expect.
         LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
@@ -48,7 +46,6 @@ public class LoginInteractorTest {
         LoginOutputBoundary failurePresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
-                // this should never be reached since the test case should fail
                 fail("Use case success is unexpected.");
             }
 
@@ -73,7 +70,6 @@ public class LoginInteractorTest {
         LoginOutputBoundary failurePresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
-                // this should never be reached since the test case should fail
                 fail("Use case success is unexpected.");
             }
 
@@ -89,5 +85,4 @@ public class LoginInteractorTest {
         LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
         interactor.execute(inputData);
     }
-
 }
