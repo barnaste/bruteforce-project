@@ -20,7 +20,7 @@ public class UploadController {
 
     public void switchToResultView(String filePath) {
         final UploadInputData uploadInputData = new UploadInputData(filePath);
-        uploadUseCaseInteractor.loadImageData(uploadInputData);
+        uploadUseCaseInteractor.uploadImageData(uploadInputData);
     }
 
     public void switchToSelectView() {
