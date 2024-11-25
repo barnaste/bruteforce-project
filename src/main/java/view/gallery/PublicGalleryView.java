@@ -69,24 +69,13 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     public void setPublicGalleryController(PublicGalleryController controller) {
         this.controller = controller;
     }
-
-    public void setPublicPlantViewController(PublicPlantInfoController controller) {
-        this.plantViewController = controller;
-    }
   
     public void setLikePlantController(LikePlantController likePlantController) {
         this.likePlantController = likePlantController;
     }
     public void displayImages(List<BufferedImage> images, List<ObjectId> ids) {
-        // System.out.println("Displaying " + images.size() + " images for page " + currentPage);
         imagesGrid.removeAll();
 
-        // Check if images is null or empty
-        if (images == null || images.isEmpty()) {
-            imagesGrid.revalidate();
-            imagesGrid.repaint();
-            return; // Exit if there are no images to display
-        }
         // Add each image with buttons below it to the grid
         for (int i = 0; i < NUM_OF_ROWS * NUM_OF_COLUMNS; i++) {
             JPanel imagePanel = new JPanel();
@@ -94,7 +83,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
             imagePanel.setLayout(new GridBagLayout());
 
             JLabel imageLabel = new JLabel();
-            if (i < images.size()) {
+            if (images != null && i < images.size()) {
                 BufferedImage image = images.get(i);
                 ObjectId id = ids.get(i);
                 Image scaledImage = image.getScaledInstance(160, 160, Image.SCALE_SMOOTH);
@@ -128,6 +117,12 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
                 gbc.insets = new Insets(2, 0, 0, 0);
                 imagePanel.add(buttonPanel, gbc);
             }
+            else if (images == null || images.isEmpty()) {
+                JPanel placeholderPanel = new JPanel();
+                placeholderPanel.setPreferredSize(new Dimension(160, 200));
+                placeholderPanel.setBackground(new Color(236, 245, 233));
+                imagePanel.add(placeholderPanel);
+            }
 
             imagesGrid.add(imagePanel);
         }
@@ -138,9 +133,10 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     }
 
     private void updateNavigation(int currentPage, int totalPages) {
+        int displayedTotalPages = Math.max(totalPages, 1);
         previousPageButton.setEnabled(currentPage > 0);
-        nextPageButton.setEnabled(currentPage < totalPages - 1);
-        pageLabel.setText("Page: " + (currentPage + 1) + " / " + totalPages);
+        nextPageButton.setEnabled(currentPage < displayedTotalPages - 1);
+        pageLabel.setText("Page: " + (currentPage + 1) + " / " + displayedTotalPages);
     }
 
     public String getViewName() {
