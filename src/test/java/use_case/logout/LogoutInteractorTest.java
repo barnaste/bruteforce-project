@@ -3,7 +3,7 @@ package use_case.logout;
 import data_access.InMemoryUserDataAccessObject;
 import entity.User;
 import org.junit.Test;
-import use_case.logout.*;
+import use_case.UserDataAccessInterface;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;

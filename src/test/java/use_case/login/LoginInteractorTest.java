@@ -1,8 +1,8 @@
-package use_case;
+package use_case.login;
 import data_access.InMemoryUserDataAccessObject;
 import entity.User;
 import org.junit.Test;
-import use_case.login.*;
+import use_case.UserDataAccessInterface;
 
 import static org.junit.Assert.*;
 
