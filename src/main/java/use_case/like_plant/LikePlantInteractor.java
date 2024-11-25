@@ -12,7 +12,10 @@ public class LikePlantInteractor implements LikePlantInputBoundary {
 
     @Override
     public void execute(LikePlantInputData input) {
+        // fetch plant id and tell DAO to like the corresponding plant
         plantDatabase.likePlant(input.getPlant().getFileID());
+
+        // prepare success view (this use case never fails)
         presenter.prepareSuccessView();
     }
 }

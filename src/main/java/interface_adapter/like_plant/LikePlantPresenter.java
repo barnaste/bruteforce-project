@@ -11,6 +11,7 @@ public class LikePlantPresenter implements LikePlantOutputBoundary {
     }
     @Override
     public void prepareSuccessView() {
+        // the main view should update the like count
         mainViewModel.firePropertyChanged("refresh");
     }
 }

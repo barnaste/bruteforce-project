@@ -11,12 +11,15 @@ import static org.junit.Assert.fail;
 public class LogoutInteractorTest {
     @Test
     public void successTest() {
-        LogoutInputData inputData = new LogoutInputData("arz");
+        // initialize DAO and add a new user to it
         UserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
-
         User user = new User("arz", "123");
         userRepository.addUser(user);
 
+        // create input data corresponding to the existing user
+        LogoutInputData inputData = new LogoutInputData("arz");
+
+        // construct temporary presenter
         LogoutOutputBoundary successPresenter = new LogoutOutputBoundary() {
             @Override
             public void prepareSuccessView(LogoutOutputData user) {
@@ -29,6 +32,7 @@ public class LogoutInteractorTest {
             }
         };
 
+        // execute use case
         LogoutInputBoundary interactor = new LogoutInteractor(userRepository, successPresenter);
         interactor.execute(inputData);
     }
