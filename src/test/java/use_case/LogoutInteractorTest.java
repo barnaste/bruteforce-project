@@ -12,7 +12,7 @@ public class LogoutInteractorTest {
     @Test
     public void successTest() {
         LogoutInputData inputData = new LogoutInputData("arz");
-        UserDataAccessInterface userRepository = InMemoryUserDataAccessObject.getInstance();
+        UserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
 
         User user = new User("arz", "123");
         userRepository.addUser(user);

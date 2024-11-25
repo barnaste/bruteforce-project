@@ -10,7 +10,7 @@ public class LoginInteractorTest {
     @Test
     public void successTest() {
         LoginInputData inputData = new LoginInputData("arz", "123");
-        UserDataAccessInterface userRepository = InMemoryUserDataAccessObject.getInstance();
+        UserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
 
         User user = new User("arz", "123");
         userRepository.addUser(user);
@@ -38,7 +38,7 @@ public class LoginInteractorTest {
     @Test
     public void failurePasswordMismatchTest() {
         LoginInputData inputData = new LoginInputData("arz", "wrong");
-        UserDataAccessInterface userRepository = InMemoryUserDataAccessObject.getInstance();
+        UserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
 
         User user = new User("arz", "123");
         userRepository.addUser(user);
@@ -65,7 +65,7 @@ public class LoginInteractorTest {
     @Test
     public void failureUserDoesNotExistTest() {
         LoginInputData inputData = new LoginInputData("arz", "123");
-        UserDataAccessInterface userRepository = InMemoryUserDataAccessObject.getInstance();
+        UserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
 
         LoginOutputBoundary failurePresenter = new LoginOutputBoundary() {
             @Override

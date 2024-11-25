@@ -18,7 +18,7 @@ public class LikePlantInteractorTest {
         plant.setFileID(plantID);
         LikePlantInputData inputData = new LikePlantInputData(plant);
 
-        PlantDataAccessInterface plantRepository = InMemoryPlantDataAccessObject.getInstance();
+        PlantDataAccessInterface plantRepository = new InMemoryPlantDataAccessObject();
         plantRepository.addPlant(plant);
 
         LikePlantOutputBoundary successPresenter = new LikePlantOutputBoundary() {

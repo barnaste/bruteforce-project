@@ -14,11 +14,7 @@ public class InMemoryPlantDataAccessObject implements PlantDataAccessInterface {
 
     private static InMemoryPlantDataAccessObject instance;
 
-    /**
-     * The private constructor -- if a new instance of this class is to be requested, it should be done
-     * by calling the getInstance() public method.
-     */
-    private InMemoryPlantDataAccessObject() {}
+    public InMemoryPlantDataAccessObject() {}
 
     /**
      * The method used to retrieve an instance of this class. This way, the DAO is maintained as a singleton.
