@@ -3,11 +3,12 @@ import data_access.InMemoryPlantDataAccessObject;
 import entity.Plant;
 import org.bson.types.ObjectId;
 import org.junit.Test;
+import static org.junit.Assert.*;
 import use_case.like_plant.LikePlantInputBoundary;
 import use_case.like_plant.LikePlantInputData;
 import use_case.like_plant.LikePlantInteractor;
 import use_case.like_plant.LikePlantOutputBoundary;
-import static org.junit.Assert.*;
+
 
 public class LikePlantInteractorTest {
     @Test
