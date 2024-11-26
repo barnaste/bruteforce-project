@@ -329,9 +329,12 @@
                 String tempusername = usernameField.getText();
                 String temppassword = new String(passwordField.getPassword());
                 deleteUserController.execute(tempusername,temppassword);
-            }else {
+            }
+            /* else {
                 //CAN REPLACE THIS
                 System.out.println("Deletion canceled by user.");
             }
+
+             */
         }
     }
