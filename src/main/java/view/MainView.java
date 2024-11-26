@@ -161,6 +161,15 @@
         }
 
         /**
+         * Create an overlay on the main view that displays the upload use case dialog.
+         */
+        public void overlayDeleteUserView() {
+            // create an overlay with the created cardPanel as the popup
+            JPanel overlayPanel = new JPanel();
+
+        }
+
+        /**
          * Create an overlay on the main view that displays the edit plant use case dialog.
          * @param plant the plant object to be displayed in the panel
          */
