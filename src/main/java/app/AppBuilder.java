@@ -1,5 +1,8 @@
 package app;
 
+import data_access.InMemoryPlantDataAccessObject;
+import data_access.MongoImageDataAccessObject;
+import data_access.MongoPlantDataAccessObject;
 import data_access.MongoUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.delete_user.DeleteUserController;
@@ -50,6 +53,9 @@ public class AppBuilder {
 
     // Data access object for user data (MongoDB)
     private final MongoUserDataAccessObject userDataAccessObject = MongoUserDataAccessObject.getInstance();
+
+    private final MongoImageDataAccessObject imageDataAccessObject = MongoImageDataAccessObject.getInstance();
+    private final MongoPlantDataAccessObject plantDataAccessObject = MongoPlantDataAccessObject.getInstance();
 
     // ViewModels for different views
     private final SignupViewModel signupViewModel = new SignupViewModel();
@@ -170,7 +176,8 @@ public class AppBuilder {
     public AppBuilder addDeleteUserUseCase() {
         final DeleteUserOutputBoundary deleteUserOutputBoundary = new DeleteUserPresenter(viewManagerModel,
                 mainViewModel, loginViewModel);
-        final DeleteUserInputBoundry deleteUserInteractor = new DeleteUserInteractor(deleteUserOutputBoundary);
+        final DeleteUserInputBoundry deleteUserInteractor = new DeleteUserInteractor(plantDataAccessObject,
+                imageDataAccessObject, userDataAccessObject, deleteUserOutputBoundary);
 
         final DeleteUserController deleteUserController = new DeleteUserController(deleteUserInteractor);
         mainView.setDeleteUserController(deleteUserController);
