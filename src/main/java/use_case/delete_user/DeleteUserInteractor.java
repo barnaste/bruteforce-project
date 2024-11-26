@@ -52,7 +52,6 @@ public class DeleteUserInteractor implements DeleteUserInputBoundry {
             userDataAccessObject.deleteUser(username);
             //LOGOUT
             userDataAccessObject.setCurrentUsername(null);
-            //final DeleteUserOutputData deleteUserOutputData = new DeleteUserOutputData(username);
             //GO TO WELCOME VIEW
             deleteUserPresenter.prepareSuccessView();
 

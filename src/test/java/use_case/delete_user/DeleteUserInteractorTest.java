@@ -55,7 +55,35 @@ public class DeleteUserInteractorTest {
     }
     @Test
     public void deleteNullUser(){
+        InMemoryPlantDataAccessObject plantDAO = InMemoryPlantDataAccessObject.getInstance();
+        InMemoryImageDataAccessObject imageDAO = InMemoryImageDataAccessObject.getInstance();
+        InMemoryUserDataAccessObject userDAO = InMemoryUserDataAccessObject.getInstance();
+        // make a new user
+        User user = new User();
+        user.setUsername("");
+        user.setPassword("");
 
+        userDAO.setCurrentUsername(user.getUsername());
+        userDAO.addUser(user);
+
+        DeleteUserInputData inputData = new DeleteUserInputData(user.getUsername(), user.getPassword());
+
+
+        //delete plants
+        DeleteUserOutputBoundary successPresenter = new DeleteUserOutputBoundary() {
+            @Override
+            public void prepareSuccessView() {
+                assertFalse(userDAO.existsByUsername("test"));
+            }
+
+            @Override
+            public void prepareFailView(String errorMessage) {
+                fail();
+            }
+        };
+
+        DeleteUserInputBoundry interactor = new DeleteUserInteractor(plantDAO, imageDAO, userDAO, successPresenter);
+        interactor.execute(inputData);
     }
     @Test
     public void deleteUserFailView(){
@@ -74,7 +102,7 @@ public class DeleteUserInteractorTest {
         Plant plant = new Plant();
         ObjectId plantID = new ObjectId();
         plant.setFileID(plantID);
-        DeleteUserInputData inputData = new DeleteUserInputData(user.getUsername(), user.getPassword());
+        DeleteUserInputData inputData = new DeleteUserInputData("wrong username", "wrong password");
 
         //upload the plant to the database under the user
         plant.setOwner(user.getUsername());
@@ -85,13 +113,12 @@ public class DeleteUserInteractorTest {
         DeleteUserOutputBoundary successPresenter = new DeleteUserOutputBoundary() {
             @Override
             public void prepareSuccessView() {
-                assertFalse(userDAO.existsByUsername("test"));
-                assertEquals(plantRepository.getNumberOfUserPlants("test"), 0);
+                fail();
             }
 
             @Override
             public void prepareFailView(String errorMessage) {
-                asser
+                return;
             }
         };
 
