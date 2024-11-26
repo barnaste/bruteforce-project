@@ -11,10 +11,6 @@ public class LoginState {
         return username;
     }
 
-    public String getLoginError() {
-        return "Username and password do not match. Try again!";
-    }
-
     public String getPassword() {
         return password;
     }
@@ -26,5 +22,4 @@ public class LoginState {
     public void setPassword(String password) {
         this.password = password;
     }
-
 }
