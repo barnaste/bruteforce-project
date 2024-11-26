@@ -1,4 +1,5 @@
-package use_case;
+package use_case.load_public_gallery;
 
 public class PublicGalleryInteractorTest {
+
 }
