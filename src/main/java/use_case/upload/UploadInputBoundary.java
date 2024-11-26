@@ -25,8 +25,8 @@ public interface UploadInputBoundary {
     void uploadImageData(UploadInputData uploadInputData);
 
     /**
-     * Executes the upload use case. That is, upload the input as an image into storage.
-     * @param uploadInputData the input image data
+     * Save the information given in the input data as a new Plant within storage.
+     * @param uploadInputData the input data about the image and the plant within
      */
     void saveUpload(UploadSaveInputData uploadInputData);
 
