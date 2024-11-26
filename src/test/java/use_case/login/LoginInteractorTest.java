@@ -7,6 +7,7 @@ import use_case.UserDataAccessInterface;
 import static org.junit.Assert.*;
 
 public class LoginInteractorTest {
+
     @Test
     public void successTest() {
         // add user to repo
