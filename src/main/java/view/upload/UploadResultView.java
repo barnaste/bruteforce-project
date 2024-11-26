@@ -25,10 +25,7 @@ public class UploadResultView extends PlantView implements PropertyChangeListene
         viewModel.addPropertyChangeListener(this);
     }
 
-    /**
-     * Create the panel seen at the top of the result view, containing the return button.
-     * @return a reference to the created panel
-     */
+    @Override
     protected JPanel createTopPanel() {
         JPanel topPanel = super.createTopPanel();
         JButton returnBtn = ViewComponentFactory.buildButton(UploadResultViewModel.RETURN_BUTTON_LABEL);
@@ -40,11 +37,10 @@ public class UploadResultView extends PlantView implements PropertyChangeListene
     }
 
     /**
-     * Create the panel within which information about the plant is displayed, containing details
-     * such as the plant name and family, as well as user-modifiable fields such as the privacy
-     * toggle and a text area for user notes.
+     * Create the panel within which user action buttons save and discard are displayed.
      * @return a reference to the created panel
      */
+    @Override
     protected JPanel createActionPanel() {
         JPanel actionPanel = super.createActionPanel();
 
