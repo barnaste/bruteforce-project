@@ -3,7 +3,7 @@ package use_case.signup;
 import data_access.InMemoryUserDataAccessObject;
 import entity.User;
 import org.junit.Test;
-import use_case.signup.*;
+import use_case.UserDataAccessInterface;
 
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.*;

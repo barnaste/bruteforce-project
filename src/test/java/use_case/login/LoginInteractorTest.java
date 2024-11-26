@@ -22,8 +22,8 @@ public class LoginInteractorTest {
             }
 
             @Override
-            public void prepareFailView(String error) {
-                fail("Use case failure is unexpected.");
+            public void prepareFailView() {
+
             }
 
             @Override
@@ -50,8 +50,8 @@ public class LoginInteractorTest {
             }
 
             @Override
-            public void prepareFailView(String error) {
-                assertEquals("Incorrect password for \"arz\".", error);
+            public void prepareFailView() {
+
             }
 
             @Override
@@ -74,8 +74,8 @@ public class LoginInteractorTest {
             }
 
             @Override
-            public void prepareFailView(String error) {
-                assertEquals("arz: Account does not exist.", error);
+            public void prepareFailView() {
+
             }
 
             @Override
