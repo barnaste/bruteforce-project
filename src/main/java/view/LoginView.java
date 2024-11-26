@@ -59,10 +59,14 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                                 currentState.getPassword()
                         );
                     }
+                    clearFields();
                 }
         );
 
-        cancel.addActionListener(this);
+        cancel.addActionListener(evt -> {
+            loginController.switchToStartView();
+            clearFields();
+        });
 
         usernameInputField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -131,16 +135,14 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        final LoginState state = (LoginState) evt.getNewValue();
         if (evt.getPropertyName().equals("error")) {
-            setFields(state);
-            JOptionPane.showMessageDialog(this, state.getLoginError());
+            JOptionPane.showMessageDialog(this, LoginViewModel.LOGIN_ERROR_MESSAGE);
         }
     }
 
-    private void setFields(LoginState state) {
-        usernameInputField.setText(state.getUsername());
-        passwordInputField.setText(state.getPassword());
+    private void clearFields() {
+        usernameInputField.setText("");
+        passwordInputField.setText("");
     }
 
 

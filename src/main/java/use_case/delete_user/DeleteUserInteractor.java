@@ -1,8 +1,5 @@
 package use_case.delete_user;
 
-import data_access.MongoImageDataAccessObject;
-import data_access.MongoPlantDataAccessObject;
-import data_access.MongoUserDataAccessObject;
 import entity.Plant;
 import use_case.ImageDataAccessInterface;
 import use_case.PlantDataAccessInterface;
@@ -14,11 +11,13 @@ import java.util.List;
 /**
  * The Delete User Interactor.
  */
-public class DeleteUserInteractor implements DeleteUserInputBoundry {
+public class DeleteUserInteractor implements DeleteUserInputBoundary {
     private final PlantDataAccessInterface plantDataAccessObject;
     private final ImageDataAccessInterface imageDataAccessObject;
     private final UserDataAccessInterface userDataAccessObject;
     private final DeleteUserOutputBoundary deleteUserPresenter;
+
+    private Runnable escapeMap;
 
     public DeleteUserInteractor(PlantDataAccessInterface plantDataAccessObject,
                                 ImageDataAccessInterface imageDataAccessObject,
@@ -37,7 +36,7 @@ public class DeleteUserInteractor implements DeleteUserInputBoundry {
         String username = userDataAccessObject.getCurrentUsername();
         String password = userDataAccessObject.getUser(username).getPassword();
 
-            // Validate the input
+        // Validate the input
         if (username.equals(tempusername) && password.equals(temppassword)) {
             // Proceed with deletion
             //GRAB THE PLANTS
@@ -53,15 +52,22 @@ public class DeleteUserInteractor implements DeleteUserInputBoundry {
             //LOGOUT
             userDataAccessObject.setCurrentUsername(null);
             final DeleteUserOutputData deleteUserOutputData = new DeleteUserOutputData(username, false);
+
             //GO TO WELCOME VIEW
             deleteUserPresenter.prepareSuccessView(deleteUserOutputData);
-
+            escape();
         } else {
-                // Show an error message if validation fails
-                //call prepare failview
-                deleteUserPresenter.prepareFailView("Invalid credentials. Try again.");
+            // Show an error message if validation fails
+            //call prepare failview
+            deleteUserPresenter.prepareFailView("Invalid credentials. Try again.");
         }
+    }
 
+    public void setEscapeMap(Runnable escapeMap) {
+        this.escapeMap = escapeMap;
+    }
 
+    public void escape() {
+        this.escapeMap.run();
     }
 }
