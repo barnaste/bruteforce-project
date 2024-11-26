@@ -54,10 +54,9 @@ public class DeleteUserInteractor implements DeleteUserInputBoundary {
             //final DeleteUserOutputData deleteUserOutputData = new DeleteUserOutputData(username);
             //GO TO WELCOME VIEW
             deleteUserPresenter.prepareSuccessView();
-
+            escape();
         } else {
             // Show an error message if validation fails
-            //call prepare failview
             deleteUserPresenter.prepareFailView("Invalid credentials. Try again.");
         }
     }
