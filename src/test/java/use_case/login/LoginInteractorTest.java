@@ -7,6 +7,7 @@ import use_case.UserDataAccessInterface;
 import static org.junit.Assert.*;
 
 public class LoginInteractorTest {
+
     @Test
     public void successTest() {
         LoginInputData inputData = new LoginInputData("arz", "123");
@@ -19,6 +20,11 @@ public class LoginInteractorTest {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
                 assertEquals("arz", user.getUsername());
+            }
+
+            @Override
+            public void prepareFailView() {
+                fail("Use case failure is unexpected.");
             }
 
             @Override
