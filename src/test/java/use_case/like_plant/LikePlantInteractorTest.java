@@ -25,12 +25,9 @@ public class LikePlantInteractorTest {
         LikePlantInputData inputData = new LikePlantInputData(plant);
 
         // construct testing presenter
-        LikePlantOutputBoundary successPresenter = new LikePlantOutputBoundary() {
-            @Override
-            public void prepareSuccessView() {
-                // the like count should increase from 0 to 1
-                assertEquals(1, plantRepository.fetchPlantByID(plantID).getNumOfLikes());
-            }
+        LikePlantOutputBoundary successPresenter = () -> {
+            // the like count should increase from 0 to 1
+            assertEquals(1, plantRepository.fetchPlantByID(plantID).getNumOfLikes());
         };
 
         // execute use case
