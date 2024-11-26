@@ -9,8 +9,6 @@ import use_case.ImageDataAccessInterface;
 import use_case.PlantDataAccessInterface;
 import entity.Plant;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
@@ -128,7 +126,7 @@ public class UploadInteractor implements UploadInputBoundary {
         plantDataBase.addPlant(plant);
 
         this.escapeMap.run();
-        presenter.prepareSuccessView();
+        presenter.notifyUploadComplete();
     }
 
     @Override

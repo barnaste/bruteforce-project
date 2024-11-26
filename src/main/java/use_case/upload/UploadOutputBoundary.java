@@ -8,25 +8,26 @@ public interface UploadOutputBoundary {
 
     /**
      * Change the display to the confirm view, showing the image selected by the user.
-     * @param outputData
+     * @param outputData the output data containing information about the image to display
      */
     void switchToConfirmView(UploadConfirmOutputData outputData);
 
     /**
      * Change the display to the select view, where the user may choose an image.
-     * @param outputData
+     * @param outputData the output data containing information about any relevant failures
      */
     void switchToSelectView(UploadSelectOutputData outputData);
 
     /**
      * Change the display to the results view, where the user sees details about the
      * plant uploaded in this use case.
-     * @param outputData
+     * @param outputData the output data containing information about the image to display in
+     *                   the results view, as well as details about the plant in the image
      */
     void switchToResultView(UploadResultOutputData outputData);
 
     /**
      * Notify the display that the Upload use case terminated and processes have finished.
      */
-    void prepareSuccessView();
+    void notifyUploadComplete();
 }

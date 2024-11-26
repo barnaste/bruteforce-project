@@ -6,6 +6,10 @@ import use_case.upload.UploadSaveInputData;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * The Controller for the Upload use case. This class packages user input and
+ * sends it to the appropriate interactor method.
+ */
 public class UploadController {
     private final UploadInputBoundary uploadUseCaseInteractor;
 
