@@ -56,4 +56,6 @@ public class InMemoryUserDataAccessObject implements use_case.UserDataAccessInte
 
     @Override
     public boolean deleteUser(String username) {return users.remove(username) != null;}
+
+    public void deleteAll() {users.clear();}
 }
