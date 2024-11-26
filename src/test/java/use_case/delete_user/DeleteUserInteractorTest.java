@@ -50,7 +50,7 @@ public class DeleteUserInteractorTest {
             }
         };
 
-        DeleteUserInputBoundry interactor = new DeleteUserInteractor(plantDAO, imageDAO, userDAO, successPresenter);
+        DeleteUserInputBoundary interactor = new DeleteUserInteractor(plantDAO, imageDAO, userDAO, successPresenter);
         interactor.execute(inputData);
     }
 }

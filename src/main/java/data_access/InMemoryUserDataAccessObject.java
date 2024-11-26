@@ -23,7 +23,7 @@ public class InMemoryUserDataAccessObject implements use_case.UserDataAccessInte
      * The private constructor -- if a new instance of this class is to be requested, it should be done
      * by calling the getInstance() public method.
      */
-    private InMemoryUserDataAccessObject() {}
+    public InMemoryUserDataAccessObject() {}
 
     /**
      * The method used to retrieve an instance of this class. This way, the DAO is maintained as a singleton.
