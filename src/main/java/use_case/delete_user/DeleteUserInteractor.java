@@ -20,10 +20,13 @@ public class DeleteUserInteractor implements DeleteUserInputBoundry {
     private final UserDataAccessInterface userDataAccessObject;
     private final DeleteUserOutputBoundary deleteUserPresenter;
 
-    public DeleteUserInteractor(DeleteUserOutputBoundary deleteUserOutputBoundary) {
-        this.plantDataAccessObject = MongoPlantDataAccessObject.getInstance();
-        this.imageDataAccessObject = MongoImageDataAccessObject.getInstance();
-        this.userDataAccessObject = MongoUserDataAccessObject.getInstance();
+    public DeleteUserInteractor(PlantDataAccessInterface plantDataAccessObject,
+                                ImageDataAccessInterface imageDataAccessObject,
+                                UserDataAccessInterface userDataAccessObject,
+                                DeleteUserOutputBoundary deleteUserOutputBoundary) {
+        this.plantDataAccessObject = plantDataAccessObject;
+        this.imageDataAccessObject = imageDataAccessObject;
+        this.userDataAccessObject = userDataAccessObject;
         this.deleteUserPresenter = deleteUserOutputBoundary;
     }
 
@@ -34,10 +37,9 @@ public class DeleteUserInteractor implements DeleteUserInputBoundry {
         String username = userDataAccessObject.getCurrentUsername();
         String password = userDataAccessObject.getUser(username).getPassword();
 
-            // Validate the input (you can add your logic here)
+            // Validate the input
         if (username.equals(tempusername) && password.equals(temppassword)) {
-                // Proceed with deletion or other logic
-
+            // Proceed with deletion
             //GRAB THE PLANTS
             List<Plant> plants = plantDataAccessObject.getUserPlants(username);
             for (Plant plant : plants) {
