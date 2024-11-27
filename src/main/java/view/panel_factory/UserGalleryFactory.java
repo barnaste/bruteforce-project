@@ -23,20 +23,26 @@ public class UserGalleryFactory {
      * @return the user gallery view
      */
     public static UserGalleryView createUserGallery(Consumer<Plant> displayPlantMap) {
+        // Get instances of data access objects for plants, images, and users
         MongoPlantDataAccessObject plantDataAccessObject = MongoPlantDataAccessObject.getInstance();
         MongoImageDataAccessObject imageDataAccessObject = MongoImageDataAccessObject.getInstance();
         MongoUserDataAccessObject userDataAccessObject = MongoUserDataAccessObject.getInstance();
+
+        // Initialize the view model and gallery manager model
         UserGalleryViewModel viewModel = new UserGalleryViewModel();
         ViewManagerModel galleryManagerModel = new ViewManagerModel();
 
+        // Set up the presenter and interactor for the user gallery
         UserGalleryOutputBoundary galleryPresenter = new UserGalleryPresenter(viewModel, galleryManagerModel);
-        UserGalleryInputBoundary userGalleryInteractor = new UserGalleryInteractor(plantDataAccessObject, galleryPresenter , imageDataAccessObject, userDataAccessObject);
+        UserGalleryInputBoundary userGalleryInteractor = new UserGalleryInteractor(plantDataAccessObject, galleryPresenter, imageDataAccessObject, userDataAccessObject);
 
+        // Create the controller and bind it to the user gallery view
         UserGalleryController userGalleryController = new UserGalleryController(userGalleryInteractor);
-        viewModel.firePropertyChanged();
+        viewModel.firePropertyChanged();  // Notify the view model of changes
         UserGalleryView userGalleryView = new UserGalleryView(viewModel, displayPlantMap);
         userGalleryView.setUserGalleryController(userGalleryController);
 
+        // Return the fully initialized user gallery view
         return userGalleryView;
     }
 }

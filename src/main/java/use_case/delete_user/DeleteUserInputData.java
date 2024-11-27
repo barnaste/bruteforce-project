@@ -8,7 +8,6 @@ public class DeleteUserInputData {
     private final String password;
 
     public DeleteUserInputData(String username, String password) {
-
         this.username = username;
         this.password = password;
     }

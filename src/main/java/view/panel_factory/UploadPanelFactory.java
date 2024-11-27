@@ -22,42 +22,51 @@ import javax.swing.*;
 import java.awt.*;
 
 public class UploadPanelFactory {
+    /**
+     * Creates and configures the upload panel for the application, which includes multiple views
+     * (selection, confirmation, result) managed by a `CardLayout`. It sets up the layout,
+     * initializes the views and controllers, and binds the interactor to manage upload functionality.
+     *
+     * @param parentPanel The parent container that holds the upload panel.
+     * @param cardPanel The `JPanel` that contains the views managed by `CardLayout`.
+     * @param escapeMap A `Runnable` to handle escape actions, such as canceling the upload process.
+     * @param mainViewModel The `MainViewModel` used to manage the application's state during the upload process.
+     */
     public static void createUploadPanel(Container parentPanel, JPanel cardPanel, Runnable escapeMap, MainViewModel mainViewModel) {
-        // NOTE: we extend CardLayout so that whenever the top card is swapped, the
-        // ENTIRE view is redrawn, and not just the region the card occupied.
-        // This is because cards may be of variant dimensions. We would otherwise
-        // have artefacts from previous cards if they were of larger dimensions.
+        // NOTE: We extend CardLayout so the entire view is redrawn when the card is swapped.
+        // This avoids artefacts from previous cards, especially if they have variant dimensions.
         CardLayout cardLayout = new CardLayout() {
             @Override
             public void show(Container parent, String name) {
                 super.show(parent, name);
-                parentPanel.revalidate();
-                parentPanel.repaint();
+                parentPanel.revalidate();  // Revalidate the parent container
+                parentPanel.repaint();     // Repaint to avoid artefacts
             }
         };
         cardPanel.setLayout(cardLayout);
 
+        // Initialize and add the UploadSelectView to the card panel
         UploadSelectViewModel selectorViewModel = new UploadSelectViewModel();
         UploadSelectView selectorView = new UploadSelectView(selectorViewModel);
         cardPanel.add(selectorView, selectorView.getViewName());
 
+        // Initialize and add the UploadConfirmView to the card panel
         UploadConfirmViewModel confirmViewModel = new UploadConfirmViewModel();
         UploadConfirmView confirmView = new UploadConfirmView(confirmViewModel);
         cardPanel.add(confirmView, confirmView.getViewName());
 
+        // Initialize and add the UploadResultView to the card panel
         UploadResultViewModel resultViewModel = new UploadResultViewModel();
         UploadResultView resultView = new UploadResultView(resultViewModel);
         cardPanel.add(resultView, resultView.getViewName());
 
+        // Initialize the ViewManager for handling view transitions
         ViewManagerModel uploadManagerModel = new ViewManagerModel();
         new ViewManager(cardPanel, cardLayout, uploadManagerModel);
 
+        // Set up the UploadOutputBoundary and Interactor
         UploadOutputBoundary uploadOutputBoundary = new UploadPresenter(
-                uploadManagerModel,
-                selectorViewModel,
-                confirmViewModel,
-                resultViewModel,
-                mainViewModel
+                uploadManagerModel, selectorViewModel, confirmViewModel, resultViewModel, mainViewModel
         );
         UploadInputBoundary uploadInteractor = new UploadInteractor(
                 uploadOutputBoundary,
@@ -66,12 +75,14 @@ public class UploadPanelFactory {
                 MongoUserDataAccessObject.getInstance()
         );
         uploadInteractor.setEscapeMap(escapeMap);
-        UploadController controller = new UploadController(uploadInteractor);
 
+        // Initialize the UploadController and link it to all views
+        UploadController controller = new UploadController(uploadInteractor);
         selectorView.setController(controller);
         confirmView.setController(controller);
         resultView.setController(controller);
 
+        // Set initial state and notify the view manager
         uploadManagerModel.setState(selectorView.getViewName());
         uploadManagerModel.firePropertyChanged();
     }
