@@ -23,7 +23,6 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     private final String viewName = "public gallery";
 
     private PublicGalleryController controller;
-    private PublicPlantInfoController plantViewController;
 
     private final JPanel imagesGrid;
     private final JButton nextPageButton;

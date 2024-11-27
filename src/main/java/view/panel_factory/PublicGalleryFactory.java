@@ -20,9 +20,17 @@ import java.util.function.Consumer;
 
 public class PublicGalleryFactory {
     /**
-     * Create and return a public gallery view.
-     * @param displayPlantMap the method to be called when the public gallery wishes to display a plant
-     * @return the public gallery view
+     * Creates and returns a PublicGalleryView, which represents the public gallery of plants.
+     * This method sets up all the necessary components such as the ViewModel, Controller,
+     * Interactor, and Presenter to support the functionality of displaying and interacting
+     * with the public gallery, including liking plants.
+     *
+     * @param displayPlantMap The method to be called when the public gallery wishes to
+     *                        display a plant. It takes a `Plant` object as an argument.
+     * @param mainViewModel The MainViewModel used for managing the application's state
+     *                      related to liking plants.
+     * @return The PublicGalleryView, fully initialized and ready to be displayed, with
+     *         the necessary controllers and interactors wired up for functionality.
      */
     public static PublicGalleryView createPublicGallery(Consumer<Plant> displayPlantMap, MainViewModel mainViewModel) {
         MongoPlantDataAccessObject plantDataAccessObject = MongoPlantDataAccessObject.getInstance();

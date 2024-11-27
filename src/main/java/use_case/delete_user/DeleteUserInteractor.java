@@ -7,7 +7,6 @@ import use_case.UserDataAccessInterface;
 
 import java.util.List;
 
-
 /**
  * The Delete User Interactor.
  */
@@ -19,6 +18,7 @@ public class DeleteUserInteractor implements DeleteUserInputBoundary {
 
     private Runnable escapeMap;
 
+    // Constructor initializes DAOs and presenter
     public DeleteUserInteractor(PlantDataAccessInterface plantDataAccessObject,
                                 ImageDataAccessInterface imageDataAccessObject,
                                 UserDataAccessInterface userDataAccessObject,
@@ -36,37 +36,40 @@ public class DeleteUserInteractor implements DeleteUserInputBoundary {
         String username = userDataAccessObject.getCurrentUsername();
         String password = userDataAccessObject.getUser(username).getPassword();
 
-        // Validate the input
+        // Validate provided credentials
         if (username.equals(tempusername) && password.equals(temppassword)) {
-            // Proceed with deletion
-            //GRAB THE PLANTS
+            // Proceed with deletion if credentials match
+
+            // Retrieve all plants associated with the user
             List<Plant> plants = plantDataAccessObject.getUserPlants(username);
             for (Plant plant : plants) {
-                //DELETE IMAGES
+                // Delete associated images first
                 imageDataAccessObject.deleteImage(plant.getImageID());
-                //THEN PLANTS
+                // Then delete plant data
                 plantDataAccessObject.deletePlant(plant.getFileID());
             }
-            //THEN USER
-            userDataAccessObject.deleteUser(username);
-            //LOGOUT
-            userDataAccessObject.setCurrentUsername(null);
-            final DeleteUserOutputData deleteUserOutputData = new DeleteUserOutputData(username, false);
 
-            //GO TO WELCOME VIEW
+            // Delete user data and log out
+            userDataAccessObject.deleteUser(username);
+            userDataAccessObject.setCurrentUsername(null);
+
+            // Prepare success output data
+            final DeleteUserOutputData deleteUserOutputData = new DeleteUserOutputData(username, false);
+            // Show success view
             deleteUserPresenter.prepareSuccessView(deleteUserOutputData);
-            escape();
+            escape(); // Prepare the mainView for the next user that logs in.
         } else {
-            // Show an error message if validation fails
-            //call prepare failview
+            // Credentials mismatch: show failure message
             deleteUserPresenter.prepareFailView("Invalid credentials. Try again.");
         }
     }
 
+    // Set escape action (used to navigate away from the current view)
     public void setEscapeMap(Runnable escapeMap) {
         this.escapeMap = escapeMap;
     }
 
+    // Trigger escape action to exit or navigate
     public void escape() {
         this.escapeMap.run();
     }
