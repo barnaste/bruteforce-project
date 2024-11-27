@@ -9,16 +9,18 @@ import java.util.List;
 
 
 /**
- * The Delete User Interactor.
+ * The Delete User Interactor handles the logic for deleting a user's account,
+ * including their plants and associated images, after validating their credentials.
  */
 public class DeleteUserInteractor implements DeleteUserInputBoundary {
-    private final PlantDataAccessInterface plantDataAccessObject;
-    private final ImageDataAccessInterface imageDataAccessObject;
-    private final UserDataAccessInterface userDataAccessObject;
-    private final DeleteUserOutputBoundary deleteUserPresenter;
+    private final PlantDataAccessInterface plantDataAccessObject;  // DAO for plant data operations
+    private final ImageDataAccessInterface imageDataAccessObject;  // DAO for image data operations
+    private final UserDataAccessInterface userDataAccessObject;    // DAO for user data operations
+    private final DeleteUserOutputBoundary deleteUserPresenter;    // Presenter for displaying the result
 
-    private Runnable escapeMap;
+    private Runnable escapeMap;  // Runnable to handle escape action (navigation)
 
+    // Constructor to initialize the necessary DAOs and presenter for the delete operation
     public DeleteUserInteractor(PlantDataAccessInterface plantDataAccessObject,
                                 ImageDataAccessInterface imageDataAccessObject,
                                 UserDataAccessInterface userDataAccessObject,
@@ -31,40 +33,44 @@ public class DeleteUserInteractor implements DeleteUserInputBoundary {
 
     @Override
     public void execute(DeleteUserInputData deleteUserInputData) {
-        final String tempusername = deleteUserInputData.getUsername();
-        final String temppassword = deleteUserInputData.getPassword();
-        String username = userDataAccessObject.getCurrentUsername();
-        String password = userDataAccessObject.getUser(username).getPassword();
+        final String tempusername = deleteUserInputData.getUsername();  // User-provided username
+        final String temppassword = deleteUserInputData.getPassword();  // User-provided password
+        String username = userDataAccessObject.getCurrentUsername();  // Current logged-in username
+        String password = userDataAccessObject.getUser(username).getPassword();  // Current user's password
 
-        // Validate the input
+        // Validate user credentials before proceeding with deletion
         if (username.equals(tempusername) && password.equals(temppassword)) {
-            // Proceed with deletion
-            //GRAB THE PLANTS
+            // If credentials are valid, proceed with deleting the user's plants, images, and account
+
+            // Retrieve all plants associated with the user
             List<Plant> plants = plantDataAccessObject.getUserPlants(username);
             for (Plant plant : plants) {
-                //DELETE IMAGES
+                // Delete associated images for each plant
                 imageDataAccessObject.deleteImage(plant.getImageID());
-                //THEN PLANTS
+                // Delete the plant from the database
                 plantDataAccessObject.deletePlant(plant.getFileID());
             }
-            //THEN USER
+
+            // Delete the user's account from the database
             userDataAccessObject.deleteUser(username);
-            //LOGOUT
+            // Log out the current user
             userDataAccessObject.setCurrentUsername(null);
-            //final DeleteUserOutputData deleteUserOutputData = new DeleteUserOutputData(username);
-            //GO TO WELCOME VIEW
+
+            // Prepare success view after successful deletion
             deleteUserPresenter.prepareSuccessView();
-            escape();
+            escape();  // Trigger navigation after successful deletion
         } else {
-            // Show an error message if validation fails
-            deleteUserPresenter.prepareFailView("Invalid credentials. Try again.");
+            // If credentials do not match, show failure message
+            deleteUserPresenter.prepareFailView();
         }
     }
 
+    // Set the escape map for navigating away after the deletion
     public void setEscapeMap(Runnable escapeMap) {
         this.escapeMap = escapeMap;
     }
 
+    // Execute the escape action (typically to navigate to the welcome view)
     public void escape() {
         this.escapeMap.run();
     }

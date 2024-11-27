@@ -54,7 +54,7 @@ public class DeleteUserPanelFactory {
         MongoImageDataAccessObject mongoImageDataAccessObject = MongoImageDataAccessObject.getInstance();
 
         // Create the presenter for the delete user functionality
-        DeleteUserOutputBoundary deleteUserPresentor = new DeleteUserPresenter(viewManagerModel, mainViewModel, loginViewModel );
+        DeleteUserOutputBoundary deleteUserPresentor = new DeleteUserPresenter(viewManagerModel, mainViewModel, loginViewModel, deleteUserViewModel);
 
         // Create the interactor which handles business logic related to deleting a user
         DeleteUserInputBoundary deleteuserInteractor = new DeleteUserInteractor(mongoPlantDataAccessObject, mongoImageDataAccessObject, mongoUserDataAccessObject, deleteUserPresentor);
