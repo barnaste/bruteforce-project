@@ -51,7 +51,7 @@ public class DeleteUserInteractorTest {
             }
 
             @Override
-            public void prepareFailView(String errorMessage) {
+            public void prepareFailView() {
                 fail();
             }
         };
@@ -105,7 +105,7 @@ public class DeleteUserInteractorTest {
             }
 
             @Override
-            public void prepareFailView(String errorMessage) {
+            public void prepareFailView() {
                 assert plantDAO.fetchPlantByID(plantID) != null;
             }
         };
@@ -155,7 +155,7 @@ public class DeleteUserInteractorTest {
             }
 
             @Override
-            public void prepareFailView(String errorMessage) {
+            public void prepareFailView() {
                 return;
             }
         };
