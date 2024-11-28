@@ -24,4 +24,8 @@
 
 2. Write a paragraph (3-6 sentences) about who you would market your program towards, if you were to sell or license your program to customers. This could be a specific category of users, such as "students", or more vague, such as "people who like games". Try to give a bit more detail along with the category.
 
+   One idea is to market our program towards plant and photography hobbyists. The social aspects of the app would be a focus in this case, such as the ability to share photos of plants, like other people's plants, and browse the public gallery in the Discover page. Another idea is to market the program towards professionals in natural photography or botany. In this case, the ability of the app to recognize a given plant might play a more important role, and the program would be marketed as a professional referencing tool.
+
 3. Write a paragraph about whether or not your program is less likely to be used by certain demographics. Your discussion here should be informed by the content of our embedded ethics modules this term.
+
+   Our program is more likely to be used by demographics with close access to nature, although all users are encouraged to explore the social aspects of the app by browsing the Discover page. The program is generally accessible to people of all age groups since, as mentioned in question 1, the app is minimalistic and intuitive to navigate - an ideal feature for junior and senior populations. In the future, the program can also implement a text-to-speech feature to increase its accessibility for people with visual impairment. 
