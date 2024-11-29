@@ -1,6 +1,5 @@
 package use_case.user_plant_info_edit;
 
-import interface_adapter.user_plant_info_edit.UserPlantInfoEditPresenter;
 import use_case.ImageDataAccessInterface;
 import use_case.PlantDataAccessInterface;
 import entity.Plant;
@@ -12,12 +11,13 @@ public class UserPlantInfoEditInteractor implements UserPlantInfoEditInputBounda
 
     private final PlantDataAccessInterface plantDatabase;
     private final ImageDataAccessInterface imageDatabase;
-    private final UserPlantInfoEditPresenter presenter;
+    private final UserPlantInfoEditOutputBoundary presenter;
     private Plant currentPlant;
 
     private Runnable escapeMap;
 
-    public UserPlantInfoEditInteractor(ImageDataAccessInterface imageDatabase, PlantDataAccessInterface plantDatabase, UserPlantInfoEditPresenter presenter) {
+    public UserPlantInfoEditInteractor(ImageDataAccessInterface imageDatabase, PlantDataAccessInterface plantDatabase,
+                                       UserPlantInfoEditOutputBoundary presenter) {
         this.plantDatabase = plantDatabase;
         this.imageDatabase = imageDatabase;
         this.presenter = presenter;
