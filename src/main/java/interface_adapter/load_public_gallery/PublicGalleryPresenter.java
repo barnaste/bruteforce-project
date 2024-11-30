@@ -4,6 +4,10 @@ import interface_adapter.ViewManagerModel;
 import use_case.load_public_gallery.PublicGalleryOutputBoundary;
 import use_case.load_public_gallery.PublicGalleryOutputData;
 
+/**
+ * Presenter for the public gallery, responsible for updating the view model with the gallery data.
+ * Implements the {@link PublicGalleryOutputBoundary} to handle the preparation of the success view.
+ */
 public class PublicGalleryPresenter implements PublicGalleryOutputBoundary {
 
     private final PublicGalleryViewModel publicGalleryViewModel;
@@ -17,7 +21,7 @@ public class PublicGalleryPresenter implements PublicGalleryOutputBoundary {
     @Override
     public void prepareSuccessView(PublicGalleryOutputData outputData) {
         // Update the public gallery state in the view model
-        PublicGalleryState galleryState = publicGalleryViewModel.getState();
+        final PublicGalleryState galleryState = publicGalleryViewModel.getState();
         galleryState.setPlantImages(outputData.getImages());
         galleryState.setCurrentPage(outputData.getPage());
         galleryState.setTotalPages(outputData.getTotalPages());

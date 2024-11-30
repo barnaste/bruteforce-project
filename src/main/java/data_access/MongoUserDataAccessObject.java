@@ -1,41 +1,48 @@
 package data_access;
 
-import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
-import static com.mongodb.client.model.Filters.eq;
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
-
-import entity.User;
-
 import org.bson.codecs.configuration.CodecProvider;
+import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
+
+import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
+import entity.User;
 
 /**
  * UserDB class implemented using MongoDB.
  */
-public class MongoUserDataAccessObject implements use_case.UserDataAccessInterface {
-    final String CONNECTIONSTRING = "mongodb+srv://brute_force:CSC207-F24@cluster0.upye6.mongodb.net/" +
-            "?retryWrites=true&w=majority&appName=Cluster0";
-    CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
-    CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
-    private String currentUsername;
-
+public final class MongoUserDataAccessObject implements use_case.UserDataAccessInterface {
     private static MongoUserDataAccessObject instance;
+
+    private static final String CONNECTIONSTRING = "mongodb+srv://brute_force:CSC207-F24@cluster0.upye6.mongodb.net/"
+            + "?retryWrites=true&w=majority&appName=Cluster0";
+    private final CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
+    private final CodecRegistry pojoCodecRegistry = CodecRegistries.fromRegistries(
+            MongoClientSettings.getDefaultCodecRegistry(), CodecRegistries.fromProviders(pojoCodecProvider));
+    private String currentUsername;
 
     /**
      * The private constructor -- if a new instance of this class is to be requested, it should be done
      * by calling the getInstance() public method.
      */
-    private MongoUserDataAccessObject() {}
+    private MongoUserDataAccessObject() {
+
+    }
 
     /**
-     * The method used to retrieve an instance of this class. This way, the DAO is maintained as a singleton.
+     * Retrieves the singleton instance of the MongoUserDataAccessObject.
+     *
+     * <p>
+     * This method ensures that only one instance of MongoUserDataAccessObject is created and used
+     * throughout the application, following the singleton design pattern.
+     *
+     * @return the singleton instance of MongoUserDataAccessObject
      */
     public static MongoUserDataAccessObject getInstance() {
         if (instance == null) {
@@ -47,28 +54,22 @@ public class MongoUserDataAccessObject implements use_case.UserDataAccessInterfa
     @Override
     public User getUser(String username) {
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
-            return getUsersCollection(mongoClient).find(eq("username", username)).first();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+            return getUsersCollection(mongoClient).find(Filters.eq("username", username)).first();
         }
     }
 
     @Override
     public boolean existsByUsername(String username) {
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
-            return getUsersCollection(mongoClient).find(eq("username", username)).first() != null;
-        } catch (Exception e) {
-            System.out.println(e.getMessage()); // Replace with logging
-            return false;
+            return getUsersCollection(mongoClient).find(Filters.eq("username", username)).first() != null;
         }
     }
 
     @Override
     public void addUser(User user) {
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
-            MongoCollection<User> collection = getUsersCollection(mongoClient);
-            if (getUsersCollection(mongoClient).find(eq("username", user.getUsername())).first() == null) {
+            final MongoCollection<User> collection = getUsersCollection(mongoClient);
+            if (getUsersCollection(mongoClient).find(Filters.eq("username", user.getUsername())).first() == null) {
                 collection.insertOne(user);
             }
         }
@@ -77,11 +78,8 @@ public class MongoUserDataAccessObject implements use_case.UserDataAccessInterfa
     @Override
     public boolean deleteUser(String username) {
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
-            DeleteResult result = getUsersCollection(mongoClient).deleteOne(eq("username", username));
+            final DeleteResult result = getUsersCollection(mongoClient).deleteOne(Filters.eq("username", username));
             return result.getDeletedCount() > 0;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
         }
     }
 
@@ -106,7 +104,7 @@ public class MongoUserDataAccessObject implements use_case.UserDataAccessInterfa
     }
 
     private MongoCollection<User> getUsersCollection(MongoClient mongoClient) {
-        MongoDatabase database = mongoClient.getDatabase("appDB").withCodecRegistry(pojoCodecRegistry);
+        final MongoDatabase database = mongoClient.getDatabase("appDB").withCodecRegistry(pojoCodecRegistry);
         return database.getCollection("users", User.class);
     }
 }

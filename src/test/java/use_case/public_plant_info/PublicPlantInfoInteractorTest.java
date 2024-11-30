@@ -15,12 +15,8 @@ public class PublicPlantInfoInteractorTest {
 
     @Before
     public void setUp() {
-        // Mock dependencies
-        mockImageDatabase = mock(ImageDataAccessInterface.class);
-        mockPlantDatabase = mock(PlantDataAccessInterface.class);
-
         // Initialize interactor with mocks
-        interactor = new PublicPlantInfoInteractor(mockImageDatabase, mockPlantDatabase);
+        interactor = new PublicPlantInfoInteractor();
     }
 
     @Test

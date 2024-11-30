@@ -1,28 +1,45 @@
 package view.gallery;
 
-import data_access.MongoPlantDataAccessObject;
-import entity.Plant;
-import interface_adapter.like_plant.LikePlantController;
-import interface_adapter.load_public_gallery.PublicGalleryController;
-import interface_adapter.load_public_gallery.PublicGalleryState;
-import interface_adapter.load_public_gallery.PublicGalleryViewModel;
-import interface_adapter.public_plant_info.PublicPlantInfoController;
-import org.bson.types.ObjectId;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.function.Consumer;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import org.bson.types.ObjectId;
+
+import data_access.MongoPlantDataAccessObject;
+import entity.Plant;
+import interface_adapter.like_plant.LikePlantController;
+import interface_adapter.load_public_gallery.PublicGalleryController;
+import interface_adapter.load_public_gallery.PublicGalleryState;
+import interface_adapter.load_public_gallery.PublicGalleryViewModel;
+
+/**
+ * Represents the public gallery view in the application, displaying a grid of plant images.
+ * Provides navigation for paging through the gallery, and allows interaction with plant images
+ * (viewing details or liking plants).
+ */
 public class PublicGalleryView extends JPanel implements PropertyChangeListener {
     private static final int NUM_OF_COLUMNS = 5;
     private static final int NUM_OF_ROWS = 3;
     private final String viewName = "public gallery";
 
-    private PublicGalleryController controller;
+    private PublicGalleryController publicGalleryController;
 
     private final JPanel imagesGrid;
     private final JButton nextPageButton;
@@ -40,20 +57,20 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
         imagesGrid = new JPanel(new GridLayout(NUM_OF_ROWS, NUM_OF_COLUMNS, 5, 5));
         add(imagesGrid, BorderLayout.CENTER);
 
-        JPanel navigationPanel = new JPanel();
+        final JPanel navigationPanel = new JPanel();
         previousPageButton = new JButton("Previous Page");
         nextPageButton = new JButton("Next Page");
         pageLabel = new JLabel();
 
-        previousPageButton.addActionListener(e -> {
-            if (controller != null) {
-                controller.loadPreviousPage();
+        previousPageButton.addActionListener(evt -> {
+            if (publicGalleryController != null) {
+                publicGalleryController.loadPreviousPage();
             }
         });
 
-        nextPageButton.addActionListener(e -> {
-            if (controller != null) {
-                controller.loadNextPage();
+        nextPageButton.addActionListener(evt -> {
+            if (publicGalleryController != null) {
+                publicGalleryController.loadNextPage();
             }
         });
 
@@ -65,49 +82,56 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
         updateNavigation(0, 1);
     }
 
-    public void setPublicGalleryController(PublicGalleryController controller) {
-        this.controller = controller;
+    public void setPublicGalleryController(PublicGalleryController publicGalleryController) {
+        this.publicGalleryController = publicGalleryController;
     }
-  
+
     public void setLikePlantController(LikePlantController likePlantController) {
         this.likePlantController = likePlantController;
     }
+
+    /**
+     * Displays a grid of plant images in the public gallery.
+     * Each image is accompanied by "Info" and "Like" buttons, which allow the user to view details
+     * or like the respective plant.
+     * If there are fewer images than available grid slots, empty placeholders are shown.
+     *
+     * @param images A list of `BufferedImage` objects representing the plant images to be displayed.
+     * @param ids    A list of `ObjectId` corresponding to the plant images, used for identifying the
+     *               plant in the database.
+     */
     public void displayImages(List<BufferedImage> images, List<ObjectId> ids) {
         imagesGrid.removeAll();
 
         // Add each image with buttons below it to the grid
         for (int i = 0; i < NUM_OF_ROWS * NUM_OF_COLUMNS; i++) {
-            JPanel imagePanel = new JPanel();
+            final JPanel imagePanel = new JPanel();
             imagePanel.setBackground(new Color(236, 245, 233));
             imagePanel.setLayout(new GridBagLayout());
 
-            JLabel imageLabel = new JLabel();
+            final JLabel imageLabel = new JLabel();
             if (images != null && i < images.size()) {
-                BufferedImage image = images.get(i);
-                ObjectId id = ids.get(i);
-                Image scaledImage = image.getScaledInstance(160, 160, Image.SCALE_SMOOTH);
+                final BufferedImage image = images.get(i);
+                final ObjectId id = ids.get(i);
+                final Image scaledImage = image.getScaledInstance(160, 160, Image.SCALE_SMOOTH);
                 imageLabel.setIcon(new ImageIcon(scaledImage));
 
-                JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+                final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
                 buttonPanel.setBackground(new Color(236, 245, 233));
 
-                MongoPlantDataAccessObject plantAccess = MongoPlantDataAccessObject.getInstance();
+                final MongoPlantDataAccessObject plantAccess = MongoPlantDataAccessObject.getInstance();
 
-                JButton infoButton = new JButton("Info");
+                final JButton infoButton = new JButton("Info");
                 infoButton.setBackground(new Color(224, 242, 213));
-                infoButton.addActionListener(e ->
-                        this.displayPlantMap.accept(plantAccess.fetchPlantByID(id))
-                );
+                infoButton.addActionListener(evt -> this.displayPlantMap.accept(plantAccess.fetchPlantByID(id)));
                 buttonPanel.add(infoButton);
 
-                JButton likeButton = new JButton("Like");
+                final JButton likeButton = new JButton("Like");
                 likeButton.setBackground(new Color(224, 242, 213));
-                likeButton.addActionListener(e ->
-                    this.likePlantController.execute(plantAccess.fetchPlantByID(id))
-                );
+                likeButton.addActionListener(evt -> this.likePlantController.execute(plantAccess.fetchPlantByID(id)));
                 buttonPanel.add(likeButton);
 
-                GridBagConstraints gbc = new GridBagConstraints();
+                final GridBagConstraints gbc = new GridBagConstraints();
                 gbc.gridx = 0;
                 gbc.gridy = 0;
                 gbc.insets = new Insets(0, 0, 2, 0);
@@ -118,7 +142,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
                 imagePanel.add(buttonPanel, gbc);
             }
             else if (images == null || images.isEmpty()) {
-                JPanel placeholderPanel = new JPanel();
+                final JPanel placeholderPanel = new JPanel();
                 placeholderPanel.setPreferredSize(new Dimension(160, 200));
                 placeholderPanel.setBackground(new Color(236, 245, 233));
                 imagePanel.add(placeholderPanel);
@@ -133,7 +157,7 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
     }
 
     private void updateNavigation(int currentPage, int totalPages) {
-        int displayedTotalPages = Math.max(totalPages, 1);
+        final int displayedTotalPages = Math.max(totalPages, 1);
         previousPageButton.setEnabled(currentPage > 0);
         nextPageButton.setEnabled(currentPage < displayedTotalPages - 1);
         pageLabel.setText("Page: " + (currentPage + 1) + " / " + displayedTotalPages);
@@ -145,12 +169,16 @@ public class PublicGalleryView extends JPanel implements PropertyChangeListener 
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        PublicGalleryState state = (PublicGalleryState) evt.getNewValue();
+        final PublicGalleryState state = (PublicGalleryState) evt.getNewValue();
         displayImages(state.getPlantImages(), state.getPlantID());
         updateNavigation(state.getCurrentPage(), state.getTotalPages());
     }
 
+    /**
+     * Refreshes the public gallery by loading the first page of plants.
+     * This method triggers the controller to load the initial page (page 0) of the public gallery.
+     */
     public void refresh() {
-        controller.loadPage(0);
+        publicGalleryController.loadPage(0);
     }
 }

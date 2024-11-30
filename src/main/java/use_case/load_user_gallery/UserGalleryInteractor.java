@@ -1,22 +1,27 @@
 package use_case.load_user_gallery;
 
-import data_access.*;
-import entity.Plant;
-import org.bson.types.ObjectId;
-import use_case.ImageDataAccessInterface;
-import use_case.PlantDataAccessInterface;
-import use_case.UserDataAccessInterface;
-
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bson.types.ObjectId;
+
+import entity.Plant;
+import use_case.ImageDataAccessInterface;
+import use_case.PlantDataAccessInterface;
+import use_case.UserDataAccessInterface;
+
+/**
+ * Interactor responsible for handling the business logic related to the user gallery use case.
+ * It interacts with data access objects for plants, images, and users, and communicates with the presenter.
+ */
 public class UserGalleryInteractor implements UserGalleryInputBoundary {
+    private static final int IMAGES_PER_PAGE = 15;
+
     private final PlantDataAccessInterface plantDataAccessObject;
     private final UserGalleryOutputBoundary galleryPresenter;
     private final ImageDataAccessInterface imageDataAccessObject;
     private final UserDataAccessInterface userDataAccessObject;
-    private static final int IMAGES_PER_PAGE = 15;
 
     private int currentPage;
 
@@ -31,14 +36,16 @@ public class UserGalleryInteractor implements UserGalleryInputBoundary {
         this.currentPage = 0;
     }
 
+    @Override
     public void nextPage() {
-        int totalPages = getNumberOfUserPlants();
+        final int totalPages = getNumberOfUserPlants();
         if (currentPage < totalPages - 1) {
             currentPage++;
             execute(new UserGalleryInputData(currentPage));
         }
     }
 
+    @Override
     public void previousPage() {
         if (currentPage > 0) {
             currentPage--;
@@ -46,30 +53,34 @@ public class UserGalleryInteractor implements UserGalleryInputBoundary {
         }
     }
 
-    public int getNumberOfUserPlants(){
-        return (int) Math.ceil((double) plantDataAccessObject.getNumberOfUserPlants(userDataAccessObject.getCurrentUsername()) / IMAGES_PER_PAGE);
+    @Override
+    public int getNumberOfUserPlants() {
+        final int num = (int) Math.ceil((double) plantDataAccessObject.getNumberOfUserPlants(
+                userDataAccessObject.getCurrentUsername()) / IMAGES_PER_PAGE);
+        return num;
     }
 
     @Override
     public void execute(UserGalleryInputData galleryInputData) {
-        int page = galleryInputData.getPage();
+        final int page = galleryInputData.getPage();
         currentPage = page;
-        int skip = page * IMAGES_PER_PAGE;  // Calculate the offset based on the page
+        final int skip = page * IMAGES_PER_PAGE;
 
         // Retrieve the correct slice of Plant objects from database
-        List<Plant> plants = plantDataAccessObject.getUserPlants(userDataAccessObject.getCurrentUsername(), skip, IMAGES_PER_PAGE);
+        final List<Plant> plants = plantDataAccessObject.getUserPlants(
+                userDataAccessObject.getCurrentUsername(), skip, IMAGES_PER_PAGE);
 
         // Get images from Plant objects
-        List<BufferedImage> images = new ArrayList<>();
-        List<ObjectId> ids = new ArrayList<>();
+        final List<BufferedImage> images = new ArrayList<>();
+        final List<ObjectId> ids = new ArrayList<>();
         for (Plant plant : plants) {
             images.add(imageDataAccessObject.getImageFromID(plant.getImageID()));
             ids.add(plant.getFileID());
         }
 
         // Prepare output data and send to presenter
-        int totalPages = getNumberOfUserPlants();
-        UserGalleryOutputData outputData = new UserGalleryOutputData(images, ids, currentPage, totalPages);
+        final int totalPages = getNumberOfUserPlants();
+        final UserGalleryOutputData outputData = new UserGalleryOutputData(images, ids, currentPage, totalPages);
         galleryPresenter.prepareSuccessView(outputData);
     }
 }

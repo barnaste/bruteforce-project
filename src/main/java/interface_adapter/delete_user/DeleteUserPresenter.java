@@ -7,25 +7,24 @@ import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import use_case.delete_user.DeleteUserOutputBoundary;
 
-import javax.swing.*;
-
 /**
  * Presenter for handling the output of the DeleteUser use case.
  * Updates the view with success or failure states based on user deletion.
  */
 public class DeleteUserPresenter implements DeleteUserOutputBoundary {
 
-    private final MainViewModel mainViewModel;  // Manages the main app's state
-    private final ViewManagerModel viewManagerModel;  // Handles view transitions
-    private final LoginViewModel loginViewModel;  // Manages login state
+    private final MainViewModel mainViewModel;
+    private final ViewManagerModel viewManagerModel;
+    private final LoginViewModel loginViewModel;
     private final DeleteUserViewModel deleteUserViewModel;
 
     /**
-     * Constructs the DeleteUserPresenter.
+     * Constructs a DeleteUserPresenter to manage the delete user functionality.
      *
-     * @param viewManagerModel manages the current view state
-     * @param mainViewModel handles the main application state
-     * @param loginViewModel manages login state
+     * @param viewManagerModel the model for managing the current view state
+     * @param mainViewModel the model for managing the main application state
+     * @param loginViewModel the model for managing user login state
+     * @param deleteUserViewModel the model for managing the delete user view state
      */
     public DeleteUserPresenter(ViewManagerModel viewManagerModel,
                                MainViewModel mainViewModel,
@@ -45,14 +44,14 @@ public class DeleteUserPresenter implements DeleteUserOutputBoundary {
     public void prepareSuccessView() {
         // Clear the main view state (logout)
         final MainState mainState = mainViewModel.getState();
-        mainState.setUsername("");  // Clear logged-in username
+        mainState.setUsername("");
         mainViewModel.setState(mainState);
         mainViewModel.firePropertyChanged("state");
 
         // Clear the login view state (reset login details)
         final LoginState loginState = loginViewModel.getState();
-        loginState.setUsername("");  // Clear username
-        loginState.setPassword("");  // Clear password
+        loginState.setUsername("");
+        loginState.setPassword("");
         loginViewModel.setState(loginState);
         loginViewModel.firePropertyChanged("state");
 
@@ -63,8 +62,6 @@ public class DeleteUserPresenter implements DeleteUserOutputBoundary {
 
     /**
      * Prepares the failure view and shows an error message.
-     *
-     * @param error the error message to display
      */
     @Override
     public void prepareFailView() {

@@ -1,8 +1,8 @@
 package use_case.user_plant_info_edit;
 
+import entity.Plant;
 import use_case.ImageDataAccessInterface;
 import use_case.PlantDataAccessInterface;
-import entity.Plant;
 
 /**
  * The Plant Edit Interactor.
@@ -12,6 +12,7 @@ public class UserPlantInfoEditInteractor implements UserPlantInfoEditInputBounda
     private final PlantDataAccessInterface plantDatabase;
     private final ImageDataAccessInterface imageDatabase;
     private final UserPlantInfoEditOutputBoundary presenter;
+
     private Plant currentPlant;
 
     private Runnable escapeMap;
@@ -54,7 +55,7 @@ public class UserPlantInfoEditInteractor implements UserPlantInfoEditInputBounda
         this.escapeMap.run();
     }
 
-    public void setPlant(Plant currentPlant) {
-        this.currentPlant = currentPlant;
+    public void setPlant(Plant newPlant) {
+        this.currentPlant = newPlant;
     }
 }

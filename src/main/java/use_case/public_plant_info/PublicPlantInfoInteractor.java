@@ -1,22 +1,15 @@
 package use_case.public_plant_info;
 
-import use_case.ImageDataAccessInterface;
-import use_case.PlantDataAccessInterface;
-import entity.Plant;
-
+/**
+ * Interactor responsible for handling the business logic related to public plant information.
+ * It is used by the `PublicPlantInfoController` to manage actions such as escaping (e.g., closing the view).
+ */
 public class PublicPlantInfoInteractor implements PublicPlantInfoInputBoundary {
 
-    private final PlantDataAccessInterface plantDatabase;
-    private final ImageDataAccessInterface imageDatabase;
-
-    // TODO: It doesn't seem like the imageDatabase is doing much here?
-
-    private Plant currentPlant;
     private Runnable escapeMap;
 
-    public PublicPlantInfoInteractor(ImageDataAccessInterface imageDatabase, PlantDataAccessInterface plantDatabase) {
-        this.plantDatabase = plantDatabase;
-        this.imageDatabase = imageDatabase;
+    public PublicPlantInfoInteractor() {
+
     }
 
     @Override

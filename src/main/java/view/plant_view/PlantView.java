@@ -1,9 +1,24 @@
 package view.plant_view;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.awt.image.BufferedImage;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JToggleButton;
+import javax.swing.SpringLayout;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 /**
  * A base design for views that display Plant objects. This design contains four sections:
@@ -27,7 +42,7 @@ public class PlantView extends JPanel {
         this.setBackground(new Color(PlantViewData.TRANSPARENT, true));
 
         // position each component nicely within the view area using a GridBagLayout
-        GridBagConstraints constraints = new GridBagConstraints();
+        final GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.gridwidth = 2;
@@ -64,7 +79,7 @@ public class PlantView extends JPanel {
      * @return a reference to the created panel
      */
     protected JPanel createTopPanel() {
-        JPanel topPanel = new JPanel();
+        final JPanel topPanel = new JPanel();
         topPanel.setLayout(new BorderLayout());
         topPanel.setBackground(new Color(PlantViewData.TOP_PANEL_COLOR, true));
         topPanel.setPreferredSize(new Dimension(
@@ -82,12 +97,12 @@ public class PlantView extends JPanel {
      * @return a reference to the created panel
      */
     protected JPanel createContentPanel() {
-        JPanel contentPanel = new JPanel();
-        SpringLayout layout = new SpringLayout();
+        final JPanel contentPanel = new JPanel();
+        final SpringLayout layout = new SpringLayout();
         contentPanel.setLayout(layout);
         contentPanel.setBackground(new Color(PlantViewData.CONTENT_PANEL_COLOR, true));
 
-        Font font = nameLabel.getFont();
+        final Font font = nameLabel.getFont();
         nameLabel.setFont(font.deriveFont(Font.BOLD).deriveFont(20f));
         layout.putConstraint(SpringLayout.WEST, nameLabel, 20, SpringLayout.WEST, contentPanel);
         layout.putConstraint(SpringLayout.NORTH, nameLabel, 20, SpringLayout.NORTH, contentPanel);
@@ -114,7 +129,7 @@ public class PlantView extends JPanel {
         notesField.setWrapStyleWord(true);
         notesField.setMargin(new Insets(10, 10, 10, 10));
         notesField.setBackground(new Color(PlantViewData.CONTENT_PANEL_COLOR, true));
-        JScrollPane notesScrollPane = new JScrollPane(notesField);
+        final JScrollPane notesScrollPane = new JScrollPane(notesField);
 
         layout.putConstraint(SpringLayout.WEST, notesScrollPane, 20, SpringLayout.WEST, contentPanel);
         layout.putConstraint(SpringLayout.EAST, notesScrollPane, -20, SpringLayout.EAST, contentPanel);
@@ -146,8 +161,8 @@ public class PlantView extends JPanel {
                 new Color(PlantViewData.PUBLIC_TOGGLE_COLOR, true));
         SwingUtilities.updateComponentTreeUI(togglePublic);
         // enable user feedback when they toggle privacy
-        togglePublic.addItemListener((e) -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
+        togglePublic.addItemListener(evt -> {
+            if (evt.getStateChange() == ItemEvent.SELECTED) {
                 togglePublic.setText("\uD83D\uDD13");
             }
             else {
@@ -167,7 +182,7 @@ public class PlantView extends JPanel {
      * @return a reference to the created panel
      */
     private JPanel createImagePanel() {
-        JPanel imagePanel = new JPanel() {
+        final JPanel imagePanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -193,7 +208,7 @@ public class PlantView extends JPanel {
      * @return a reference to the created panel
      */
     protected JPanel createActionPanel() {
-        JPanel actionPanel = new JPanel();
+        final JPanel actionPanel = new JPanel();
         actionPanel.setLayout(new GridBagLayout());
         actionPanel.setBackground(new Color(PlantViewData.ACTION_PANEL_COLOR));
 
@@ -216,7 +231,9 @@ public class PlantView extends JPanel {
         return certaintyLabel;
     }
 
-    public JLabel getOwnerLabel() { return ownerLabel; }
+    public JLabel getOwnerLabel() {
+        return ownerLabel;
+    }
 
     public JLabel getLikesLabel() {
         return likesLabel;

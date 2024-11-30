@@ -1,10 +1,15 @@
 package use_case.load_user_gallery;
 
-import org.bson.types.ObjectId;
-
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+import org.bson.types.ObjectId;
+
+/**
+ * Represents the output data for the User Gallery use case.
+ * Contains the images, their associated IDs, and pagination information
+ * for displaying the user's plant gallery.
+ */
 public class UserGalleryOutputData {
     private final List<BufferedImage> images;
     private final List<ObjectId> ids;

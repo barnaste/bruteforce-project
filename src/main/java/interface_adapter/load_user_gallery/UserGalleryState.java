@@ -1,16 +1,22 @@
 package interface_adapter.load_user_gallery;
 
-import org.bson.types.ObjectId;
-
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+import org.bson.types.ObjectId;
+
+/**
+ * Represents the state of the user gallery, holding information about the currently displayed plant images,
+ * the current page, total pages, and the IDs of the plants.
+ * This class is used to track and manage the gallery's state for the user, including pagination and the
+ * associated images and plant IDs.
+ */
 public class UserGalleryState {
 
     private List<BufferedImage> plantImages;
     private List<ObjectId> plantID;
-    private int currentPage;                  // Current page number
-    private int totalPages;                   // Total number of pages
+    private int currentPage;
+    private int totalPages;
 
     public List<BufferedImage> getPlantImages() {
         return plantImages;

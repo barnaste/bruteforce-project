@@ -11,7 +11,7 @@ public interface ImageDataAccessInterface {
      * @param id is the unique id of the desired image
      * @return the image with the given id
      */
-     BufferedImage getImageFromID(String id);
+    BufferedImage getImageFromID(String id);
 
     /**
      * A method that inserts a new image into the database.

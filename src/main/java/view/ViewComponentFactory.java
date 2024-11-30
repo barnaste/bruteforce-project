@@ -1,19 +1,28 @@
 package view;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.util.List;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.swing.AbstractButton;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 
 /**
  * A factory class for building View Components with a consistent style.
  */
 public final class ViewComponentFactory {
 
-    private ViewComponentFactory() {}
+    private ViewComponentFactory() {
+
+    }
 
     /**
      * Builds a stylized JButton.
@@ -21,7 +30,7 @@ public final class ViewComponentFactory {
      * @return the button
      */
     public static JButton buildButton(String text) {
-        JButton button = new JButton(text);
+        final JButton button = new JButton(text);
         button.setBorderPainted(true);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
@@ -67,30 +76,30 @@ public final class ViewComponentFactory {
         BufferedImage image = null;
         try {
             // Crop the image so that it is has square aspect ratio
-            BufferedImage sourceImg = ImageIO.read(new File(imagePath));
-            int thumbWidth = Math.min(sourceImg.getWidth(), sourceImg.getHeight());
+            final BufferedImage sourceImg = ImageIO.read(new File(imagePath));
+            final int thumbWidth = Math.min(sourceImg.getWidth(), sourceImg.getHeight());
             image = sourceImg.getSubimage(
                     (sourceImg.getWidth() - thumbWidth) / 2,
                     (sourceImg.getHeight() - thumbWidth) / 2,
                     thumbWidth, thumbWidth);
 
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+        }
+        catch (IOException ioException) {
+            System.out.println(ioException.getMessage());
         }
         return image;
     }
 
+    /**
+     * Sets the preferred, minimum, and maximum size for the given button.
+     * This ensures that the button has a consistent size regardless of layout constraints.
+     *
+     * @param button the button whose size is to be set
+     * @param buttonSize the size to apply to the button
+     */
     public static void setButtonSize(AbstractButton button, Dimension buttonSize) {
         button.setPreferredSize(buttonSize);
         button.setMinimumSize(buttonSize);
         button.setMaximumSize(buttonSize);
-    }
-
-    public static JToggleButton buildToggleButton(String text) {
-        JToggleButton toggleButton = new JToggleButton(text);
-        toggleButton.setBorderPainted(true);
-        toggleButton.setContentAreaFilled(false);
-        toggleButton.setFocusPainted(false);
-        return toggleButton;
     }
 }

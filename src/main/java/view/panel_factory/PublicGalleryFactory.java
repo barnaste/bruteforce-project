@@ -1,5 +1,7 @@
 package view.panel_factory;
 
+import java.util.function.Consumer;
+
 import data_access.MongoImageDataAccessObject;
 import data_access.MongoPlantDataAccessObject;
 import entity.Plant;
@@ -16,8 +18,10 @@ import use_case.load_public_gallery.PublicGalleryInteractor;
 import use_case.load_public_gallery.PublicGalleryOutputBoundary;
 import view.gallery.PublicGalleryView;
 
-import java.util.function.Consumer;
-
+/**
+ * Controller for managing the public gallery's image pages. It interacts with the use case interactor
+ * to load, paginate, and retrieve images for the public gallery.
+ */
 public class PublicGalleryFactory {
     /**
      * Creates and returns a PublicGalleryView, which represents the public gallery of plants.
@@ -33,25 +37,27 @@ public class PublicGalleryFactory {
      *         the necessary controllers and interactors wired up for functionality.
      */
     public static PublicGalleryView createPublicGallery(Consumer<Plant> displayPlantMap, MainViewModel mainViewModel) {
-        MongoPlantDataAccessObject plantDataAccessObject = MongoPlantDataAccessObject.getInstance();
-        MongoImageDataAccessObject imageDataAccessObject = MongoImageDataAccessObject.getInstance();
-        PublicGalleryViewModel viewModel = new PublicGalleryViewModel();
-        ViewManagerModel galleryManagerModel = new ViewManagerModel();
+        final MongoPlantDataAccessObject plantDataAccessObject = MongoPlantDataAccessObject.getInstance();
+        final MongoImageDataAccessObject imageDataAccessObject = MongoImageDataAccessObject.getInstance();
+        final PublicGalleryViewModel viewModel = new PublicGalleryViewModel();
+        final ViewManagerModel galleryManagerModel = new ViewManagerModel();
 
         // Set up the PublicGalleryPresenter and PublicGalleryInteractor
-        PublicGalleryOutputBoundary galleryPresenter = new PublicGalleryPresenter(viewModel, galleryManagerModel);
-        PublicGalleryInputBoundary publicGalleryInteractor = new PublicGalleryInteractor(plantDataAccessObject, galleryPresenter, imageDataAccessObject);
+        final PublicGalleryOutputBoundary galleryPresenter = new PublicGalleryPresenter(viewModel, galleryManagerModel);
+        final PublicGalleryInputBoundary publicGalleryInteractor =
+                new PublicGalleryInteractor(plantDataAccessObject, galleryPresenter, imageDataAccessObject);
 
         // Initialize the PublicGalleryController and View
-        PublicGalleryController publicGalleryController = new PublicGalleryController(publicGalleryInteractor);
+        final PublicGalleryController publicGalleryController = new PublicGalleryController(publicGalleryInteractor);
         viewModel.firePropertyChanged();
-        PublicGalleryView publicGalleryView = new PublicGalleryView(viewModel, displayPlantMap);
+        final PublicGalleryView publicGalleryView = new PublicGalleryView(viewModel, displayPlantMap);
         publicGalleryView.setPublicGalleryController(publicGalleryController);
 
         // Initialize the like use case
-        LikePlantPresenter likePlantPresenter = new LikePlantPresenter(mainViewModel);
-        LikePlantInteractor likePlantInteractor = new LikePlantInteractor(plantDataAccessObject, likePlantPresenter);
-        LikePlantController likePlantController = new LikePlantController(likePlantInteractor);
+        final LikePlantPresenter likePlantPresenter = new LikePlantPresenter(mainViewModel);
+        final LikePlantInteractor likePlantInteractor =
+                new LikePlantInteractor(plantDataAccessObject, likePlantPresenter);
+        final LikePlantController likePlantController = new LikePlantController(likePlantInteractor);
         publicGalleryView.setLikePlantController(likePlantController);
 
         return publicGalleryView;

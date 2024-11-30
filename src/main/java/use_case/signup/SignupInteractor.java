@@ -8,16 +8,16 @@ import use_case.UserDataAccessInterface;
  */
 public class SignupInteractor implements SignupInputBoundary {
     private final UserDataAccessInterface userDataAccessObject;
-        private final SignupOutputBoundary userPresenter;
+    private final SignupOutputBoundary userPresenter;
 
     public SignupInteractor(UserDataAccessInterface signupDataAccessInterface,
                             SignupOutputBoundary signupOutputBoundary) {
-            this.userDataAccessObject = signupDataAccessInterface;
-            this.userPresenter = signupOutputBoundary;
-        }
+        this.userDataAccessObject = signupDataAccessInterface;
+        this.userPresenter = signupOutputBoundary;
+    }
 
-        @Override
-        public void execute(SignupInputData signupInputData) {
+    @Override
+    public void execute(SignupInputData signupInputData) {
         if (userDataAccessObject.existsByUsername(signupInputData.getUsername())) {
             userPresenter.prepareFailView("User already exists.");
         }
@@ -40,6 +40,8 @@ public class SignupInteractor implements SignupInputBoundary {
     public void switchToLoginView() {
         userPresenter.switchToLoginView();
     }
+
+    @Override
     public void switchToStartView() {
         userPresenter.switchToStartView();
     }

@@ -1,9 +1,10 @@
 package use_case;
 
-import entity.Plant;
+import java.util.List;
+
 import org.bson.types.ObjectId;
 
-import java.util.List;
+import entity.Plant;
 
 /**
  * PlantDB is an interface that defines the methods that the PlantDB class must implement.
@@ -89,5 +90,5 @@ public interface PlantDataAccessInterface {
      * @param fileID the ID of the plant to like
      * @return {@code true} if the like was successfully recorded, {@code false} otherwise
      */
-    boolean likePlant(ObjectId fileID);;
+    boolean likePlant(ObjectId fileID);
 }

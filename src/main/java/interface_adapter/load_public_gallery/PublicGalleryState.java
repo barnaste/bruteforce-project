@@ -1,22 +1,28 @@
 package interface_adapter.load_public_gallery;
 
-import org.bson.types.ObjectId;
-
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+import org.bson.types.ObjectId;
+
+/**
+ * Represents the state of the public gallery, including the current page of plant images,
+ * the total number of pages, and the plant images and IDs.
+ */
 public class PublicGalleryState {
 
-    private List<BufferedImage> plantImages;  // List of plant images for the gallery
+    private List<BufferedImage> plantImages;
     private List<ObjectId> plantID;
-    private int currentPage;                  // Current page number
-    private int totalPages;                   // Total number of pages
+    private int currentPage;
+    private int totalPages;
 
     public List<BufferedImage> getPlantImages() {
         return plantImages;
     }
 
-    public List<ObjectId> getPlantID() { return plantID; }
+    public List<ObjectId> getPlantID() {
+        return plantID;
+    }
 
     public void setPlantImages(List<BufferedImage> plantImages) {
         this.plantImages = plantImages;

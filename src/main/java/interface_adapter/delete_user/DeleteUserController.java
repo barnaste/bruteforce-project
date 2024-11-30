@@ -9,7 +9,7 @@ import use_case.delete_user.DeleteUserInputData;
  */
 public class DeleteUserController {
 
-    private DeleteUserInputBoundary deleteUserUseCaseInteractor;  // Interactor to handle the delete user use case logic
+    private DeleteUserInputBoundary deleteUserUseCaseInteractor;
 
     /**
      * Constructs a DeleteUserController with the specified interactor.

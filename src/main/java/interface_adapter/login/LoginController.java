@@ -27,6 +27,9 @@ public class LoginController {
         loginUseCaseInteractor.execute(loginInputData);
     }
 
+    /**
+     * Switches the view to the start view by delegating to the login use case interactor.
+     */
     public void switchToStartView() {
         loginUseCaseInteractor.switchToStartView();
     }
