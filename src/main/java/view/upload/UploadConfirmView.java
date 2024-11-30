@@ -70,7 +70,7 @@ public class UploadConfirmView extends JPanel implements PropertyChangeListener 
         final JButton confirmBtn = ViewComponentFactory.buildButton(UploadConfirmViewModel.CONFIRM_BUTTON_LABEL);
         confirmBtn.setBorderPainted(false);
 
-        confirmBtn.addActionListener(evt -> controller.switchToResultView(this.imagePath) );
+        confirmBtn.addActionListener(evt -> controller.switchToResultView(this.imagePath));
         topPanel.add(confirmBtn, BorderLayout.EAST);
         return topPanel;
     }

@@ -9,7 +9,8 @@ public interface PublicGalleryOutputBoundary {
     /**
      * Prepares and presents the success view of the public gallery with the given output data.
      *
-     * @param outputData the data to be displayed in the public gallery view, including images and pagination information
+     * @param outputData the data to be displayed in the public gallery view, including images and
+     *                   pagination information
      */
     void prepareSuccessView(PublicGalleryOutputData outputData);
 }

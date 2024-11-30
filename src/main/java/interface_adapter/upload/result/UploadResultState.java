@@ -10,7 +10,7 @@ public class UploadResultState {
     private String name = "";
     private String scientificName = "";
     private String family = "";
-    private double certainty = 0;
+    private double certainty;
 
     public String getImagePath() {
         return imagePath;

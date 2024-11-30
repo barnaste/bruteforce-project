@@ -58,7 +58,13 @@ public final class MongoPlantDataAccessObject implements PlantDataAccessInterfac
     }
 
     /**
-     * The method used to retrieve an instance of this class. This way, the DAO is maintained as a singleton.
+     * Retrieves the singleton instance of the MongoPlantDataAccessObject.
+     *
+     * <p>
+     * This method ensures that only one instance of the MongoPlantDataAccessObject exists at any time,
+     * adhering to the singleton design pattern.
+     *
+     * @return the singleton instance of MongoPlantDataAccessObject
      */
     public static MongoPlantDataAccessObject getInstance() {
         if (instance == null) {
@@ -241,7 +247,7 @@ public final class MongoPlantDataAccessObject implements PlantDataAccessInterfac
 
     /**
      * Deletes all plants from the MongoDB collection.
-     * This method removes all documents from the "plants" collection. This is for testing purposes and testing purposes only.
+     * This method removes all documents from the "plants" collection. TESTING ONLY.
      *
      * @throws RuntimeException if an error occurs while deleting plants.
      */

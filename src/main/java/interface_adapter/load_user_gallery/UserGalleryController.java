@@ -3,6 +3,11 @@ package interface_adapter.load_user_gallery;
 import use_case.load_user_gallery.UserGalleryInputBoundary;
 import use_case.load_user_gallery.UserGalleryInputData;
 
+/**
+ * Controller for managing the user gallery use case.
+ * It interacts with the `UserGalleryInputBoundary` to load user-specific gallery pages
+ * and handle page navigation (next/previous).
+ */
 public class UserGalleryController {
     private final UserGalleryInputBoundary galleryUseCaseInteractor;
 
@@ -19,10 +24,18 @@ public class UserGalleryController {
         galleryUseCaseInteractor.execute(galleryInputData);
     }
 
+    /**
+     * Loads the next page of the user gallery.
+     * This method delegates the page change action to the interactor's nextPage method.
+     */
     public void loadNextPage() {
         galleryUseCaseInteractor.nextPage();
     }
 
+    /**
+     * Loads the previous page of the user gallery.
+     * This method delegates the page change action to the interactor's previousPage method.
+     */
     public void loadPreviousPage() {
         galleryUseCaseInteractor.previousPage();
     }

@@ -43,6 +43,7 @@ public class UploadResultView extends PlantView implements PropertyChangeListene
 
     /**
      * Create the panel within which user action buttons save and discard are displayed.
+     *
      * @return a reference to the created panel
      */
     @Override
@@ -52,14 +53,16 @@ public class UploadResultView extends PlantView implements PropertyChangeListene
         final JButton saveBtn = ViewComponentFactory.buildButton(UploadResultViewModel.SAVE_BUTTON_LABEL);
         saveBtn.setPreferredSize(new Dimension(100, 30));
 
-        saveBtn.addActionListener(evt -> controller.saveUpload(
-                getImage(),
-                getNameLabel().getText(),
-                getFamilyLabel().getText(),
-                getScientificNameLabel().getText(),
-                getNotesField().getText(),
-                getTogglePublic().isSelected()
-        ));
+        saveBtn.addActionListener(evt -> {
+            controller.saveUpload(
+                    getImage(),
+                    getNameLabel().getText(),
+                    getFamilyLabel().getText(),
+                    getScientificNameLabel().getText(),
+                    getNotesField().getText(),
+                    getTogglePublic().isSelected()
+            );
+        });
         // NOTE: we negate privacyToggle as the controller needs to know if the image is public,
         //  not if the image is private.
         final JButton discardBtn = ViewComponentFactory.buildButton(UploadResultViewModel.DISCARD_BUTTON_LABEL);
@@ -82,6 +85,7 @@ public class UploadResultView extends PlantView implements PropertyChangeListene
     /**
      * Set variable fields within this view, such as the plant image and name, based on
      * the state information given as parameter.
+     *
      * @param state the state the view should represent
      */
     private void setFields(UploadResultState state) {
@@ -105,6 +109,7 @@ public class UploadResultView extends PlantView implements PropertyChangeListene
 
     /**
      * A getter for the view name.
+     *
      * @return the view name to be used by view models
      */
     public String getViewName() {

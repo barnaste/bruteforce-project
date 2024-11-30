@@ -44,7 +44,8 @@ public class PublicGalleryFactory {
 
         // Set up the PublicGalleryPresenter and PublicGalleryInteractor
         final PublicGalleryOutputBoundary galleryPresenter = new PublicGalleryPresenter(viewModel, galleryManagerModel);
-        final PublicGalleryInputBoundary publicGalleryInteractor = new PublicGalleryInteractor(plantDataAccessObject, galleryPresenter, imageDataAccessObject);
+        final PublicGalleryInputBoundary publicGalleryInteractor =
+                new PublicGalleryInteractor(plantDataAccessObject, galleryPresenter, imageDataAccessObject);
 
         // Initialize the PublicGalleryController and View
         final PublicGalleryController publicGalleryController = new PublicGalleryController(publicGalleryInteractor);
@@ -54,7 +55,8 @@ public class PublicGalleryFactory {
 
         // Initialize the like use case
         final LikePlantPresenter likePlantPresenter = new LikePlantPresenter(mainViewModel);
-        final LikePlantInteractor likePlantInteractor = new LikePlantInteractor(plantDataAccessObject, likePlantPresenter);
+        final LikePlantInteractor likePlantInteractor =
+                new LikePlantInteractor(plantDataAccessObject, likePlantPresenter);
         final LikePlantController likePlantController = new LikePlantController(likePlantInteractor);
         publicGalleryView.setLikePlantController(likePlantController);
 

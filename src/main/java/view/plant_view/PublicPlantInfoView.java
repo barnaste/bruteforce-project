@@ -38,7 +38,7 @@ public class PublicPlantInfoView extends PlantView {
         final JButton returnBtn = ViewComponentFactory.buildButton(PublicPlantInfoViewModel.RETURN_BUTTON_LABEL);
         returnBtn.setBorderPainted(false);
 
-        returnBtn.addActionListener((e) -> controller.escape());
+        returnBtn.addActionListener(evt -> controller.escape());
         topPanel.add(returnBtn, BorderLayout.WEST);
         return topPanel;
     }

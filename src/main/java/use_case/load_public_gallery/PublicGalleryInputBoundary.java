@@ -3,6 +3,7 @@ package use_case.load_public_gallery;
 /**
  * Interface for the input boundary of the public gallery use case.
  *
+ * <p>
  * This interface defines the methods required for interacting with the public gallery, including
  * executing the use case, navigating between pages, and retrieving information about public plants.
  */

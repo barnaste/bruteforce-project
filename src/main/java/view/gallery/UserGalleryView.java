@@ -32,7 +32,8 @@ import interface_adapter.load_user_gallery.UserGalleryViewModel;
 /**
  * Represents the user gallery view in the application, displaying a paginated grid of user plant images.
  * It allows navigation through pages and interaction with plant information through buttons under each image.
- * The view listens for property changes from the view model and updates the displayed images and navigation accordingly.
+ * The view listens for property changes from the view model and updates the displayed images and navigation
+ * accordingly.
  */
 public class UserGalleryView extends JPanel implements PropertyChangeListener {
     private static final int NUM_OF_COLUMNS = 5;
@@ -90,10 +91,12 @@ public class UserGalleryView extends JPanel implements PropertyChangeListener {
      * The method updates the gallery by creating a grid of image panels, each containing an image and
      * a button that, when clicked, displays more information about the selected plant.
      *
+     * <p>
      * If the `images` list is empty or null, the method will display empty placeholder panels.
      *
      * @param images A list of `BufferedImage` objects representing the images to be displayed in the gallery.
-     * @param ids A list of `ObjectId` objects associated with each plant's image. Each image corresponds to a plant that can be edited.
+     * @param ids A list of `ObjectId` objects associated with each plant's image. Each image corresponds to a plant
+     *            that can be edited.
      */
     public void displayImages(List<BufferedImage> images, List<ObjectId> ids) {
         imagesGrid.removeAll();
