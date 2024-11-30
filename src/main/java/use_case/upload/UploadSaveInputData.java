@@ -15,7 +15,8 @@ public class UploadSaveInputData {
     private final String userNotes;
     private final boolean isPublic;
 
-    public UploadSaveInputData(BufferedImage image, String plantName, String family, String plantSpecies, String userNotes, boolean isPublic) {
+    public UploadSaveInputData(BufferedImage image, String plantName, String family,
+                               String plantSpecies, String userNotes, boolean isPublic) {
         this.image = image;
         this.plantName = plantName;
         this.family = family;

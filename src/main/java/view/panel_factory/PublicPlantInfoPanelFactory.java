@@ -1,15 +1,19 @@
 package view.panel_factory;
 
+import javax.swing.JPanel;
+
 import data_access.MongoImageDataAccessObject;
-import data_access.MongoPlantDataAccessObject;
 import entity.Plant;
 import interface_adapter.public_plant_info.PublicPlantInfoController;
 import use_case.ImageDataAccessInterface;
 import use_case.public_plant_info.PublicPlantInfoInteractor;
 import view.plant_view.PublicPlantInfoView;
 
-import javax.swing.*;
-
+/**
+ * Factory class responsible for creating and configuring a `PublicPlantInfoView` to display
+ * detailed information about a specific plant. It sets up the interactor, controller, and escape functionality
+ * for the view.
+ */
 public class PublicPlantInfoPanelFactory {
     /**
      * Creates and configures a `PublicPlantInfoView` to display the details of a given plant.
@@ -21,21 +25,17 @@ public class PublicPlantInfoPanelFactory {
      */
     public static void createPublicPlantPanel(Plant plant, JPanel panel, Runnable escapeMap) {
         // Get image access and create the plant info view
-        ImageDataAccessInterface imageAccess = MongoImageDataAccessObject.getInstance();
+        final ImageDataAccessInterface imageAccess = MongoImageDataAccessObject.getInstance();
 
-        PublicPlantInfoView view = new PublicPlantInfoView(plant, imageAccess.getImageFromID(plant.getImageID()));
+        final PublicPlantInfoView view = new PublicPlantInfoView(plant, imageAccess.getImageFromID(plant.getImageID()));
         panel.add(view);
 
         // Set up interactor and escape map
-        PublicPlantInfoInteractor interactor = new PublicPlantInfoInteractor(
-                imageAccess,
-                MongoPlantDataAccessObject.getInstance()
-        );
+        final PublicPlantInfoInteractor interactor = new PublicPlantInfoInteractor();
         interactor.setEscapeMap(escapeMap);
 
         // Create controller and link to view
-        PublicPlantInfoController controller = new PublicPlantInfoController(interactor);
+        final PublicPlantInfoController controller = new PublicPlantInfoController(interactor);
         view.setController(controller);
     }
-
 }

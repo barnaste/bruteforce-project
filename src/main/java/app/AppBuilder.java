@@ -1,40 +1,33 @@
 package app;
 
+import java.awt.CardLayout;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+
 import data_access.MongoImageDataAccessObject;
 import data_access.MongoPlantDataAccessObject;
 import data_access.MongoUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.delete_user.DeleteUserController;
-import interface_adapter.delete_user.DeleteUserPresenter;
-import interface_adapter.logout.LogoutController;
-import interface_adapter.logout.LogoutPresenter;
-import interface_adapter.main.MainViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
-import interface_adapter.mode_switch.ModeSwitchController;
-import interface_adapter.mode_switch.ModeSwitchPresenter;
-import interface_adapter.mode_switch.ModeSwitchViewModel;
+import interface_adapter.main.MainViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import use_case.delete_user.DeleteUserInputBoundary;
-import use_case.delete_user.DeleteUserInteractor;
-import use_case.delete_user.DeleteUserOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
-import use_case.mode_switch.ModeSwitchInteractor;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
-import use_case.logout.LogoutInputBoundary;
-import use_case.logout.LogoutInteractor;
-import use_case.logout.LogoutOutputBoundary;
-import view.*;
-
-import javax.swing.*;
-import java.awt.*;
+import view.LoginView;
+import view.MainView;
+import view.SignupView;
+import view.StartView;
+import view.ViewManager;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of

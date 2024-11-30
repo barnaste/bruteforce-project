@@ -2,6 +2,11 @@ package use_case;
 
 import entity.User;
 
+/**
+ * Interface for user data access, providing methods for managing users
+ * in a data store. It includes operations for checking user existence,
+ * adding, retrieving, deleting users, and managing the current logged-in user.
+ */
 public interface UserDataAccessInterface {
     /**
      * Checks if the given username exists.
@@ -11,7 +16,7 @@ public interface UserDataAccessInterface {
     boolean existsByUsername(String username);
 
     /**
-     * A method that adds a new user entry into the database
+     * A method that adds a new user entry into the database.
      * @param user is the user being added.
      */
     void addUser(User user);

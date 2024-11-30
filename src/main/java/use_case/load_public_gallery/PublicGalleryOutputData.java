@@ -1,10 +1,14 @@
 package use_case.load_public_gallery;
 
-import org.bson.types.ObjectId;
-
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+import org.bson.types.ObjectId;
+
+/**
+ * Data transfer object (DTO) that contains the output data for the public gallery.
+ * Holds the images, their IDs, current page number, and total pages for gallery pagination.
+ */
 public class PublicGalleryOutputData {
     private final List<BufferedImage> images;
     private final List<ObjectId> ids;

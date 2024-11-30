@@ -1,5 +1,9 @@
 package entity;
 
+/**
+ * Represents a user in the system, with a username and a password.
+ * Used for user authentication and management.
+ */
 public class User {
     private String username;
     private String password;
@@ -20,6 +24,7 @@ public class User {
     public User() {
 
     }
+
     public String getUsername() {
         return username;
     }

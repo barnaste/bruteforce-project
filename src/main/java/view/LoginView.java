@@ -1,13 +1,20 @@
 package view;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -53,7 +60,6 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                 evt -> {
                     if (evt.getSource().equals(logIn)) {
                         final LoginState currentState = loginViewModel.getState();
-
                         loginController.execute(
                                 currentState.getUsername(),
                                 currentState.getPassword()
@@ -144,7 +150,6 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         usernameInputField.setText("");
         passwordInputField.setText("");
     }
-
 
     public String getViewName() {
         return viewName;

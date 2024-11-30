@@ -3,7 +3,6 @@ package use_case.login;
 import entity.User;
 import use_case.UserDataAccessInterface;
 
-
 /**
  * The Login Interactor.
  */
@@ -25,13 +24,15 @@ public class LoginInteractor implements LoginInputBoundary {
         if (!userDataAccessObject.existsByUsername(username)) {
             // user does not exist
             loginPresenter.prepareFailView();
-        } else {
+        }
+        else {
             // user exists
             final String pwd = userDataAccessObject.getUser(username).getPassword();
             if (!password.equals(pwd)) {
                 // incorrect password for the user
                 loginPresenter.prepareFailView();
-            } else {
+            }
+            else {
                 // correct password for the user
 
                 final User user = userDataAccessObject.getUser(loginInputData.getUsername());

@@ -1,16 +1,15 @@
 package view.plant_view;
 
+import java.awt.BorderLayout;
+import java.awt.image.BufferedImage;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
 import entity.Plant;
 import interface_adapter.public_plant_info.PublicPlantInfoController;
 import interface_adapter.public_plant_info.PublicPlantInfoViewModel;
 import view.ViewComponentFactory;
-
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * The View for the display of publicly visible plants use case.
@@ -35,8 +34,8 @@ public class PublicPlantInfoView extends PlantView {
 
     @Override
     protected JPanel createTopPanel() {
-        JPanel topPanel = super.createTopPanel();
-        JButton returnBtn = ViewComponentFactory.buildButton(PublicPlantInfoViewModel.RETURN_BUTTON_LABEL);
+        final JPanel topPanel = super.createTopPanel();
+        final JButton returnBtn = ViewComponentFactory.buildButton(PublicPlantInfoViewModel.RETURN_BUTTON_LABEL);
         returnBtn.setBorderPainted(false);
 
         returnBtn.addActionListener((e) -> controller.escape());
@@ -46,7 +45,7 @@ public class PublicPlantInfoView extends PlantView {
 
     @Override
     protected JPanel createContentPanel() {
-        JPanel contentPanel = super.createContentPanel();
+        final JPanel contentPanel = super.createContentPanel();
         contentPanel.remove(this.getTogglePublic());
         return contentPanel;
     }

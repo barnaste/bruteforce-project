@@ -1,21 +1,33 @@
 package view.gallery;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.List;
+import java.util.function.Consumer;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import org.bson.types.ObjectId;
+
 import data_access.MongoPlantDataAccessObject;
 import entity.Plant;
 import interface_adapter.like_plant.LikePlantController;
 import interface_adapter.load_public_gallery.PublicGalleryController;
 import interface_adapter.load_public_gallery.PublicGalleryState;
 import interface_adapter.load_public_gallery.PublicGalleryViewModel;
-import interface_adapter.public_plant_info.PublicPlantInfoController;
-import org.bson.types.ObjectId;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.List;
-import java.util.function.Consumer;
 
 public class PublicGalleryView extends JPanel implements PropertyChangeListener {
     private static final int NUM_OF_COLUMNS = 5;

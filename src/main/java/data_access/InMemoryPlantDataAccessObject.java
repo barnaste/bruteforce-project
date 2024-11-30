@@ -1,27 +1,40 @@
 package data_access;
 
-import entity.Plant;
-import org.bson.types.ObjectId;
-import use_case.PlantDataAccessInterface;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.bson.types.ObjectId;
 
-public class InMemoryPlantDataAccessObject implements PlantDataAccessInterface {
+import entity.Plant;
+import use_case.PlantDataAccessInterface;
+
+/**
+ * In-memory implementation of the PlantDataAccessInterface for managing plant data.
+ * This class follows the Singleton pattern to ensure a single instance for plant data storage.
+ */
+public final class InMemoryPlantDataAccessObject implements PlantDataAccessInterface {
+    private static InMemoryPlantDataAccessObject instance;
 
     private final Map<ObjectId, Plant> plants = new HashMap<>();
-
-    private static InMemoryPlantDataAccessObject instance;
 
     /**
      * The private constructor -- if a new instance of this class is to be requested, it should be done
      * by calling the getInstance() public method.
      */
-    private InMemoryPlantDataAccessObject() {}
+    private InMemoryPlantDataAccessObject() {
+
+    }
 
     /**
-     * The method used to retrieve an instance of this class. This way, the DAO is maintained as a singleton.
+     * Returns the singleton instance of InMemoryPlantDataAccessObject.
+     * If the instance does not exist, it is created.
+     *
+     * @return the singleton instance of InMemoryPlantDataAccessObject
      */
     public static InMemoryPlantDataAccessObject getInstance() {
         if (instance == null) {
@@ -33,32 +46,30 @@ public class InMemoryPlantDataAccessObject implements PlantDataAccessInterface {
     @Override
     public List<Plant> getUserPlants(String username, int skip, int limit) {
 
-        List<Plant> sortedplants = getUserPlants(username); // Reused the single-parameter version
+        // Reused the single-parameter version
+        final List<Plant> sortedPlants = getUserPlants(username);
 
-        int start = Math.min(skip, sortedplants.size());
-        int end = Math.min(start + limit, sortedplants.size());
+        final int start = Math.min(skip, sortedPlants.size());
+        final int end = Math.min(start + limit, sortedPlants.size());
 
-        return sortedplants.subList(start, end);
+        return sortedPlants.subList(start, end);
 
     }
 
     @Override
     public List<Plant> getUserPlants(String username) {
-
-        List<Plant> result = new ArrayList<>();
+        final List<Plant> result = new ArrayList<>();
         for (Plant plant : plants.values()) {
             if (plant.getOwner().equals(username)) {
                 result.add(plant);
             }
         }
-        result.sort((p1, p2) -> p2.getLastChanged().compareTo(p1.getLastChanged()));
+        result.sort((evt1, evt2) -> evt2.getLastChanged().compareTo(evt1.getLastChanged()));
         return result;
-
     }
 
     @Override
     public List<Plant> getPublicPlants(int skip, int limit) {
-
         return plants.values().stream()
                 .filter(Plant::getIsPublic)
                 .sorted(Comparator.comparing(Plant::getNumOfLikes).reversed())
@@ -71,19 +82,19 @@ public class InMemoryPlantDataAccessObject implements PlantDataAccessInterface {
     public void addPlant(Plant plant) {
         plant.setLastChanged(new Date());
         plants.put(plant.getFileID(), plant);
-
     }
 
     @Override
     public boolean editPlant(ObjectId fileID, boolean isPublic, String comments) {
-        Plant plant = plants.get(fileID);
+        boolean result = false;
+        final Plant plant = plants.get(fileID);
         if (plant != null) {
             plant.setIsPublic(isPublic);
             plant.setComments(comments);
             plant.setLastChanged(new Date());
-            return true;
+            result = true;
         }
-        return false;
+        return result;
     }
 
     @Override
@@ -95,7 +106,7 @@ public class InMemoryPlantDataAccessObject implements PlantDataAccessInterface {
     public int getNumberOfPublicPlants() {
         int count = 0;
         for (Plant plant : plants.values()) {
-            if (plant.getIsPublic()){
+            if (plant.getIsPublic()) {
                 count++;
             }
         }
@@ -120,16 +131,19 @@ public class InMemoryPlantDataAccessObject implements PlantDataAccessInterface {
 
     @Override
     public boolean likePlant(ObjectId fileID) {
-        Plant plant = plants.get(fileID);
+        boolean result = false;
+        final Plant plant = plants.get(fileID);
         if (plant != null) {
             plant.setNumOfLikes(plant.getNumOfLikes() + 1);
-            return true;
+            result = true;
         }
-        return false;
+        return result;
     }
 
-    public void deleteAll(){
+    /**
+     * Clears all plants from the in-memory storage.
+     */
+    public void deleteAll() {
         plants.clear();
     }
-
 }

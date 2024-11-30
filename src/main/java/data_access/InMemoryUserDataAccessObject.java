@@ -1,10 +1,9 @@
 package data_access;
 
-import entity.User;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import entity.User;
 
 /**
  * In-memory implementation of the DAO for storing user data. This implementation does
@@ -13,20 +12,25 @@ import java.util.Map;
 
 public class InMemoryUserDataAccessObject implements use_case.UserDataAccessInterface {
 
+    private static InMemoryUserDataAccessObject instance;
+
     private final Map<String, User> users = new HashMap<>();
 
     private String currentUsername;
 
-    private static InMemoryUserDataAccessObject instance;
-
     /**
-     * The private constructor -- if a new instance of this class is to be requested, it should be done
-     * by calling the getInstance() public method.
+     * Returns the singleton instance of InMemoryUserDataAccessObject.
+     * If the instance does not exist, it is created.
      */
-    public InMemoryUserDataAccessObject() {}
+    public InMemoryUserDataAccessObject() {
+
+    }
 
     /**
-     * The method used to retrieve an instance of this class. This way, the DAO is maintained as a singleton.
+     * Retrieves the singleton instance of InMemoryUserDataAccessObject.
+     * If the instance does not exist, it is created.
+     *
+     * @return the singleton instance of InMemoryUserDataAccessObject
      */
     public static InMemoryUserDataAccessObject getInstance() {
         if (instance == null) {
@@ -41,7 +45,9 @@ public class InMemoryUserDataAccessObject implements use_case.UserDataAccessInte
     }
 
     @Override
-    public void addUser(User user) { users.put(user.getUsername(), user);}
+    public void addUser(User user) {
+        users.put(user.getUsername(), user);
+    }
 
     @Override
     public String getCurrentUsername() {
@@ -49,13 +55,24 @@ public class InMemoryUserDataAccessObject implements use_case.UserDataAccessInte
     }
 
     @Override
-    public void setCurrentUsername(String username) {this.currentUsername = username;}
+    public void setCurrentUsername(String username) {
+        this.currentUsername = username;
+    }
 
     @Override
-    public User getUser(String username) {return users.get(username);}
+    public User getUser(String username) {
+        return users.get(username);
+    }
 
     @Override
-    public boolean deleteUser(String username) {return users.remove(username) != null;}
+    public boolean deleteUser(String username) {
+        return users.remove(username) != null;
+    }
 
-    public void deleteAll() {users.clear();}
+    /**
+     * Clears all user data from the in-memory storage.
+     */
+    public void deleteAll() {
+        users.clear();
+    }
 }

@@ -3,6 +3,10 @@ package interface_adapter.load_public_gallery;
 import use_case.load_public_gallery.PublicGalleryInputBoundary;
 import use_case.load_public_gallery.PublicGalleryInputData;
 
+/**
+ * Controller for managing the public gallery's image pages. It interacts with the use case interactor
+ * to load, paginate, and retrieve images for the public gallery.
+ */
 public class PublicGalleryController {
 
     private final PublicGalleryInputBoundary galleryUseCaseInteractor;
@@ -20,10 +24,16 @@ public class PublicGalleryController {
         galleryUseCaseInteractor.execute(galleryInputData);
     }
 
+    /**
+     * Loads the next page of the public gallery by invoking the `nextPage` method in the use case interactor.
+     */
     public void loadNextPage() {
         galleryUseCaseInteractor.nextPage();
     }
 
+    /**
+     * Loads the previous page of the public gallery by invoking the `previousPage` method in the use case interactor.
+     */
     public void loadPreviousPage() {
         galleryUseCaseInteractor.previousPage();
     }

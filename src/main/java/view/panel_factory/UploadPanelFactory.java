@@ -1,5 +1,10 @@
 package view.panel_factory;
 
+import java.awt.CardLayout;
+import java.awt.Container;
+
+import javax.swing.JPanel;
+
 import data_access.MongoImageDataAccessObject;
 import data_access.MongoPlantDataAccessObject;
 import data_access.MongoUserDataAccessObject;
@@ -18,9 +23,10 @@ import view.upload.UploadConfirmView;
 import view.upload.UploadResultView;
 import view.upload.UploadSelectView;
 
-import javax.swing.*;
-import java.awt.*;
-
+/**
+ * ViewModel class for the public plant information view. This class holds constant values
+ * and manages the data associated with displaying detailed information about a specific plant.
+ */
 public class UploadPanelFactory {
     /**
      * Creates and configures the upload panel for the application, which includes multiple views
@@ -32,43 +38,44 @@ public class UploadPanelFactory {
      * @param escapeMap A `Runnable` to handle escape actions, such as canceling the upload process.
      * @param mainViewModel The `MainViewModel` used to manage the application's state during the upload process.
      */
-    public static void createUploadPanel(Container parentPanel, JPanel cardPanel, Runnable escapeMap, MainViewModel mainViewModel) {
+    public static void createUploadPanel(Container parentPanel, JPanel cardPanel,
+                                         Runnable escapeMap, MainViewModel mainViewModel) {
         // NOTE: We extend CardLayout so the entire view is redrawn when the card is swapped.
         // This avoids artefacts from previous cards, especially if they have variant dimensions.
-        CardLayout cardLayout = new CardLayout() {
+        final CardLayout cardLayout = new CardLayout() {
             @Override
             public void show(Container parent, String name) {
                 super.show(parent, name);
-                parentPanel.revalidate();  // Revalidate the parent container
-                parentPanel.repaint();     // Repaint to avoid artefacts
+                parentPanel.revalidate();
+                parentPanel.repaint();
             }
         };
         cardPanel.setLayout(cardLayout);
 
         // Initialize and add the UploadSelectView to the card panel
-        UploadSelectViewModel selectorViewModel = new UploadSelectViewModel();
-        UploadSelectView selectorView = new UploadSelectView(selectorViewModel);
+        final UploadSelectViewModel selectorViewModel = new UploadSelectViewModel();
+        final UploadSelectView selectorView = new UploadSelectView(selectorViewModel);
         cardPanel.add(selectorView, selectorView.getViewName());
 
         // Initialize and add the UploadConfirmView to the card panel
-        UploadConfirmViewModel confirmViewModel = new UploadConfirmViewModel();
-        UploadConfirmView confirmView = new UploadConfirmView(confirmViewModel);
+        final UploadConfirmViewModel confirmViewModel = new UploadConfirmViewModel();
+        final UploadConfirmView confirmView = new UploadConfirmView(confirmViewModel);
         cardPanel.add(confirmView, confirmView.getViewName());
 
         // Initialize and add the UploadResultView to the card panel
-        UploadResultViewModel resultViewModel = new UploadResultViewModel();
-        UploadResultView resultView = new UploadResultView(resultViewModel);
+        final UploadResultViewModel resultViewModel = new UploadResultViewModel();
+        final UploadResultView resultView = new UploadResultView(resultViewModel);
         cardPanel.add(resultView, resultView.getViewName());
 
         // Initialize the ViewManager for handling view transitions
-        ViewManagerModel uploadManagerModel = new ViewManagerModel();
+        final ViewManagerModel uploadManagerModel = new ViewManagerModel();
         new ViewManager(cardPanel, cardLayout, uploadManagerModel);
 
         // Set up the UploadOutputBoundary and Interactor
-        UploadOutputBoundary uploadOutputBoundary = new UploadPresenter(
+        final UploadOutputBoundary uploadOutputBoundary = new UploadPresenter(
                 uploadManagerModel, selectorViewModel, confirmViewModel, resultViewModel, mainViewModel
         );
-        UploadInputBoundary uploadInteractor = new UploadInteractor(
+        final UploadInputBoundary uploadInteractor = new UploadInteractor(
                 uploadOutputBoundary,
                 MongoImageDataAccessObject.getInstance(),
                 MongoPlantDataAccessObject.getInstance(),
@@ -77,7 +84,7 @@ public class UploadPanelFactory {
         uploadInteractor.setEscapeMap(escapeMap);
 
         // Initialize the UploadController and link it to all views
-        UploadController controller = new UploadController(uploadInteractor);
+        final UploadController controller = new UploadController(uploadInteractor);
         selectorView.setController(controller);
         confirmView.setController(controller);
         resultView.setController(controller);

@@ -1,17 +1,33 @@
 package view.panel_factory;
 
+import javax.swing.JPanel;
+
 import data_access.MongoImageDataAccessObject;
 import data_access.MongoPlantDataAccessObject;
 import entity.Plant;
+import interface_adapter.main.MainViewModel;
 import interface_adapter.user_plant_info_edit.UserPlantInfoEditController;
 import interface_adapter.user_plant_info_edit.UserPlantInfoEditPresenter;
-import interface_adapter.main.MainViewModel;
 import use_case.ImageDataAccessInterface;
 import use_case.user_plant_info_edit.UserPlantInfoEditInteractor;
 import view.plant_view.PlantInfoEditView;
 
-import javax.swing.*;
-
+/**
+ * The `UserPlantInfoEditPanelFactory` class is responsible for creating and setting up the
+ * view for editing plant information. It initializes the necessary components including the
+ * interactor, presenter, and controller, and then adds the plant information edit view to
+ * the provided panel. The class abstracts the creation of the plant info edit panel and
+ * links all the components needed for the plant editing process.
+ *
+ * <p>
+ * The view enables users to modify the details of a plant such as its name, description,
+ * and other attributes. It also supports escape functionality, allowing users to cancel
+ * the edit operation if desired.
+ *
+ * <p>
+ * The factory pattern is used here to ensure that all necessary dependencies are properly
+ * wired together and encapsulated before the view is added to the parent panel.
+ */
 public class UserPlantInfoEditPanelFactory {
     /**
      * Creates and sets up the view for editing plant information, including initializing
@@ -22,28 +38,29 @@ public class UserPlantInfoEditPanelFactory {
      * @param escapeMap A `Runnable` for handling escape actions, such as canceling the edit.
      * @param mainViewModel The `MainViewModel` used for managing the application's state during the edit process.
      */
-    public static void createEditPlantPanel(Plant plant, JPanel panel, Runnable escapeMap, MainViewModel mainViewModel) {
+    public static void createEditPlantPanel(Plant plant, JPanel panel, Runnable escapeMap,
+                                            MainViewModel mainViewModel) {
         // Get image access to retrieve the plant's image
-        ImageDataAccessInterface imageAccess = MongoImageDataAccessObject.getInstance();
+        final ImageDataAccessInterface imageAccess = MongoImageDataAccessObject.getInstance();
 
         // Create and add the plant info edit view to the panel
-        PlantInfoEditView view = new PlantInfoEditView(plant, imageAccess.getImageFromID(plant.getImageID()));
+        final PlantInfoEditView view = new PlantInfoEditView(plant, imageAccess.getImageFromID(plant.getImageID()));
         panel.add(view);
 
         // Initialize the presenter for editing plant info
-        UserPlantInfoEditPresenter editPlantPresenter = new UserPlantInfoEditPresenter(mainViewModel);
+        final UserPlantInfoEditPresenter editPlantPresenter = new UserPlantInfoEditPresenter(mainViewModel);
 
         // Set up the interactor to handle plant info editing logic
-        UserPlantInfoEditInteractor interactor = new UserPlantInfoEditInteractor(
+        final UserPlantInfoEditInteractor interactor = new UserPlantInfoEditInteractor(
                 imageAccess,
                 MongoPlantDataAccessObject.getInstance(),
                 editPlantPresenter
         );
-        interactor.setPlant(plant);  // Set the plant to be edited
-        interactor.setEscapeMap(escapeMap);  // Set escape handling
+        interactor.setPlant(plant);
+        interactor.setEscapeMap(escapeMap);
 
         // Create the controller and bind it to the view
-        UserPlantInfoEditController controller = new UserPlantInfoEditController(interactor);
-        view.setController(controller);  // Link the controller to the view
+        final UserPlantInfoEditController controller = new UserPlantInfoEditController(interactor);
+        view.setController(controller);
     }
 }

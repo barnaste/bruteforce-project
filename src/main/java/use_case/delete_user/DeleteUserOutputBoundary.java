@@ -1,7 +1,5 @@
 package use_case.delete_user;
 
-import use_case.login.LoginOutputData;
-
 /**
  * The output boundary for the Delete User Use Case.
  */

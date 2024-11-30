@@ -1,15 +1,23 @@
 package view.upload;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
 import interface_adapter.upload.UploadController;
 import interface_adapter.upload.confirm.UploadConfirmState;
 import interface_adapter.upload.confirm.UploadConfirmViewModel;
 import view.ViewComponentFactory;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * The View for the confirmation stage of the Upload use case.
@@ -28,7 +36,7 @@ public class UploadConfirmView extends JPanel implements PropertyChangeListener 
         this.setBackground(new Color(UploadConfirmViewModel.TRANSPARENT, true));
 
         // position each component nicely within the view area using GridBagLayout
-        GridBagConstraints constraints = new GridBagConstraints();
+        final GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.anchor = GridBagConstraints.CENTER;
@@ -45,7 +53,7 @@ public class UploadConfirmView extends JPanel implements PropertyChangeListener 
      * @return a reference to the created panel
      */
     private JPanel createTopPanel() {
-        JPanel topPanel = new JPanel();
+        final JPanel topPanel = new JPanel();
         topPanel.setLayout(new BorderLayout());
         topPanel.setBackground(new Color(UploadConfirmViewModel.TOP_PANEL_COLOR, true));
         topPanel.setPreferredSize(new Dimension(
@@ -53,16 +61,16 @@ public class UploadConfirmView extends JPanel implements PropertyChangeListener 
                 UploadConfirmViewModel.TOP_PANEL_HEIGHT
         ));
 
-        JButton returnBtn = ViewComponentFactory.buildButton(UploadConfirmViewModel.RETURN_BUTTON_LABEL);
+        final JButton returnBtn = ViewComponentFactory.buildButton(UploadConfirmViewModel.RETURN_BUTTON_LABEL);
         returnBtn.setBorderPainted(false);
 
-        returnBtn.addActionListener((e) -> controller.switchToSelectView() );
+        returnBtn.addActionListener(evt -> controller.switchToSelectView());
         topPanel.add(returnBtn, BorderLayout.WEST);
 
-        JButton confirmBtn = ViewComponentFactory.buildButton(UploadConfirmViewModel.CONFIRM_BUTTON_LABEL);
+        final JButton confirmBtn = ViewComponentFactory.buildButton(UploadConfirmViewModel.CONFIRM_BUTTON_LABEL);
         confirmBtn.setBorderPainted(false);
 
-        confirmBtn.addActionListener((e) -> controller.switchToResultView(this.imagePath) );
+        confirmBtn.addActionListener(evt -> controller.switchToResultView(this.imagePath) );
         topPanel.add(confirmBtn, BorderLayout.EAST);
         return topPanel;
     }
@@ -73,7 +81,7 @@ public class UploadConfirmView extends JPanel implements PropertyChangeListener 
      * @return a reference to the created panel
      */
     private JPanel createImagePanel() {
-        JPanel imagePanel = new JPanel() {
+        final JPanel imagePanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
