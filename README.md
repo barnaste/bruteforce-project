@@ -28,14 +28,13 @@ Discover and learn about plants effortlessly with Plantinarium! Snap a photo to 
 
 ## Summary of the Project’s Purpose
 
-This project is designed to help users identify plants by uploading images, enabling them to share plant-related information and write notes and facts about the plants they encounter.
+Plantinarium makes identifying plants easy and fun. Just upload a photo, and the system will identify the species for you. It’s more than just identification—you can share your discoveries and add notes or fun facts about the plants you encounter.
 
-- **What the project does:** Users can upload photos of plants, and the system will identify the plant species. It also allows users to share plants with others and add personalized notes or facts.
-- **Why the project was made:** The project was created to assist plant enthusiasts, gardeners, students, and researchers in identifying plants easily and sharing knowledge in a collaborative way.
-- **Problem solved:** This project eliminates the hassle of manual identification by leveraging technology to provide instant results, making it easier for users to learn about and document plants. It is useful for anyone interested in botany, gardening, or plant care, offering both educational and practical value.  
+This project was built for plant enthusiasts, gardeners, students, and researchers who want a simple way to learn about plants and share knowledge with others. By automating plant identification, Plantinarium saves time and makes it easier to document and explore the world of plants, whether for education, gardening, or pure curiosity.
+
 
 ## Table of Contents
-(NOT SURE IF THIS SHOULD BE AT THE TOP, OUTLINE SAYS HERE?)
+
 1. [Group Members](#group-members)
 2. [User Stories](#user-stories)
 3. [Summary of the Project’s Purpose](#summary-of-the-projects-purpose)
