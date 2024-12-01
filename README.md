@@ -11,7 +11,7 @@ Discover and learn about plants effortlessly with Plantinarium! Snap a photo to 
 1. Stefan Barna : barnaste
 2. Areez Alam Chishtie : arz-c
 3. Avichai Isaac Gobrin : Avigobrin
-4. Ali Karim Lalani : AliKarimLalani (some commits were done with `phytorchumsworth')
+4. Ali Karim Lalani : AliKarimLalani (the vast majority of code commits were done with `phytorchumsworth')
 5. Xiangyu Li : nonisomorphiclinearmap (some commits were done with `pullnointer')
 6. Serene Leona Stoller : sere-ne
 
