@@ -82,7 +82,7 @@ For more information, please refer https://creativecommons.org/publicdomain/zero
 
 ## Feedback
 
-Your feedback is invaluable to improving **Plantinarium**! Whether you’ve discovered a bug, have suggestions for new features, or want to share your thoughts on the app, we encourage you to let us know. Below, you’ll find details on how to provide feedback and what to expect.
+Want to be part of an exciting, open-source project for plant lovers and enthusiasts? Join the Plantinarium community and explore how you can contribute below!
 
 ---
 
