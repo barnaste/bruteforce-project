@@ -69,7 +69,9 @@ This project is designed to help users identify plants by uploading images, enab
 - Click delete user inorder to delete your account.
 
 ## License 
-(unsure which liscence we have, but that goes here)
+This project uses a Creative Commons 1.0 Universal License.
+
+For more information, please refer https://creativecommons.org/publicdomain/zero/1.0/deed.en and the LICENSE file.
 
 ## Feedback
 
