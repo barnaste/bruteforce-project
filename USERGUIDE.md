@@ -49,6 +49,7 @@ To identify a plant, click **Upload**, and you’ll see the upload screen.
 
 - Click **Select from Computer** to upload a photo. The system will analyze the image and identify the plant.  
 - Once identified, you can add notes about the plant, such as where you found it or interesting facts.
+![image](https://github.com/user-attachments/assets/f6828968-2f46-41fb-b5f4-a69b93402454)
 
 ---
 
