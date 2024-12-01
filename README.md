@@ -2,6 +2,8 @@
 
 Discover and learn about plants effortlessly with Plantinarium! Snap a photo to identify plant species, share your finds, and jot down notes or fun facts to connect with fellow plant lovers.
 
+![image](https://github.com/user-attachments/assets/4a11087d-6f0b-4353-be9b-1cd9c00cbd7a)
+
 ## Group Members
 
 **Name : GitHub username**
