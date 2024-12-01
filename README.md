@@ -50,15 +50,15 @@ This project was built for plant enthusiasts, gardeners, students, and researche
 
 ## Current Features
 
--Sign Up and Login: Create an account or log in to access Plantinarium's features.
--Logout: Securely log out of your account when you're done.
--Upload Plants: Upload images of plants to have them automatically identified by the system.
--Write Notes: Add personalized notes or facts to your plant entries.
--View Public and Private Plants: Browse your private plant collection or explore publicly shared plants from others.
--Edit Posts: Update or modify your uploaded plant entries and notes.
--View Others' Plant Info: Learn from detailed information and notes shared by other users.
--Like System: Like and appreciate plants shared by others.
--Delete Account: Permanently remove your account and all associated data.
+- Sign Up and Login: Create an account or log in to access Plantinarium's features.
+- Logout: Securely log out of your account when you're done.
+- Upload Plants: Upload images of plants to have them automatically identified by the system.
+- Write Notes: Add personalized notes or facts to your plant entries.
+- View Public and Private Plants: Browse your private plant collection or explore publicly shared plants from others.
+- Edit Posts: Update or modify your uploaded plant entries and notes.
+- View Others' Plant Info: Learn from detailed information and notes shared by other users.
+- Like System: Like and appreciate plants shared by others.
+- Delete Account: Permanently remove your account and all associated data.
 
 
 ## Installation instructions
