@@ -1,5 +1,9 @@
 # plantinarium
 
+Discover and learn about plants effortlessly with Plantinarium! Snap a photo to identify plant species, share your finds, and jot down notes or fun facts to connect with fellow plant lovers.
+
+![image](https://github.com/user-attachments/assets/4a11087d-6f0b-4353-be9b-1cd9c00cbd7a)
+
 ## Group Members
 
 **Name : GitHub username**
@@ -7,7 +11,7 @@
 1. Stefan Barna : barnaste
 2. Areez Alam Chishtie : arz-c
 3. Avichai Isaac Gobrin : Avigobrin
-4. Ali Karim Lalani : AliKarimLalani (some commits were done with `phytorchumsworth')
+4. Ali Karim Lalani : AliKarimLalani (the vast majority of code commits were done with `phytorchumsworth')
 5. Xiangyu Li : nonisomorphiclinearmap (some commits were done with `pullnointer')
 6. Serene Leona Stoller : sere-ne
 
@@ -22,19 +26,17 @@
 7. I want to view details about plant images that I have uploaded : ***Ali***
 8. I want to delete my account and wipe all my information if I decide to stop using the app : ***Avi***
 9. I want to log out of my account and return to the start screen : ***Areez***
-
-plantinarium 
+ 
 
 ## Summary of the Project’s Purpose
 
-This project is designed to help users identify plants by uploading images, enabling them to share plant-related information and write notes and facts about the plants they encounter.
+Plantinarium makes identifying plants easy and fun. Just upload a photo, and the system will identify the species for you. It’s more than just identification—you can share your discoveries and add notes or fun facts about the plants you encounter.
 
-- **What the project does:** Users can upload photos of plants, and the system will identify the plant species. It also allows users to share plants with others and add personalized notes or facts.
-- **Why the project was made:** The project was created to assist plant enthusiasts, gardeners, students, and researchers in identifying plants easily and sharing knowledge in a collaborative way.
-- **Problem solved:** This project eliminates the hassle of manual identification by leveraging technology to provide instant results, making it easier for users to learn about and document plants. It is useful for anyone interested in botany, gardening, or plant care, offering both educational and practical value.  
+This project was built for plant enthusiasts, gardeners, students, and researchers who want a simple way to learn about plants and share knowledge with others. By automating plant identification, Plantinarium saves time and makes it easier to document and explore the world of plants, whether for education, gardening, or pure curiosity.
+
 
 ## Table of Contents
-(NOT SURE IF THIS SHOULD BE AT THE TOP, OUTLINE SAYS HERE?)
+
 1. [Group Members](#group-members)
 2. [User Stories](#user-stories)
 3. [Summary of the Project’s Purpose](#summary-of-the-projects-purpose)
@@ -46,34 +48,41 @@ This project is designed to help users identify plants by uploading images, enab
 9. [Contributions](#contributions)
 
 
-## Features of the software
-(NEED TO MAKE THIS MORE CLEAR AND ADD EXAMPLES)
-- sign up and login
-- upload 
-- make plants public
-- write notes
-- gallery
-- delete user
-- .
+## Features of the Software
+
+- Sign Up and Login: Create an account or log in to access Plantinarium's features.
+- Logout: Securely log out of your account when you're done.
+- Upload Plants: Upload images of plants to have them automatically identified by the system.
+- Write Notes: Add personalized notes or facts to your plant entries.
+- View Public and Private Plants: Browse your private plant collection or explore publicly shared plants from others.
+- Edit Posts: Update or modify your uploaded plant entries and notes.
+- View Others' Plant Info: Learn from detailed information and notes shared by other users.
+- Like System: Like and appreciate plants shared by others.
+- Delete Account: Permanently remove your account and all associated data.
+
 
 ## Installation instructions
-(not sure what to put here)
-- sometimes users need to set the scale to 100% (as apposed to the windows default of 150%)
+
+1. Open your preferred IDE (e.g., IntelliJ, Eclipse, or VS Code).
+
+2. Clone the repository: git clone https://github.com/barnaste/plantinarium.git
+
+3. In your IDE, open the cloned plantinarium folder as a project.
+
+4. Run the application using the main class or your IDE's run configuration to start exploring Plantinarium!
 
 ## Usage guide 
-(NEED FURTHER EXAMPLES, AND POTENTIALLY SCREENSHOTS)
-- sign up
-- log in
-- upload jpg of plants
-- click edit button to change notes of plants
-- Click delete user inorder to delete your account.
+
+Please refer to the attatched User Guide.
 
 ## License 
-(unsure which liscence we have, but that goes here)
+This project uses a Creative Commons 1.0 Universal License.
+
+For more information, please refer https://creativecommons.org/publicdomain/zero/1.0/deed.en and the [LICENSE](https://github.com/barnaste/plantinarium/blob/main/LICENSE.txt) file.
 
 ## Feedback
 
-Your feedback is invaluable to improving **Plantinarium**! Whether you’ve discovered a bug, have suggestions for new features, or want to share your thoughts on the app, we encourage you to let us know. Below, you’ll find details on how to provide feedback and what to expect.
+Want to be part of an exciting, open-source project for plant lovers and enthusiasts? Join the Plantinarium community and explore how you can contribute below!
 
 ---
 
