@@ -1,5 +1,7 @@
 # plantinarium
 
+Discover and learn about plants effortlessly with Plantinarium! Snap a photo to identify plant species, share your finds, and jot down notes or fun facts to connect with fellow plant lovers.
+
 ## Group Members
 
 **Name : GitHub username**
@@ -22,8 +24,7 @@
 7. I want to view details about plant images that I have uploaded : ***Ali***
 8. I want to delete my account and wipe all my information if I decide to stop using the app : ***Avi***
 9. I want to log out of my account and return to the start screen : ***Areez***
-
-plantinarium 
+ 
 
 ## Summary of the Project’s Purpose
 
@@ -57,8 +58,14 @@ This project is designed to help users identify plants by uploading images, enab
 - .
 
 ## Installation instructions
-(not sure what to put here)
-- sometimes users need to set the scale to 100% (as apposed to the windows default of 150%)
+
+1. Open your preferred IDE (e.g., IntelliJ, Eclipse, or VS Code).
+
+2. Clone the repository: git clone https://github.com/barnaste/plantinarium.git
+
+3. In your IDE, open the cloned plantinarium folder as a project.
+
+4. Run the application using the main class or your IDE's run configuration to start exploring Plantinarium!
 
 ## Usage guide 
 (NEED FURTHER EXAMPLES, AND POTENTIALLY SCREENSHOTS)
