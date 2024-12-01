@@ -48,7 +48,7 @@ This project was built for plant enthusiasts, gardeners, students, and researche
 9. [Contributions](#contributions)
 
 
-## Current Features
+## Features of the Software
 
 - Sign Up and Login: Create an account or log in to access Plantinarium's features.
 - Logout: Securely log out of your account when you're done.
@@ -72,17 +72,13 @@ This project was built for plant enthusiasts, gardeners, students, and researche
 4. Run the application using the main class or your IDE's run configuration to start exploring Plantinarium!
 
 ## Usage guide 
-(NEED FURTHER EXAMPLES, AND POTENTIALLY SCREENSHOTS)
-- sign up
-- log in
-- upload jpg of plants
-- click edit button to change notes of plants
-- Click delete user inorder to delete your account.
+
+Please refer to the attatched User Guide.
 
 ## License 
 This project uses a Creative Commons 1.0 Universal License.
 
-For more information, please refer https://creativecommons.org/publicdomain/zero/1.0/deed.en and the LICENSE file.
+For more information, please refer https://creativecommons.org/publicdomain/zero/1.0/deed.en and the [LICENSE](https://github.com/barnaste/plantinarium/blob/main/LICENSE.txt) file.
 
 ## Feedback
 
