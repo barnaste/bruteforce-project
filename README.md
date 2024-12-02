@@ -1,4 +1,4 @@
-# plantinarium
+# Plantinarium
 
 Discover and learn about plants effortlessly with Plantinarium! Snap a photo to identify plant species, share your finds, and jot down notes or fun facts to connect with fellow plant lovers.
 
