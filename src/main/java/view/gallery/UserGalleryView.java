@@ -54,8 +54,8 @@ public class UserGalleryView extends JPanel implements PropertyChangeListener {
         this.displayPlantMap = displayPlantMap;
 
         setLayout(new BorderLayout());
-        imagesGrid = new JPanel(new GridLayout(NUM_OF_ROWS, NUM_OF_COLUMNS, 5, 5));
-        add(new JScrollPane(imagesGrid), BorderLayout.CENTER);
+        imagesGrid = new JPanel(new GridLayout(NUM_OF_ROWS, NUM_OF_COLUMNS, 10, 5));
+        add(imagesGrid, BorderLayout.CENTER);
 
         final JPanel navigationPanel = new JPanel();
         previousPageButton = new JButton("Previous Page");

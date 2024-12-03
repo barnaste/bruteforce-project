@@ -115,7 +115,12 @@ public final class MongoPlantDataAccessObject implements PlantDataAccessInterfac
     @Override
     public List<Plant> getPublicPlants(int skip, int limit) {
         final List<Plant> result = new ArrayList<>();
-        final Bson sort = Sorts.descending("numOfLikes");
+
+        final Bson sort = Sorts.orderBy(
+                Sorts.descending("numOfLikes"),  // Primary sort by numOfLikes (descending)
+                Sorts.descending("lastChanged")  // Secondary sort by lastChanged (descending)
+        );
+
         try (MongoClient mongoClient = MongoClients.create(CONNECTIONSTRING)) {
             final MongoCollection<Plant> collection = getPlantsCollection(mongoClient);
 
@@ -124,7 +129,6 @@ public final class MongoPlantDataAccessObject implements PlantDataAccessInterfac
                     .sort(sort)
                     .skip(skip)
                     .limit(limit);
-
             // Add each found plant to the result list
             for (Plant plant : iterable) {
                 result.add(plant);
